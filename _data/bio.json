@@ -7,6 +7,11 @@
     "phone": "",
     "website": "https://ouimet.info",
     "summary": "I'm a Senior Staff Software Developer specialized in backend development. Blockchain really gets me curious !",
+    "summaryLong": [
+      "I'm a Senior Staff Software Developer with over 23 years of experience, and I still love coding, especially when it involves tackling complex problems and collaborating with teams. From high-level design to getting into the nitty-gritty of the code, I enjoy working through the tough questions, whether it's defining domain boundaries or optimizing architecture.",
+      "I’m passionate about domain-driven design, event-driven systems, and patterns like sagas and the transactional outbox. While ChatGPT might be quicker at cranking out CRUD stacks, I believe my real value comes in balancing the trade-offs, working with people, and finding the right solutions—together.",
+      "I like to keep things light and fun, but I’m serious about delivering quality. Whether it’s diving into code reviews or process improvements, I aim for a balance of high standards and practical solutions."
+    ],
     "location": { "address": "", "postalCode": "", "city": "Montréal", "countryCode": "CA", "region": "Québec" },
     "profiles": [
       { "network": "github", "username": "couimet", "url": "http://github.com/couimet" },
