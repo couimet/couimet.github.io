@@ -41,13 +41,11 @@ layout: home
         <h1 class="display-6 text-start m-0">About me</h1>
       </div>
       <div class="col-lg-9">
-        <p class="m-0">
-          {% for entry in site.data.bio.basics.summaryLong %}
-            <p class="m-0">
-              {{ entry }}
-            </p>
-          {% endfor %}
-        </p>
+        {% for entry in site.data.bio.basics.summaryLong %}
+          <p class="m-0 long-summary-entry">
+            {{ entry }}
+          </p>
+        {% endfor %}
       </div>
     </div>
 
