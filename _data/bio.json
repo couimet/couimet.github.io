@@ -17,6 +17,7 @@
     "profiles": [
       { "network": "github", "username": "couimet", "url": "http://github.com/couimet" },
       { "network": "linkedin", "username": "charlesouimet", "url": "http://linkedin.com/in/charlesouimet" },
+      { "network": "instagram", "username": "charles.ouimet.geek", "url": "https://www.instagram.com/charles.ouimet.geek/" },
     ]
   },
   "interests": [
