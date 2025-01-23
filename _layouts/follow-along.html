@@ -1,0 +1,33 @@
+---
+layout: home
+---
+
+<div class="container py-4">
+  <h1 class="display-4">{{ page.title }}</h1>
+
+  {% for label in page.labels %}
+    <span style="background-color: var(--tf-pill-bg)" class="badge rounded-pill">{{ label }}</span>
+  {% endfor %}
+  </p>
+
+  {{ content }}
+
+  {% if page.instagram %}
+  <p>
+    <a href="{{page.instagram}}" target="_blank">
+      <svg class="tf-social">
+        <use xlink:href="/img/bootstrap-icons.svg#instagram"/>
+      </svg> post
+    </a> sharing my work.
+  </p>
+  {% endif %}
+
+  <p class="card-text">{{ include.page.content | markdownify }}</p>
+
+  {% if page.credits %}
+    {% include follow-alongs/{{page.credits}}-credits.html %}
+  {% endif %}
+
+</div>
+
+<p class="text-center pt-4"><a href="{{ site.baseurl}}/follow-alongs/">See all {{ follow-along_pages.size }} follow-alongs</a></p>

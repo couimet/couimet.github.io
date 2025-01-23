@@ -1,0 +1,37 @@
+<div class="col-md-6 col-lg-4">
+  <div class="card h-100">
+    <div class="card-body">
+      <h5 class="card-title"><a class="nav-link" href="{{ site.baseurl}}{{ include.page.url }}">{{ include.page.title }}</a></h5>
+      <p>
+        {% for label in include.page.labels %}
+        <span style="background-color: var(--tf-pill-bg)" class="badge rounded-pill">{{ label }}</span>
+        {% endfor %}
+      </p>
+      
+      {% if page.instagram %}
+      <p>
+        <a href="{{page.instagram}}" target="_blank">
+          <svg class="tf-social">
+            <use xlink:href="/img/bootstrap-icons.svg#instagram"/>
+          </svg> post
+        </a> sharing my work.
+      </p>
+      {% endif %}
+      
+      <p class="card-text">{{ include.page.content | markdownify }}</p>
+
+      {% if page.credits %}
+        {% include follow-alongs/{{page.credits}}-credits.html %}
+      {% endif %}
+    </div>
+    <div class="card-footer">
+      <div class="text-center">
+        {% if page.repourl %}
+          <a href="{{ page.repourl }}" class="btn btn-outline-dark" target="_blank">My repo</a>
+        {% else %}
+          <a href="{{ site.baseurl}}{{ include.page.url }}" class="btn btn-outline-dark">Read More</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

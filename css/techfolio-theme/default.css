@@ -13,6 +13,7 @@
   --tf-page-bg-color: var(--bs-white);
   --tf-footer-bg-color: var(--bs-gray-200);
   --tf-projects-bg-color: var(--bs-gray-100);
+  --tf-follow-alongs-bg-color: var(--bs-gray-100);
 }
 
 /* Format social media icons */

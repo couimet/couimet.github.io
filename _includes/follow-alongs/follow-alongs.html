@@ -1,0 +1,34 @@
+<div style="background-color: var(--tf-follow-alongs-bg-color)" class="bg-gradient py-3" id="follow-alongs">
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <h1 class="display-4 text-start">Follow-alongs</h1>
+        <div>
+          <p>
+            Follow-alongs are tutorials I completed, with commits added at key milestones throughout the process.
+          </p>
+          <p>
+            These forks are designed to help others easily pick up from important points in the tutorial, providing the same code as the original creator. This allows them to continue building without starting from scratch.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      {% assign follow-along_pages = site.pages | where: "type", "follow-along" | sort: "sequence" | reverse %}
+      {% for page in follow-along_pages %}
+        {% unless page.draft %}
+          {% include follow-alongs/follow-along-card.html page=page %}
+        {% endunless %}
+        {% if forloop.index == include.limit %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if follow-along_pages.size > include.limit %}
+      <p class="text-center pt-4"><a href="{{ site.baseurl}}/follow-alongs/">See all {{ follow-along_pages.size }} follow-alongs</a></p>
+    {% endif %}
+
+  </div>
+</div>
