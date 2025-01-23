@@ -1,6 +1,6 @@
 ---
 layout: project
-type: project
+type: DISABLED_project
 image: img/cotton/cotton-square.png
 title: "Cotton"
 date: 2014

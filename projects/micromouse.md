@@ -1,6 +1,6 @@
 ---
 layout: project
-type: project
+type: DISABLED_project
 image: img/micromouse/micromouse-square.jpg
 title: "Micromouse"
 date: 2015

@@ -1,6 +1,6 @@
 ---
 layout: project
-type: project
+type: DISABLED_project
 image: img/vacay/vacay-square.png
 title: "Vacay"
 date: 2015
