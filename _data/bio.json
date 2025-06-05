@@ -15,8 +15,8 @@
     ],
     "location": { "address": "", "postalCode": "", "city": "Montréal", "countryCode": "CA", "region": "Québec" },
     "profiles": [
-      { "network": "github", "username": "couimet", "url": "http://github.com/couimet" },
-      { "network": "linkedin", "username": "charlesouimet", "url": "http://linkedin.com/in/charlesouimet" },
+      { "network": "github", "username": "couimet", "url": "https://github.com/couimet" },
+      { "network": "linkedin", "username": "charlesouimet", "url": "https://linkedin.com/in/charlesouimet" },
       { "network": "telegram", "username": "@couimet", "url": "https://t.me/couimet" },
       { "network": "discord", "username": "couimet", "url": "https://discord.com/users/couimet" },
       { "network": "twitter", "username": "charlesouimet", "url": "https://x.com/charlesouimet/" },
