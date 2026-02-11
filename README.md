@@ -9,6 +9,8 @@ See more details at https://techfolios.github.io/docs/user-guide/local-developme
 Install dependencies:
 
 ```bash
+rbenv install 3.1.4
+rbenv local 3.1.4
 bundle install
 ```
 
