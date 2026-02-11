@@ -3,16 +3,39 @@ layout: home
 ---
 
 <div class="container py-4">
-  <h1 class="display-4">{{ page.title }}</h1>
+  <div class="position-relative">
+    {% if page.logourl or page.iconurl %}
+      {% assign header_logo = page.logourl | default: page.iconurl %}
+      <img
+        src="{{ header_logo }}"
+        alt="{{ page.title }} logo"
+        class="float-end ms-3 mb-2 d-none d-sm-block"
+        style="height: 96px; width: auto; object-fit: contain;"
+      />
+      {% if page.iconurl %}
+        <img
+          src="{{ page.iconurl }}"
+          alt="{{ page.title }} logo"
+          class="float-end ms-3 mb-2 d-sm-none"
+          style="height: 48px; width: auto; object-fit: contain;"
+        />
+      {% endif %}
+    {% endif %}
 
-  {% for label in page.labels %}
-    <span style="background-color: var(--tf-pill-bg)" class="badge rounded-pill">{{ label }}</span>
-  {% endfor %}
-  </p>
+    <h1 class="display-4 mb-2">{{ page.title }}</h1>
 
-  <p><a href="{{ page.repourl }}" target="_blank">Visit my repo</a></p>
+    <p class="mb-2">
+      {% for label in page.labels %}
+        <span style="background-color: var(--tf-pill-bg)" class="badge rounded-pill">{{ label }}</span>
+      {% endfor %}
+    </p>
 
-  {{ content }}
+    <p class="mb-0"><a href="{{ page.repourl }}" target="_blank">Visit my repo</a></p>
+  </div>
+
+  <div class="mt-3">
+    {{ content }}
+  </div>
 </div>
 
 <p class="text-center pt-4"><a href="{{ site.baseurl}}/projects/">See all projects</a></p>

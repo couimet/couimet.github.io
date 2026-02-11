@@ -1,14 +1,25 @@
 <div class="col-md-6 col-lg-4">
   <div class="card h-100">
     <div class="card-body">
-      <h5 class="card-title"><a class="nav-link" href="{{ site.baseurl}}{{ include.page.url }}">{{ include.page.title }}</a></h5>
-      <p>
-        {% for label in include.page.labels %}
-        <span style="background-color: var(--tf-pill-bg)" class="badge rounded-pill">{{ label }}</span>
-        {% endfor %}
-      </p>
+      <div class="d-flex justify-content-between align-items-stretch">
+        <div class="me-2">
+          <h5 class="card-title mb-1">
+            <a class="nav-link" href="{{ site.baseurl}}{{ include.page.url }}">{{ include.page.title }}</a>
+          </h5>
+          <p class="mb-0">
+            {% for label in include.page.labels %}
+            <span style="background-color: var(--tf-pill-bg)" class="badge rounded-pill">{{ label }}</span>
+            {% endfor %}
+          </p>
+        </div>
+        {% if include.page.iconurl %}
+          <div class="d-flex align-items-center ms-2">
+            <img src="{{ include.page.iconurl }}" alt="{{ include.page.title }} logo" style="height: 64px; width: auto; object-fit: contain;" />
+          </div>
+        {% endif %}
+      </div>
 
-      <p class="card-text">{{ include.page.summary }}</p>
+      <p class="card-text mt-2">{{ include.page.summary }}</p>
     </div>
 
     <div class="card-footer">
