@@ -18,7 +18,13 @@
       </p>
       {% endif %}
       
-      <p class="card-text">{{ include.page.content | markdownify }}</p>
+      <p class="card-text">
+        {% if include.page.summary %}
+          {{ include.page.summary }}
+        {% else %}
+          {{ include.page.content | markdownify }}
+        {% endif %}
+      </p>
 
       {% if page.credits %}
         {% include follow-alongs/{{page.credits}}-credits.html %}
