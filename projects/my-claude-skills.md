@@ -19,4 +19,4 @@ Each skill focuses on one part of the developer workflow (planning, execution, q
 If you want to see these skills in action, start with:
 
 - The <a href="https://github.com/couimet/my-claude-skills#see-it-in-action" target="_blank"><code>See It In Action</code> section of the README</a>, which walks through the full issue lifecycle these skills are built around
-- The <a href="{{ site.baseurl }}/follow-alongs/my-claude-skills-issues-10.html">issues-10 follow-along</a> on this site, which mirrors that demo in a more narrative, portfolio-friendly format
+- The <a href="{{ site.baseurl }}/follow-alongs/my-claude-skills-issues-10.html">From Blank Issue to PR — With the Thinking Exposed</a> follow-along on this site, which mirrors that demo in a more narrative, portfolio-friendly format
