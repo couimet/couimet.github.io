@@ -12,4 +12,4 @@ labels:
   - dapp
 ---
 
-<p>This repository was forked from <a href="https://github.com/dappuniversity/millow" target="_blank">dappuniversity/millow</a>.</p>
+<p>This repository was forked from <a href="https://github.com/dappuniversity/millow" target="_blank" rel="noopener noreferrer">dappuniversity/millow</a>.</p>

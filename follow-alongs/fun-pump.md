@@ -12,4 +12,4 @@ labels:
   - dapp
 ---
 
-<p>This repository was forked from <a href="https://github.com/dappuniversity/fun-pump" target="_blank">dappuniversity/fun-pump</a>.</p>
+<p>This repository was forked from <a href="https://github.com/dappuniversity/fun-pump" target="_blank" rel="noopener noreferrer">dappuniversity/fun-pump</a>.</p>
