@@ -10,7 +10,7 @@
       
       {% if page.instagram %}
       <p>
-        <a href="{{page.instagram}}" target="_blank">
+        <a href="{{page.instagram}}" target="_blank" rel="noopener noreferrer">
           <svg class="tf-social">
             <use xlink:href="/img/bootstrap-icons.svg#instagram"/>
           </svg> post
@@ -33,7 +33,7 @@
     <div class="card-footer">
       <div class="text-center">
         {% if page.repourl %}
-          <a href="{{ page.repourl }}" class="btn btn-outline-dark" target="_blank">My repo</a>
+          <a href="{{ page.repourl }}" class="btn btn-outline-dark" target="_blank" rel="noopener noreferrer">My repo</a>
         {% else %}
           <a href="{{ site.baseurl}}{{ include.page.url }}" class="btn btn-outline-dark">Read More</a>
         {% endif %}

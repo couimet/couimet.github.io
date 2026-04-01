@@ -13,7 +13,7 @@ labels:
 ---
 
 <p>
-  If you came here from my <a href="https://dev.to/couimet/from-vide-coding-to-supercharged-vibe-guiding-6nm" target="_blank">From Vide Coding to Supercharged Vibe Guiding</a> post, this is the part where we stop talking about the idea—and actually execute it.
+  If you came here from my <a href="https://dev.to/couimet/from-vide-coding-to-supercharged-vibe-guiding-6nm" target="_blank" rel="noopener noreferrer">From Vide Coding to Supercharged Vibe Guiding</a> post, this is the part where we stop talking about the idea—and actually execute it.
 </p>
 
 <p>
@@ -25,5 +25,5 @@ labels:
 </p>
 
 <p>
-  You can walk through the full timeline here: <a href="https://couimet.github.io/my-claude-skills/issues-10/index.html" target="_blank">View the full issue → PR timeline</a>.
+  You can walk through the full timeline here: <a href="https://couimet.github.io/my-claude-skills/issues-10/index.html" target="_blank" rel="noopener noreferrer">View the full issue → PR timeline</a>.
 </p>
