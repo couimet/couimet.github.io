@@ -2,5 +2,7 @@
 layout: default
 ---
 {% include header.html %}
-{{ content }}
+<main class="flex-grow-1{% if page.url == '/' %} home-sections{% endif %}">
+  {{ content }}
+</main>
 {% include footer.html %}
