@@ -16,7 +16,6 @@
   --tf-articles-border-color: rgba(0, 0, 0, 0.08);
   --tf-articles-row-even-bg-color: rgba(0, 0, 0, 0.02);
   --tf-articles-row-hover-bg-color: rgba(0, 0, 0, 0.06);
-  --tf-changelog-bg-color: var(--bs-gray-100);
 }
 
 /* Format social media icons */
