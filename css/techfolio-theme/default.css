@@ -12,7 +12,6 @@
   --tf-icon-hover: var(--bs-gray-500);
   --tf-page-bg-color: var(--bs-white);
   --tf-footer-bg-color: var(--bs-gray-200);
-  --tf-projects-bg-color: var(--bs-gray-100);
   --tf-articles-border-color: rgba(0, 0, 0, 0.08);
   --tf-articles-row-even-bg-color: rgba(0, 0, 0, 0.02);
   --tf-articles-row-hover-bg-color: rgba(0, 0, 0, 0.06);
@@ -54,6 +53,15 @@ a {
 
 .long-summary-entry:not(:last-child) {
   margin-bottom: 1em !important;
+}
+
+/* Auto-alternate homepage sections so adding/removing sections needs no color tweaks. */
+.home-sections > .bg-gradient:nth-of-type(odd) {
+  background-color: var(--bs-white) !important;
+}
+
+.home-sections > .bg-gradient:nth-of-type(even) {
+  background-color: var(--bs-gray-100) !important;
 }
 
 .articles-scroll {
