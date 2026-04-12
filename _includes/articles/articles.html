@@ -1,0 +1,70 @@
+<div class="bg-gradient py-3" id="articles">
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <h1 class="display-4 text-start">
+          <a class="text-reset" href="{{ '/articles/' | prepend: site.baseurl }}">Articles</a>
+        </h1>
+      </div>
+    </div>
+
+    {% assign articles = site.data.articles %}
+    {% assign item_limit = include.limit | default: articles.size %}
+    {% assign full_height = include.full_height | default: false %}
+    {% assign utm_campaign = include.utm_campaign %}
+    {% if utm_campaign == nil %}
+      {% if page.url == '/' %}
+        {% assign utm_campaign = 'landing-articles-section' %}
+      {% elsif page.url == '/articles/' %}
+        {% assign utm_campaign = 'articles-page' %}
+      {% else %}
+        {% assign utm_campaign = 'articles-section' %}
+      {% endif %}
+    {% endif %}
+
+    <div class="articles-scroll{% if full_height %} articles-scroll-full{% endif %}">
+      {% for article in articles limit: item_limit %}
+        {% assign link_base = article.link | split: '#' | first %}
+        {% assign link_fragment = article.link | remove: link_base %}
+        {% assign utm_separator = '?' %}
+        {% if link_base contains '?' %}
+          {% assign utm_separator = '&' %}
+        {% endif %}
+        {% capture article_href %}{{ link_base }}{{ utm_separator }}utm_source=ouimet.info&utm_medium=referral&utm_campaign={{ utm_campaign | url_encode }}{{ link_fragment }}{% endcapture %}
+        <article class="article-item px-3 py-2" id="article-{{ article.anchor }}">
+          <p class="article-date mb-1">{{ article.date }}</p>
+          <a
+            class="article-link"
+            href="{{ article_href }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ article.title }}
+          </a>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if articles.size > item_limit %}
+      <p class="text-center pt-4"><a href="{{ site.baseurl}}/articles/">See all {{ articles.size }} articles</a></p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  (function () {
+    function revealAnchoredArticle() {
+      if (!window.location.hash) return;
+      var id = window.location.hash.slice(1);
+      if (!id || !id.startsWith("article-")) return;
+
+      var el = document.getElementById(id);
+      if (!el) return;
+
+      el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+    }
+
+    window.addEventListener("DOMContentLoaded", revealAnchoredArticle);
+    window.addEventListener("hashchange", revealAnchoredArticle);
+  })();
+</script>

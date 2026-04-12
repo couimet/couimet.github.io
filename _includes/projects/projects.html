@@ -1,8 +1,10 @@
-<div style="background-color: {{ include.bg-color | default: 'var(--bs-white)' }}" class="bg-gradient py-3" id="projects">
+<div class="bg-gradient py-3" id="projects">
   <div class="container">
     <div class="row mb-3">
       <div class="col-md-6">
-        <h1 class="display-4 text-start">Projects</h1>
+        <h1 class="display-4 text-start">
+          <a class="text-reset" href="{{ '/projects/' | prepend: site.baseurl }}">Projects</a>
+        </h1>
       </div>
     </div>
 

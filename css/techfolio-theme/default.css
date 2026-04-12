@@ -12,8 +12,9 @@
   --tf-icon-hover: var(--bs-gray-500);
   --tf-page-bg-color: var(--bs-white);
   --tf-footer-bg-color: var(--bs-gray-200);
-  --tf-projects-bg-color: var(--bs-gray-100);
-  --tf-changelog-bg-color: var(--bs-gray-100);
+  --tf-articles-border-color: rgba(0, 0, 0, 0.08);
+  --tf-articles-row-even-bg-color: rgba(0, 0, 0, 0.02);
+  --tf-articles-row-hover-bg-color: rgba(0, 0, 0, 0.06);
 }
 
 /* Format social media icons */
@@ -52,4 +53,56 @@ a {
 
 .long-summary-entry:not(:last-child) {
   margin-bottom: 1em !important;
+}
+
+/* Auto-alternate homepage sections so adding/removing sections needs no color tweaks. */
+.home-sections > .bg-gradient:nth-of-type(odd) {
+  background-color: var(--bs-white) !important;
+}
+
+.home-sections > .bg-gradient:nth-of-type(even) {
+  background-color: var(--bs-gray-100) !important;
+}
+
+.articles-scroll {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--tf-articles-border-color);
+  border-radius: 0.375rem;
+}
+
+.articles-scroll-full {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.article-item + .article-item {
+  border-top: 1px solid var(--tf-articles-border-color);
+}
+
+.article-item:nth-child(even) {
+  background-color: var(--tf-articles-row-even-bg-color);
+}
+
+.article-item:hover {
+  background-color: var(--tf-articles-row-hover-bg-color);
+}
+
+.article-date {
+  color: var(--bs-gray-600);
+  font-size: 0.85rem;
+}
+
+.article-link {
+  color: var(--bs-body-color);
+}
+
+.article-link:hover {
+  color: var(--bs-link-color);
+}
+
+@media (max-width: 767.98px) {
+  .articles-scroll {
+    max-height: 260px;
+  }
 }
