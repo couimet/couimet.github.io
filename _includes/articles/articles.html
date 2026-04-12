@@ -24,11 +24,13 @@
 
     <div class="articles-scroll{% if full_height %} articles-scroll-full{% endif %}">
       {% for article in articles limit: item_limit %}
+        {% assign link_base = article.link | split: '#' | first %}
+        {% assign link_fragment = article.link | remove: link_base %}
         {% assign utm_separator = '?' %}
-        {% if article.link contains '?' %}
+        {% if link_base contains '?' %}
           {% assign utm_separator = '&' %}
         {% endif %}
-        {% capture article_href %}{{ article.link }}{{ utm_separator }}utm_source=ouimet.info&utm_medium=referral&utm_campaign={{ utm_campaign }}{% endcapture %}
+        {% capture article_href %}{{ link_base }}{{ utm_separator }}utm_source=ouimet.info&utm_medium=referral&utm_campaign={{ utm_campaign | url_encode }}{{ link_fragment }}{% endcapture %}
         <article class="article-item px-3 py-2" id="article-{{ article.anchor }}">
           <p class="article-date mb-1">{{ article.date }}</p>
           <a
