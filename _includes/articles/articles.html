@@ -25,7 +25,7 @@
     <div class="articles-scroll{% if full_height %} articles-scroll-full{% endif %}">
       {% for article in articles limit: item_limit %}
         {% assign link_base = article.link | split: '#' | first %}
-        {% assign link_fragment = article.link | remove: link_base %}
+        {% assign link_fragment = article.link | remove_first: link_base %}
         {% assign utm_separator = '?' %}
         {% if link_base contains '?' %}
           {% assign utm_separator = '&' %}
