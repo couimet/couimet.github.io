@@ -32,7 +32,7 @@
         {% endif %}
         {% capture article_href %}{{ link_base }}{{ utm_separator }}utm_source=ouimet.info&utm_medium=referral&utm_campaign={{ utm_campaign | url_encode }}{{ link_fragment }}{% endcapture %}
         <article class="article-item px-3 py-2" id="article-{{ article.anchor }}">
-          <p class="article-date mb-1">{{ article.date }}</p>
+          <p class="article-date mb-1">{{ article.date }}<button class="article-share" aria-label="Copy link to this article" title="Copy link to this article" data-anchor="article-{{ article.anchor }}">🔗</button></p>
           <a
             class="article-link"
             href="{{ article_href }}"
@@ -61,10 +61,42 @@
       var el = document.getElementById(id);
       if (!el) return;
 
-      el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+      el.classList.remove("pulse");
+      void el.offsetWidth;
+      el.classList.add("pulse");
+      setTimeout(function () { el.classList.remove("pulse"); }, 6000);
+
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
-    window.addEventListener("DOMContentLoaded", revealAnchoredArticle);
+    function handleShareClick(e) {
+      var btn = e.target.closest(".article-share");
+      if (!btn) return;
+      e.stopPropagation();
+      var anchor = btn.getAttribute("data-anchor");
+      if (!anchor) return;
+      var url = window.location.origin + window.location.pathname + "#" + anchor;
+      navigator.clipboard.writeText(url).then(function () {
+        showShareToast(btn, "Copied");
+      }).catch(function () {
+        showShareToast(btn, "Copy failed");
+      });
+    }
+
+    function showShareToast(btn, text) {
+      var existing = btn.parentElement.querySelector(".article-share-toast");
+      if (existing) existing.remove();
+      var toast = document.createElement("span");
+      toast.className = "article-share-toast";
+      toast.textContent = text;
+      btn.insertAdjacentElement("afterend", toast);
+      setTimeout(function () { toast.remove(); }, 1500);
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      revealAnchoredArticle();
+      document.addEventListener("click", handleShareClick);
+    });
     window.addEventListener("hashchange", revealAnchoredArticle);
   })();
 </script>
