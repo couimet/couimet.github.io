@@ -124,6 +124,15 @@ a {
   opacity: 1;
 }
 
+@media (hover: none) {
+  .article-share {
+    opacity: 0.7;
+  }
+  .article-share:active {
+    opacity: 1;
+  }
+}
+
 .article-share-toast {
   display: inline-block;
   margin-left: 2px;

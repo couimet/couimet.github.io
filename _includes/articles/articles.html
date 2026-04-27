@@ -61,12 +61,12 @@
       var el = document.getElementById(id);
       if (!el) return;
 
+      var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       el.classList.remove("pulse");
       void el.offsetWidth;
       el.classList.add("pulse");
-      setTimeout(function () { el.classList.remove("pulse"); }, 6000);
+      setTimeout(function () { el.classList.remove("pulse"); }, prefersReduced ? 2000 : 6000);
 
-      var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "nearest" });
     }
 
