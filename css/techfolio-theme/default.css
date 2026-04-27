@@ -15,6 +15,9 @@
   --tf-articles-border-color: rgba(0, 0, 0, 0.08);
   --tf-articles-row-even-bg-color: rgba(0, 0, 0, 0.02);
   --tf-articles-row-hover-bg-color: rgba(0, 0, 0, 0.06);
+  --tf-articles-pulse-bg-color: rgba(13, 110, 253, 0.12);
+  --tf-articles-toast-bg-color: #0d6efd;
+  --tf-articles-toast-fg-color: #ffffff;
 }
 
 /* Format social media icons */
@@ -91,6 +94,73 @@ a {
 .article-date {
   color: var(--bs-gray-600);
   font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.article-share {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 1px 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+  border-radius: 3px;
+}
+
+.article-item:hover .article-share,
+.article-share:focus {
+  opacity: 0.7;
+}
+
+.article-share:hover {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .article-share {
+    opacity: 0.7;
+  }
+  .article-share:active {
+    opacity: 1;
+  }
+}
+
+.article-share-toast {
+  display: inline-block;
+  margin-left: 2px;
+  background: var(--tf-articles-toast-bg-color);
+  color: var(--tf-articles-toast-fg-color);
+  border: none;
+  border-radius: 4px;
+  padding: 1px 8px;
+  font-size: 0.7rem;
+  pointer-events: none;
+  animation: article-share-toast-fade 1.5s ease forwards;
+  vertical-align: middle;
+}
+
+@keyframes article-share-toast-fade {
+  0%   { opacity: 0; transform: translateX(4px); }
+  15%  { opacity: 1; transform: translateX(0); }
+  80%  { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(-2px); }
+}
+
+@keyframes article-pulse {
+  0%, 100% { background: transparent; }
+  50%      { background: var(--tf-articles-pulse-bg-color); }
+}
+
+.article-item.pulse {
+  animation: article-pulse 2s ease-in-out 3;
 }
 
 .article-link {
@@ -104,5 +174,15 @@ a {
 @media (max-width: 767.98px) {
   .articles-scroll {
     max-height: 260px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-item.pulse {
+    animation: none;
+    background: var(--tf-articles-pulse-bg-color);
+  }
+  .article-share-toast {
+    animation: none;
   }
 }
