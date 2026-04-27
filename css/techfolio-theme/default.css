@@ -16,6 +16,8 @@
   --tf-articles-row-even-bg-color: rgba(0, 0, 0, 0.02);
   --tf-articles-row-hover-bg-color: rgba(0, 0, 0, 0.06);
   --tf-articles-pulse-bg-color: rgba(13, 110, 253, 0.12);
+  --tf-articles-toast-bg-color: #0d6efd;
+  --tf-articles-toast-fg-color: #ffffff;
 }
 
 /* Format social media icons */
@@ -125,8 +127,8 @@ a {
 .article-share-toast {
   display: inline-block;
   margin-left: 2px;
-  background: #0d6efd;
-  color: #ffffff;
+  background: var(--tf-articles-toast-bg-color);
+  color: var(--tf-articles-toast-fg-color);
   border: none;
   border-radius: 4px;
   padding: 1px 8px;
@@ -163,5 +165,15 @@ a {
 @media (max-width: 767.98px) {
   .articles-scroll {
     max-height: 260px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-item.pulse {
+    animation: none;
+    background: var(--tf-articles-pulse-bg-color);
+  }
+  .article-share-toast {
+    animation: none;
   }
 }
