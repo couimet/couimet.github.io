@@ -6,3 +6,68 @@ layout: default
   {{ content }}
 </main>
 {% include footer.html %}
+{% if page.url == '/' %}
+<script>
+  (function () {
+    var sectionIds = ["about", "projects", "articles", "follow-alongs", "career-changelog"];
+    var sections = sectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    if (!sections.length) return;
+
+    var userHasScrolled = false;
+    var currentSectionHash = "";
+    var ticking = false;
+
+    function getActiveSection() {
+      // Active = last section whose top is above 20% of the viewport.
+      // Works for both short and tall sections; deterministic, no ties.
+      var triggerY = window.scrollY + window.innerHeight * 0.2;
+      var active = null;
+      for (var i = 0; i < sections.length; i++) {
+        if (sections[i].offsetTop <= triggerY) active = sections[i];
+      }
+      return active;
+    }
+
+    function updateHash() {
+      ticking = false;
+      if (!userHasScrolled) return;
+
+      var active = getActiveSection();
+
+      if (!active) {
+        if (window.location.hash) {
+          currentSectionHash = "";
+          history.replaceState(null, "", window.location.pathname);
+        }
+        return;
+      }
+
+      var id = active.id;
+      // Don't clobber an article-level hash when re-entering the articles section
+      if (id === "articles" && window.location.hash.startsWith("#article-")) return;
+
+      // "about" is the implicit top — keep the URL clean with no hash
+      if (id === "about") {
+        if (window.location.hash) {
+          currentSectionHash = "";
+          history.replaceState(null, "", window.location.pathname);
+        }
+        return;
+      }
+
+      if (id !== currentSectionHash) {
+        currentSectionHash = id;
+        history.replaceState(null, "", "#" + id);
+      }
+    }
+
+    window.addEventListener("scroll", function () {
+      if (!userHasScrolled) userHasScrolled = true;
+      if (!ticking) {
+        requestAnimationFrame(updateHash);
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+</script>
+{% endif %}
