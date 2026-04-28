@@ -16,10 +16,17 @@ BACKUP_FILE="$BACKUP_DIR/$(date +%Y%m%d-%H%M%S).tar.gz"
 
 mkdir -p "$BACKUP_DIR"
 
-echo "==> Backing up current site to $BACKUP_FILE"
-tar -czf "$BACKUP_FILE" -C "$HOME" ouimet_info
-echo "    Backup created. To roll back:"
-echo "    rm -rf $REMOTE_PATH && mkdir $REMOTE_PATH && tar -xzf $BACKUP_FILE -C $HOME"
+BACKUP_PARENT="$(dirname "$REMOTE_PATH")"
+BACKUP_NAME="$(basename "$REMOTE_PATH")"
+
+if [[ -d "$REMOTE_PATH" ]]; then
+  echo "==> Backing up current site to $BACKUP_FILE"
+  tar -czf "$BACKUP_FILE" -C "$BACKUP_PARENT" "$BACKUP_NAME"
+  echo "    Backup created. To roll back:"
+  echo "    rm -rf \"$REMOTE_PATH\" && tar -xzf \"$BACKUP_FILE\" -C \"$BACKUP_PARENT\""
+else
+  echo "==> No existing site at $REMOTE_PATH; skipping backup (first run)"
+fi
 echo ""
 
 echo "==> Mirroring couimet.github.io into $REMOTE_PATH"
