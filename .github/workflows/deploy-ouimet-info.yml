@@ -9,11 +9,16 @@
 #     ssh-copy-id -i ~/.ssh/ouimet_deploy.pub <your-ssh-user>@<your-ssh-host>
 #     cat ~/.ssh/ouimet_deploy   # copy this — it's the private key to paste into GitHub
 #
+#   Get the host fingerprint (run locally, no authentication needed):
+#     ssh-keyscan -t ed25519 <your-ssh-host> | ssh-keygen -lf - -E sha256
+#     Copy the SHA256:... portion (including the SHA256: prefix).
+#
 #   1. In GitHub → Settings → Secrets and variables → Actions, create these secrets:
-#        OUIMET_INFO_SSH_HOST        the SSH hostname your provider gave you
-#        OUIMET_INFO_SSH_USERNAME    your SSH login (same username you use in terminal)
-#        OUIMET_INFO_SSH_PRIVATE_KEY paste the private key generated above (entire file content)
-#        OUIMET_INFO_REMOTE_PATH     ~/ouimet_info
+#        OUIMET_INFO_SSH_HOST          the SSH hostname your provider gave you
+#        OUIMET_INFO_SSH_USERNAME      your SSH login (same username you use in terminal)
+#        OUIMET_INFO_SSH_PRIVATE_KEY   paste the private key generated above (entire file content)
+#        OUIMET_INFO_REMOTE_PATH       ~/ouimet_info
+#        OUIMET_INFO_SSH_FINGERPRINT   the SHA256:... value from ssh-keyscan above
 #   2. Replace the `on:` block below with:
 #        on:
 #          push:
@@ -40,6 +45,9 @@ on:
         description: 'Remote web root path'
         required: true
         default: '~/ouimet_info'
+      fingerprint:
+        description: 'SHA256 fingerprint of server host key — get it with: ssh-keyscan -t ed25519 <host> | ssh-keygen -lf - -E sha256'
+        required: true
 
 jobs:
   deploy:
@@ -65,9 +73,10 @@ jobs:
       - name: Backup existing site on server
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ inputs.host }}           # Option C: ${{ secrets.OUIMET_INFO_SSH_HOST }}
-          username: ${{ inputs.username }}   # Option C: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
-          password: ${{ inputs.password }}   # Option C: key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}  ← field name changes from 'password' to 'key'
+          host: ${{ inputs.host }}                  # Option C: ${{ secrets.OUIMET_INFO_SSH_HOST }}
+          username: ${{ inputs.username }}           # Option C: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
+          password: ${{ inputs.password }}           # Option C: key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}  ← field name changes from 'password' to 'key'
+          fingerprint: ${{ inputs.fingerprint }}     # Option C: ${{ secrets.OUIMET_INFO_SSH_FINGERPRINT }}
           script: |
             BACKUP="${{ inputs.remote_path }}-backup-$(date +%Y%m%d-%H%M%S)"
             cp -r "${{ inputs.remote_path }}" "$BACKUP"
@@ -78,9 +87,10 @@ jobs:
       - name: Upload built site
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ inputs.host }}           # Option C: ${{ secrets.OUIMET_INFO_SSH_HOST }}
-          username: ${{ inputs.username }}   # Option C: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
-          password: ${{ inputs.password }}   # Option C: key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}  ← field name changes from 'password' to 'key'
+          host: ${{ inputs.host }}                  # Option C: ${{ secrets.OUIMET_INFO_SSH_HOST }}
+          username: ${{ inputs.username }}           # Option C: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
+          password: ${{ inputs.password }}           # Option C: key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}  ← field name changes from 'password' to 'key'
+          fingerprint: ${{ inputs.fingerprint }}     # Option C: ${{ secrets.OUIMET_INFO_SSH_FINGERPRINT }}
           source: '_site/*'
-          target: ${{ inputs.remote_path }}  # Option C: ${{ secrets.OUIMET_INFO_REMOTE_PATH }}
+          target: ${{ inputs.remote_path }}         # Option C: ${{ secrets.OUIMET_INFO_REMOTE_PATH }}
           strip_components: 1
