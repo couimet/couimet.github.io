@@ -1,0 +1,86 @@
+# Option B: manually triggered deploy — credentials typed at trigger time, never stored.
+#
+# Migrating to Option C (automated on every push to main, SSH keypair auth):
+#   SSH keypairs are the best practice for CI/CD: no password to brute-force, easy to revoke,
+#   and the private key never leaves GitHub Secrets.
+#
+#   One-time server setup (run locally, then SSH into the server):
+#     ssh-keygen -t ed25519 -C "github-deploy-ouimet.info" -f ~/.ssh/ouimet_deploy
+#     ssh-copy-id -i ~/.ssh/ouimet_deploy.pub <your-ssh-user>@<your-ssh-host>
+#     cat ~/.ssh/ouimet_deploy   # copy this — it's the private key to paste into GitHub
+#
+#   1. In GitHub → Settings → Secrets and variables → Actions, create these secrets:
+#        OUIMET_INFO_SSH_HOST        the SSH hostname your provider gave you
+#        OUIMET_INFO_SSH_USERNAME    your SSH login (same username you use in terminal)
+#        OUIMET_INFO_SSH_PRIVATE_KEY paste the private key generated above (entire file content)
+#        OUIMET_INFO_REMOTE_PATH     ~/ouimet_info
+#   2. Replace the `on:` block below with:
+#        on:
+#          push:
+#            branches: ["main"]
+#          workflow_dispatch:
+#   3. Apply the inline # Option C substitutions shown on each credential line below.
+#      Note: `password:` becomes `key:` — it is a different field name, not just a value swap.
+#   4. Delete the "Mask password" step — secrets are masked automatically.
+name: Deploy to ouimet.info (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      host:
+        description: 'SSH host (e.g. ssh.your-provider.com)'
+        required: true
+      username:
+        description: 'SSH username'
+        required: true
+      password:
+        description: 'SSH password (masked in logs)'
+        required: true
+      remote_path:
+        description: 'Remote web root path'
+        required: true
+        default: '~/ouimet_info'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mask password  # Remove this step in Option C — secrets are masked automatically
+        run: echo "::add-mask::${{ inputs.password }}"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1.4'
+          bundler-cache: true
+
+      - name: Build Jekyll
+        run: bundle exec jekyll build --baseurl ""
+        env:
+          JEKYLL_ENV: production
+
+      - name: Backup existing site on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ inputs.host }}           # Option C: ${{ secrets.OUIMET_INFO_SSH_HOST }}
+          username: ${{ inputs.username }}   # Option C: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
+          password: ${{ inputs.password }}   # Option C: key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}  ← field name changes from 'password' to 'key'
+          script: |
+            BACKUP="${{ inputs.remote_path }}-backup-$(date +%Y%m%d-%H%M%S)"
+            cp -r "${{ inputs.remote_path }}" "$BACKUP"
+            echo "Backup created at $BACKUP"
+
+      # scp uploads only files present in _site/. It does not delete anything
+      # on the server, other files and folders are left untouched.
+      - name: Upload built site
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ inputs.host }}           # Option C: ${{ secrets.OUIMET_INFO_SSH_HOST }}
+          username: ${{ inputs.username }}   # Option C: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
+          password: ${{ inputs.password }}   # Option C: key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}  ← field name changes from 'password' to 'key'
+          source: '_site/*'
+          target: ${{ inputs.remote_path }}  # Option C: ${{ secrets.OUIMET_INFO_REMOTE_PATH }}
+          strip_components: 1
