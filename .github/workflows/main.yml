@@ -15,8 +15,9 @@ on:
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# contents: write is required to publish the site.zip GitHub Release used by sync-ouimet-info.sh
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -47,6 +48,19 @@ jobs:
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
+      - name: Package _site as zip for ouimet.info sync
+        # zip from inside _site so paths are root-relative (not _site/foo) when extracted
+        run: cd _site && zip -r ../site.zip .
+      - name: Publish site.zip as GitHub Release
+        # Overwrites the 'latest' release on every push so the download URL stays stable:
+        # https://github.com/couimet/couimet.github.io/releases/latest/download/site.zip
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest site build
+          body: "Auto-published on every push to main. Used by scripts/sync-ouimet-info.sh to sync ouimet.info."
+          files: site.zip
+          make_latest: true
       - name: Upload artifact
         # Automatically uploads an artifact from the './_site' directory by default
         uses: actions/upload-pages-artifact@v3
