@@ -78,9 +78,17 @@ jobs:
           password: ${{ inputs.password }}           # Option C: key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}  ← field name changes from 'password' to 'key'
           fingerprint: ${{ inputs.fingerprint }}     # Option C: ${{ secrets.OUIMET_INFO_SSH_FINGERPRINT }}
           script: |
-            BACKUP="${{ inputs.remote_path }}-backup-$(date +%Y%m%d-%H%M%S)"
-            cp -r "${{ inputs.remote_path }}" "$BACKUP"
-            echo "Backup created at $BACKUP"
+            BACKUP_DIR="$HOME/ouimet_info_backups"
+            BACKUP_FILE="$BACKUP_DIR/$(date +%Y%m%d-%H%M%S).tar.gz"
+            BACKUP_PARENT="$(dirname "${{ inputs.remote_path }}")"
+            BACKUP_NAME="$(basename "${{ inputs.remote_path }}")"
+            mkdir -p "$BACKUP_DIR"
+            if [[ -d "${{ inputs.remote_path }}" ]]; then
+              tar -czf "$BACKUP_FILE" -C "$BACKUP_PARENT" "$BACKUP_NAME"
+              echo "Backup created at $BACKUP_FILE"
+            else
+              echo "No existing site; skipping backup (first run)"
+            fi
 
       # scp uploads only files present in _site/. It does not delete anything
       # on the server, other files and folders are left untouched.
