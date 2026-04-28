@@ -11,6 +11,7 @@ layout: default
   (function () {
     var sectionIds = ["about", "projects", "articles", "follow-alongs", "career-changelog"];
     var sections = sectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    sections.sort(function (a, b) { return a.offsetTop - b.offsetTop; });
     if (!sections.length) return;
 
     var userHasScrolled = false;

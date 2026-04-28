@@ -102,7 +102,10 @@
     }
 
     var articleUserScrolled = false;
-    window.addEventListener("scroll", function () { articleUserScrolled = true; }, { once: true, passive: true });
+    function markUserScrolled() { articleUserScrolled = true; }
+    ["pointerdown", "wheel", "keydown", "touchstart"].forEach(function (type) {
+      window.addEventListener(type, markUserScrolled, { once: true, passive: true });
+    });
 
     function initArticleScrollSpy() {
       var container = document.querySelector(".articles-scroll-full");
@@ -116,7 +119,8 @@
         var best = null;
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            if (!best || entry.intersectionRatio > best.intersectionRatio) {
+            var top = entry.boundingClientRect.top;
+            if (top >= 0 && (!best || top < best.boundingClientRect.top)) {
               best = entry;
             }
           }
