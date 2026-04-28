@@ -101,9 +101,45 @@
       setTimeout(function () { toast.remove(); }, 1500);
     }
 
+    var articleUserScrolled = false;
+    function markUserScrolled() { articleUserScrolled = true; }
+    ["pointerdown", "wheel", "keydown", "touchstart"].forEach(function (type) {
+      window.addEventListener(type, markUserScrolled, { once: true, passive: true });
+    });
+
+    function initArticleScrollSpy() {
+      var container = document.querySelector(".articles-scroll-full");
+      if (!container) return;
+
+      var items = container.querySelectorAll(".article-item[id]");
+      if (!items.length || !("IntersectionObserver" in window)) return;
+
+      var currentArticleHash = "";
+      var spy = new IntersectionObserver(function (entries) {
+        var best = null;
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var top = entry.boundingClientRect.top;
+            if (top >= 0 && (!best || top < best.boundingClientRect.top)) {
+              best = entry;
+            }
+          }
+        });
+        if (best && best.target.id && best.target.id !== currentArticleHash) {
+          currentArticleHash = best.target.id;
+          if (articleUserScrolled) {
+            history.replaceState(null, "", "#" + best.target.id);
+          }
+        }
+      }, { threshold: [0.3, 0.5, 0.7], rootMargin: "-10% 0px -60% 0px" });
+
+      items.forEach(function (item) { spy.observe(item); });
+    }
+
     window.addEventListener("DOMContentLoaded", function () {
       revealAnchoredArticle();
       document.addEventListener("click", handleShareClick);
+      initArticleScrollSpy();
     });
     window.addEventListener("hashchange", revealAnchoredArticle);
   })();
