@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run this script ON your server after SSH-ing in.
 # It mirrors the live couimet.github.io site to your ouimet.info web root,
-# creating a timestamped backup first so you can roll back if needed.
+# creating a compressed backup first so you can roll back if needed.
 #
 # To download this script directly on the server:
 #   wget -O sync-ouimet-info.sh https://raw.githubusercontent.com/couimet/couimet.github.io/main/scripts/sync-ouimet-info.sh && chmod +x sync-ouimet-info.sh
@@ -11,12 +11,15 @@
 set -euo pipefail
 
 REMOTE_PATH="$HOME/ouimet_info"
-BACKUP_PATH="${REMOTE_PATH}-backup-$(date +%Y%m%d-%H%M%S)"
+BACKUP_DIR="$HOME/ouimet_info_backups"
+BACKUP_FILE="$BACKUP_DIR/$(date +%Y%m%d-%H%M%S).tar.gz"
 
-echo "==> Backing up current site to $BACKUP_PATH"
-cp -r "$REMOTE_PATH" "$BACKUP_PATH"
+mkdir -p "$BACKUP_DIR"
+
+echo "==> Backing up current site to $BACKUP_FILE"
+tar -czf "$BACKUP_FILE" -C "$HOME" ouimet_info
 echo "    Backup created. To roll back:"
-echo "    rm -rf $REMOTE_PATH && mv $BACKUP_PATH $REMOTE_PATH"
+echo "    rm -rf $REMOTE_PATH && mkdir $REMOTE_PATH && tar -xzf $BACKUP_FILE -C $HOME"
 echo ""
 
 echo "==> Mirroring couimet.github.io into $REMOTE_PATH"
@@ -32,4 +35,4 @@ wget \
 
 echo ""
 echo "==> Done. ouimet.info web root is now up to date."
-echo "    Backup kept at: $BACKUP_PATH"
+echo "    Backup kept at: $BACKUP_FILE"
