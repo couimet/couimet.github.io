@@ -14,10 +14,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-# contents: write is required to publish the site.zip GitHub Release used by sync-ouimet-info.sh
+# Workflow-level permissions (least privilege — contents: write is scoped to the build job only)
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -31,6 +30,10 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # required to publish the site.zip GitHub Release used by sync-ouimet-info.sh
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -54,7 +57,8 @@ jobs:
       - name: Publish site.zip as GitHub Release
         # Overwrites the 'latest' release on every push so the download URL stays stable:
         # https://github.com/couimet/couimet.github.io/releases/latest/download/site.zip
-        uses: softprops/action-gh-release@v2
+        # Pinned to commit SHA for supply-chain safety (v2 = 3bb12739...)
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65  # v2
         with:
           tag_name: latest
           name: Latest site build
