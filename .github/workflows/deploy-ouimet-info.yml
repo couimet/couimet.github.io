@@ -57,7 +57,7 @@ jobs:
         run: echo "::add-mask::${{ inputs.password }}"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
