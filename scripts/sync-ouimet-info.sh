@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
 # Run this script ON your server after SSH-ing in.
-# It mirrors the live couimet.github.io site to your ouimet.info web root,
-# creating a compressed backup first so you can roll back if needed.
+# It downloads the latest site.zip from the GitHub Release for this repo and
+# syncs it into the ouimet.info web root, creating a compressed backup first.
+# Requires: wget, unzip, rsync (all confirmed available on the server).
+# Files explicitly excluded from sync (charles/, sarah/, .htaccess) are preserved.
+# Files removed from the Jekyll build are removed from the server (rsync --delete).
 #
 # To download this script directly on the server:
 #   wget -O sync-ouimet-info.sh https://raw.githubusercontent.com/couimet/couimet.github.io/main/scripts/sync-ouimet-info.sh && chmod +x sync-ouimet-info.sh
-#
-# Safe for existing server-only directories: wget only downloads files from the
-# source and never deletes anything. Other files and folders are left untouched.
 set -euo pipefail
 
 REMOTE_PATH="$HOME/ouimet_info"
 BACKUP_DIR="$HOME/ouimet_info_backups"
 BACKUP_FILE="$BACKUP_DIR/$(date +%Y%m%d-%H%M%S).tar.gz"
+ZIP_TMP="/tmp/ouimet_info_site.zip"
+STAGING_DIR="$(mktemp -d)"
+RELEASE_URL="https://github.com/couimet/couimet.github.io/releases/latest/download/site.zip"
+
+trap 'rm -f "$ZIP_TMP"; rm -rf "$STAGING_DIR"' EXIT
 
 mkdir -p "$BACKUP_DIR"
 
@@ -26,19 +31,22 @@ if [[ -d "$REMOTE_PATH" ]]; then
   echo "    rm -rf \"$REMOTE_PATH\" && tar -xzf \"$BACKUP_FILE\" -C \"$BACKUP_PARENT\""
 else
   echo "==> No existing site at $REMOTE_PATH; skipping backup (first run)"
+  mkdir -p "$REMOTE_PATH"
 fi
 echo ""
 
-echo "==> Mirroring couimet.github.io into $REMOTE_PATH"
-wget \
-  --mirror \
-  --page-requisites \
-  --no-parent \
-  --no-host-directories \
-  --directory-prefix="$REMOTE_PATH" \
-  --quiet \
-  --show-progress \
-  https://couimet.github.io/
+echo "==> Downloading latest site build"
+wget -q --show-progress -O "$ZIP_TMP" "$RELEASE_URL"
+
+echo "==> Extracting into staging directory"
+unzip -q "$ZIP_TMP" -d "$STAGING_DIR"
+
+echo "==> Syncing into $REMOTE_PATH (files removed from the build will be deleted)"
+rsync -a --delete \
+  --exclude 'charles/' \
+  --exclude 'sarah/' \
+  --exclude '.htaccess' \
+  "$STAGING_DIR"/ "$REMOTE_PATH"/
 
 echo ""
 echo "==> Done. ouimet.info web root is now up to date."
