@@ -40,6 +40,7 @@ wget -q --show-progress -O "$ZIP_TMP" "$RELEASE_URL"
 
 echo "==> Extracting into staging directory"
 unzip -q "$ZIP_TMP" -d "$STAGING_DIR"
+chmod -R a+rX "$STAGING_DIR"
 
 echo "==> Syncing into $REMOTE_PATH (files removed from the build will be deleted)"
 rsync -a --delete \
@@ -47,6 +48,7 @@ rsync -a --delete \
   --exclude 'sarah/' \
   --exclude '.htaccess' \
   "$STAGING_DIR"/ "$REMOTE_PATH"/
+chmod o+rx "$REMOTE_PATH"
 
 echo ""
 echo "==> Done. ouimet.info web root is now up to date."
