@@ -25,7 +25,6 @@
       <h3 id="changelog-8-0-0-added">Added</h3>
       <ul>
         <li>Member of <a href="https://shop.app/" target="_blank" rel="noopener noreferrer">shop.app</a> Buyer Acquisition (growth) team, focused on the <a href="https://help.shop.app/en/shop/shop-cash" target="_blank" rel="noopener noreferrer">Shop Cash</a> domain.</li>
-        <li id="changelog-8-0-0-added-ruby">Use of <a href="https://www.ruby-lang.org/" target="_blank" rel="noopener noreferrer">Ruby</a>; ramped up quickly through <a href="https://pragmaticstudio.com/courses/ruby" target="_blank" rel="noopener noreferrer">The Pragmatic Studio</a>'s Ruby Programming course.</li>
         <li>First open source contribution to the <a href="https://rubygems.org/gems/smart_todo/versions/1.11.0" target="_blank" rel="noopener noreferrer">smart_todo</a> gem, adding support for a <code>context</code> attribute referencing GitHub issues (see <a href="https://my.diffend.io/gems/smart_todo/1.10.0/1.11.0" target="_blank" rel="noopener noreferrer">diff</a>).</li>
         <li>Contribution to the transition of the shop.app ecosystem to <a href="https://www.yugabyte.com/" target="_blank" rel="noopener noreferrer">YugabyteDB</a>, including ownership of migration for one of the highest QPS tables (top 20).</li>
         <li>Technical design and implementation of an affiliate payout program in partnership with <a href="https://impact.com/" target="_blank" rel="noopener noreferrer">impact.com</a>.</li>
@@ -34,9 +33,10 @@
             <li>Creation of <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener noreferrer">Claude Commands</a> to automate repetitive tasks.</li>
             <li>Development of <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener noreferrer">Claude Skills</a> to encode domain-specific knowledge.</li>
             <li>Development of a Claude skill for ATC (Air Traffic Controller) support rotation, leveraging multiple <a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noopener noreferrer">Model Context Protocol (MCP)</a> integrations to collect data and guide decisions based on team runbooks.</li>
-            <li>Motivated the creation of <a href="https://github.com/couimet/rangeLink/tree/main/packages/rangelink-vscode-extension#readme" target="_blank" rel="noopener noreferrer">RangeLink</a> and <a href="https://github.com/couimet/my-claude-skills" target="_blank" rel="noopener noreferrer">my-claude-skills</a>.</li>
+            <li>Motivated the creation of <a href="https://ouimet.info/projects/rangelink-extension.html" target="_blank" rel="noopener noreferrer">RangeLink</a> and <a href="https://ouimet.info/projects/my-claude-skills.html" target="_blank" rel="noopener noreferrer">my-claude-skills</a>.</li>
           </ul>
         </li>
+        <li id="changelog-8-0-0-added-ruby">Use of <a href="https://www.ruby-lang.org/" target="_blank" rel="noopener noreferrer">Ruby</a>; ramped up quickly through <a href="https://pragmaticstudio.com/courses/ruby" target="_blank" rel="noopener noreferrer">The Pragmatic Studio</a>'s Ruby Programming course.</li>
         <li>Use of <a href="https://rubyonrails.org/" target="_blank" rel="noopener noreferrer">Ruby on Rails</a> and related ecosystem:
           <ul>
             <li><a href="https://guides.rubyonrails.org/active_record_basics.html" target="_blank" rel="noopener noreferrer">ActiveRecord</a></li>
@@ -77,6 +77,10 @@
         <li>Migration of a GitHub repository that contained a single <code>npm</code> package to a monorepo with multiple packages using <a href="https://turborepo.com/" target="_blank" rel="noopener noreferrer">Turborepo</a> and <a href="https://github.com/changesets/changesets" target="_blank" rel="noopener noreferrer">changeset</a>.</li>
         <li>Centralized <a href="https://github.com/features/actions" target="_blank" rel="noopener noreferrer">GitHub Actions</a> repository to reduce duplication across CI/CD workflows and improve maintainability.</li>
         <li>Structured logging across services, enabling efficient log filtering and analysis via <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html" target="_blank" rel="noopener noreferrer">AWS CloudWatch Log Insights</a>.</li>
+        <li>Use of <a href="https://developer.hashicorp.com/terraform" target="_blank" rel="noopener noreferrer">Terraform</a>.</li>
+        <li>Use of <a href="https://github.com/features/actions" target="_blank" rel="noopener noreferrer">GitHub Actions</a>.</li>
+        <li>Use of Docker <a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/" target="_blank" rel="noopener noreferrer">image layers</a> to provide seed data to dev and test environments.</li>
+        <li>Use of <a href="https://bullmq.io/" target="_blank" rel="noopener noreferrer">BullMQ</a>.</li>
       </ul>
       <h3 id="changelog-7-0-0-deprecated">Deprecated</h3>
       <ul>
@@ -109,17 +113,23 @@
       <h2 id="changelog-6-0-0">6.0.0 - Senior Developer @ Deliverr (2021 to 2022)</h2>
       <h3 id="changelog-6-0-0-added">Added</h3>
       <ul>
-        <li>Use of <a href="https://tsoa-community.github.io/docs/" target="_blank" rel="noopener noreferrer">TSOA</a>; shout-out to <a href="https://www.linkedin.com/in/galtidhar/" target="_blank" rel="noopener noreferrer">Gal Tidhar</a>.</li>
-        <li>Use of <a href="https://maxwells-daemon.io/" target="_blank" rel="noopener noreferrer">Maxwell</a> as our <a href="https://en.wikipedia.org/wiki/Change_data_capture" target="_blank" rel="noopener noreferrer">change data capture (CDC)</a> solution.</li>
         <li>Implementation of the <a href="https://microservices.io/patterns/data/transactional-outbox.html" target="_blank" rel="noopener noreferrer">transactional outbox pattern</a> in a brand new service and refactored an already-existing service to use this pattern.</li>
         <li>Definition of the original specification for integration events in our distributed ecosystem, ensuring a robust foundation for inter-service communication.</li>
         <li>Many contributions to our private packages in the organization's NPM repository; improving developers' experience across our ecosystem.</li>
         <li>A few small Slack communities/sub-groups focusing on domain-driven design, event-driven architecture, serverless technologies, observability, etc.</li>
         <li>Knowledge in the fulfillment and warehousing industry.</li>
+        <li>Use of <a href="https://tsoa-community.github.io/docs/" target="_blank" rel="noopener noreferrer">TSOA</a>; shout-out to <a href="https://www.linkedin.com/in/galtidhar/" target="_blank" rel="noopener noreferrer">Gal Tidhar</a>.</li>
+        <li>Use of <a href="https://maxwells-daemon.io/" target="_blank" rel="noopener noreferrer">Maxwell</a> as our <a href="https://en.wikipedia.org/wiki/Change_data_capture" target="_blank" rel="noopener noreferrer">change data capture (CDC)</a> solution.</li>
       </ul>
       <h2 id="changelog-5-0-0">5.0.0 - Tech Lead @ SSENSE (2019 to 2021)</h2>
       <h3 id="changelog-5-0-0-added">Added</h3>
       <ul>
+        <li>Project to peel-off the <a href="https://en.wikipedia.org/wiki/Order_management_system" target="_blank" rel="noopener noreferrer">order management system (OMS)</a> out of the company's <a href="https://en.wikipedia.org/wiki/Monolithic_application" target="_blank" rel="noopener noreferrer">monolith</a> to its own DDD domain/microservices.</li>
+        <li>Member of <code>Technical Architecture Group (TAG)</code>. With the architects, Staff & Principal Engineers, our group of 6-10 people established the departments' tech standards. Oversaw the projects of 3 other teams to ensure they followed the established standards while still applying best practices to reach the targeted software <i>*ilities</i>.</li>
+        <li>Winner of Hackathon 2019 with my idea to improve the onboarding process of new hires.</li>
+        <li>Knowledge in the luxury e-commerce industry and distributed order management systems.</li>
+        <li>Use of <code>TypeScript</code> and <code>Node.js</code>; shout-out to <a href="https://www.linkedin.com/in/yannickcordinier/" target="_blank" rel="noopener noreferrer">Yannick Cordinier</a>.</li>
+        <li>Use of <a href="https://github.com/features/copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot</a> as my favourite coding buddy.</li>
         <li>Use of <a href="https://en.wikipedia.org/wiki/Domain-driven_design" target="_blank" rel="noopener noreferrer">Domain-Driven Design</a> (<a href="https://www.linkedin.com/feed/hashtag/?keywords=ddd" target="_blank" rel="noopener noreferrer">#ddd</a>); shout-out to <a href="https://www.linkedin.com/in/mbneto/" target="_blank" rel="noopener noreferrer">Mário Bittencourt</a>.</li>
         <li>Use of <a href="https://en.wikipedia.org/wiki/Event-driven_architecture" target="_blank" rel="noopener noreferrer">Event-Driven Architecture (eda)</a>.</li>
         <li>Use of <a href="https://refactoring.guru/design-patterns/state/typescript/example" target="_blank" rel="noopener noreferrer">state machine</a> to manage the state of the customer orders in the newly-peeled-off <a href="https://en.wikipedia.org/wiki/Order_management_system" target="_blank" rel="noopener noreferrer">order management system (OMS)</a>.</li>
@@ -131,12 +141,7 @@
         <li>Use of <a href="https://aws.amazon.com/pm/dynamodb" target="_blank" rel="noopener noreferrer">DynamoDB</a>.</li>
         <li>Use of <a href="https://en.wikipedia.org/wiki/OpenAPI_Specification" target="_blank" rel="noopener noreferrer">OpenAPI Specification</a> to officialize our contracts; shout-out to <a href="https://www.linkedin.com/in/mbneto/" target="_blank" rel="noopener noreferrer">Mário Bittencourt</a> for <a href="https://medium.com/ssense-tech/shifting-perspectives-placing-api-design-at-the-core-of-development-6fd9fe5b69a3" target="_blank" rel="noopener noreferrer">his article</a>.</li>
         <li>Use of <a href="https://www.bpmn.org/" target="_blank" rel="noopener noreferrer">BPMN (Business Process Model and Notation)</a>.</li>
-        <li>Project to peel-off the <a href="https://en.wikipedia.org/wiki/Order_management_system" target="_blank" rel="noopener noreferrer">order management system (OMS)</a> out of the company's <a href="https://en.wikipedia.org/wiki/Monolithic_application" target="_blank" rel="noopener noreferrer">monolith</a> to its own DDD domain/microservices.</li>
-        <li>Use of <code>TypeScript</code> and <code>Node.js</code>; shout-out to <a href="https://www.linkedin.com/in/yannickcordinier/" target="_blank" rel="noopener noreferrer">Yannick Cordinier</a>.</li>
-        <li>Use of <a href="https://github.com/features/copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot</a> as my favourite coding buddy.</li>
-        <li>Member of <code>Technical Architecture Group (TAG)</code>. With the architects, Staff & Principal Engineers, our group of 6-10 people established the departments' tech standards. Oversaw the projects of 3 other teams to ensure they followed the established standards while still applying best practices to reach the targeted software <i>*ilities</i>.</li>
-        <li>Winner of Hackathon 2019 with my idea to improve the onboarding process of new hires.</li>
-        <li>Knowledge in the luxury e-commerce industry and distributed order management systems.</li>
+        <li>Use of <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer">Docker</a> and <a href="https://docs.docker.com/compose/" target="_blank" rel="noopener noreferrer">Docker Compose</a>.</li>
       </ul>
       <h3 id="changelog-5-0-0-changed">Changed</h3>
       <ul>
@@ -145,13 +150,13 @@
       <h2 id="changelog-4-0-0">4.0.0 - Senior Developer @ Zola (2019)</h2>
       <h3 id="changelog-4-0-0-added">Added</h3>
       <ul>
+        <li><a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank" rel="noopener noreferrer">AWS Certified Cloud Practitioner</a> certification <a href="https://www.credly.com/badges/c3ccd5a7-dc9e-433d-95c5-5a8278a00b60/" target="_blank" rel="noopener noreferrer">issued on 2019-04-19</a>.</li>
+        <li>Knowledge in the wedding and event planning industry.</li>
+        <li>Knowledge in the e-commerce industry.</li>
         <li>Use of <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer">Amazon Web Services (AWS)</a>.</li>
         <li>Use of <a href="https://en.wikipedia.org/wiki/Microservices" target="_blank" rel="noopener noreferrer">microservices</a>.</li>
         <li>Use of <a href="https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development" target="_blank" rel="noopener noreferrer">trunk-based development</a>.</li>
         <li>Use of <a href="https://www.split.io/feature-flags-best-practices-ebook/" target="_blank" rel="noopener noreferrer">feature flags</a>.</li>
-        <li><a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank" rel="noopener noreferrer">AWS Certified Cloud Practitioner</a> certification <a href="https://www.credly.com/badges/c3ccd5a7-dc9e-433d-95c5-5a8278a00b60/" target="_blank" rel="noopener noreferrer">issued on 2019-04-19</a>.</li>
-        <li>Knowledge in the wedding and event planning industry.</li>
-        <li>Knowledge in the e-commerce industry.</li>
       </ul>
       <h3 id="changelog-4-0-0-changed">Changed</h3>
       <ul>
@@ -160,14 +165,14 @@
       <h2 id="changelog-3-0-0">3.0.0 - Architect @ AFS Technologies (2011 to 2018)</h2>
       <h3 id="changelog-3-0-0-added">Added</h3>
       <ul>
-        <li>Skills to develop <a href="https://en.wikipedia.org/wiki/Software_as_a_service" target="_blank" rel="noopener noreferrer">SaaS solutions</a>.</li>
+        <li><a href="https://en.wikipedia.org/wiki/Scrum_(software_development)" target="_blank" rel="noopener noreferrer">Scrum Master</a> certification.</li>
         <li>Use of <a href="https://en.wikipedia.org/wiki/Agile_software_development" target="_blank" rel="noopener noreferrer">Agile methodologies</a>.</li>
-        <li>Use of <code>Java</code>, <code>Spring framework</code>, <code>Hibernate</code>, <code>Mockito</code>.</li>
+        <li>Skills to develop <a href="https://en.wikipedia.org/wiki/Software_as_a_service" target="_blank" rel="noopener noreferrer">SaaS solutions</a>.</li>
         <li>Building of <a href="https://en.wikipedia.org/wiki/REST" target="_blank" rel="noopener noreferrer">REST</a> APIs.</li>
+        <li>Knowledge in the <a href="https://en.wikipedia.org/wiki/Fast-moving_consumer_goods" target="_blank" rel="noopener noreferrer">consumer packaged goods (CPG)</a> industry.</li>
+        <li>Use of <code>Java</code>, <code>Spring framework</code>, <code>Hibernate</code>, <code>Mockito</code>.</li>
         <li>Use of <a href="https://en.wikipedia.org/wiki/Continuous_integration" target="_blank" rel="noopener noreferrer">Continuous Integration (CI)</a> pipelines.</li>
         <li>Use of <a href="https://en.wikipedia.org/wiki/Extract,_transform,_load" target="_blank" rel="noopener noreferrer">ETL (Extract, Transform, Load)</a> processes and <a href="https://en.wikipedia.org/wiki/MultiDimensional_eXpressions" target="_blank" rel="noopener noreferrer">MDX query language</a> in a <a href="https://en.wikipedia.org/wiki/Microsoft_Analysis_Services" target="_blank" rel="noopener noreferrer">Microsoft SQL Server Analysis Services (SSAS)</a> environment.</li>        
-        <li><a href="https://en.wikipedia.org/wiki/Scrum_(software_development)" target="_blank" rel="noopener noreferrer">Scrum Master</a> certification.</li>
-        <li>Knowledge in the <a href="https://en.wikipedia.org/wiki/Fast-moving_consumer_goods" target="_blank" rel="noopener noreferrer">consumer packaged goods (CPG)</a> industry.</li>
       </ul>
       <h3 id="changelog-3-0-0-changed">Changed</h3>
       <ul>
@@ -181,8 +186,8 @@
       <h2 id="changelog-1-0-0">1.0.0 - Senior Developer @ Markzware Software (2001 to 2006)</h2>
       <h3 id="changelog-1-0-0-added">Added</h3>
       <ul>
-        <li>Use of <code>C</code>, <code>C++</code>, <code>Perl</code>.</li>
         <li>Knowledge in the digital publishing, prepress and printing industry.</li>
+        <li>Use of <code>C</code>, <code>C++</code>, <code>Perl</code>.</li>
       </ul>
       <h2 id="changelog-0-1-0">0.1.0 - The Beginning (2001)</h2>
       <h3 id="changelog-0-1-0-added">Added</h3>
