@@ -134,7 +134,7 @@ a {
   }
 }
 
-.article-share-toast {
+.copy-link-toast {
   position: absolute;
   left: 100%;
   top: 0;
@@ -147,23 +147,23 @@ a {
   font-size: 0.7rem;
   font-weight: 500;
   pointer-events: none;
-  animation: article-share-toast-fade 1.5s ease forwards;
+  animation: copy-link-toast-fade 1.5s ease forwards;
 }
 
-@keyframes article-share-toast-fade {
+@keyframes copy-link-toast-fade {
   0%   { opacity: 0; transform: translateX(4px); }
   8%   { opacity: 1; transform: translateX(0); }
   80%  { opacity: 1; transform: translateX(0); }
   100% { opacity: 0; transform: translateX(-2px); }
 }
 
-@keyframes article-pulse {
+@keyframes anchor-pulse {
   0%, 100% { background: transparent; }
   50%      { background: var(--tf-articles-pulse-bg-color); }
 }
 
-.article-item.pulse {
-  animation: article-pulse 2s ease-in-out 3;
+.article-item.anchor-pulse {
+  animation: anchor-pulse 2s ease-in-out 3;
 }
 
 /* ---- heading anchors (changelog and other sections) ---- */
@@ -217,39 +217,11 @@ li[id]:hover .heading-anchor,
   }
 }
 
-.heading-anchor-toast {
-  position: absolute;
-  left: 100%;
-  top: 0;
-  white-space: nowrap;
-  background: #0d6efd;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  padding: 1px 8px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  pointer-events: none;
-  animation: heading-anchor-toast-fade 1.5s ease forwards;
-}
-
-@keyframes heading-anchor-toast-fade {
-  0%   { opacity: 0; }
-  15%  { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes heading-pulse {
-  0%, 100% { background: transparent; }
-  50%      { background: var(--tf-articles-pulse-bg-color); }
-}
-
-.section-title.heading-pulse,
-h2[id].heading-pulse,
-h3[id].heading-pulse,
-li[id].heading-pulse {
-  animation: heading-pulse 2s ease-in-out 3;
+.section-title.anchor-pulse,
+h2[id].anchor-pulse,
+h3[id].anchor-pulse,
+li[id].anchor-pulse {
+  animation: anchor-pulse 2s ease-in-out 3;
 }
 
 .article-link {
@@ -267,21 +239,18 @@ li[id].heading-pulse {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .article-item.pulse {
+  .article-item.anchor-pulse {
     animation: none;
     background: var(--tf-articles-pulse-bg-color);
   }
-  .article-share-toast {
+  .copy-link-toast {
     animation: none;
   }
-  .section-title.heading-pulse,
-  h2[id].heading-pulse,
-  h3[id].heading-pulse,
-  li[id].heading-pulse {
+  .section-title.anchor-pulse,
+  h2[id].anchor-pulse,
+  h3[id].anchor-pulse,
+  li[id].anchor-pulse {
     animation: none;
     background: var(--tf-articles-pulse-bg-color);
-  }
-  .heading-anchor-toast {
-    animation: none;
   }
 }

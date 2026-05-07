@@ -1,0 +1,30 @@
+<script>
+  window.copyLink = function (trigger, url) {
+    function showToast(text) {
+      var existing = trigger.querySelector(".copy-link-toast");
+      if (existing) existing.remove();
+      trigger.style.opacity = "1";
+      var toast = document.createElement("span");
+      toast.className = "copy-link-toast";
+      toast.setAttribute("role", "status");
+      toast.setAttribute("aria-live", "polite");
+      toast.setAttribute("aria-atomic", "true");
+      toast.textContent = text;
+      trigger.appendChild(toast);
+      setTimeout(function () { toast.remove(); trigger.style.opacity = ""; }, 1500);
+    }
+
+    if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
+      showToast("Copy failed");
+      trigger.blur();
+      return;
+    }
+
+    navigator.clipboard.writeText(url).then(function () {
+      showToast("Copied");
+    }).catch(function () {
+      showToast("Copy failed");
+    });
+    trigger.blur();
+  };
+</script>

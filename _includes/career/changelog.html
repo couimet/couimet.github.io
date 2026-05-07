@@ -216,42 +216,17 @@
   </div>
 </div>
 
+{% include copy-link.html %}
 <script>
   (function () {
     function handleHeadingAnchorClick(e) {
       var anchor = e.target.closest(".heading-anchor");
       if (!anchor) return;
-      e.preventDefault();
       var id = anchor.getAttribute("href");
       if (!id || !id.startsWith("#")) return;
+      e.preventDefault();
       var url = window.location.origin + window.location.pathname + id;
-      if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
-        showHeadingToast(anchor, "Copy failed");
-        return;
-      }
-      navigator.clipboard.writeText(url).then(function () {
-        showHeadingToast(anchor, "Copied");
-      }).catch(function () {
-        showHeadingToast(anchor, "Copy failed");
-      });
-      anchor.blur();
-    }
-
-    function showHeadingToast(anchor, text) {
-      var existing = anchor.parentElement.querySelector(".heading-anchor-toast");
-      if (existing) existing.remove();
-      anchor.style.opacity = "1";
-      var toast = document.createElement("span");
-      toast.className = "heading-anchor-toast";
-      toast.setAttribute("role", "status");
-      toast.setAttribute("aria-live", "polite");
-      toast.setAttribute("aria-atomic", "true");
-      toast.textContent = text;
-      anchor.appendChild(toast);
-      setTimeout(function () {
-        toast.remove();
-        anchor.style.opacity = "";
-      }, 1500);
+      copyLink(anchor, url);
     }
 
     function revealHeadingFromHash() {
@@ -265,10 +240,10 @@
       var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       // Defer to ensure browser has finished native scroll-to-fragment before we pulse
       requestAnimationFrame(function () {
-        el.classList.remove("heading-pulse");
+        el.classList.remove("anchor-pulse");
         void el.offsetWidth;
-        el.classList.add("heading-pulse");
-        setTimeout(function () { el.classList.remove("heading-pulse"); }, prefersReduced ? 2000 : 6000);
+        el.classList.add("anchor-pulse");
+        setTimeout(function () { el.classList.remove("anchor-pulse"); }, prefersReduced ? 2000 : 6000);
       });
     }
 

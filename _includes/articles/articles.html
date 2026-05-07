@@ -52,6 +52,7 @@
   </div>
 </div>
 
+{% include copy-link.html %}
 <script>
   (function () {
     function revealAnchoredArticle() {
@@ -63,10 +64,10 @@
       if (!el) return;
 
       var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      el.classList.remove("pulse");
+      el.classList.remove("anchor-pulse");
       void el.offsetWidth;
-      el.classList.add("pulse");
-      setTimeout(function () { el.classList.remove("pulse"); }, prefersReduced ? 2000 : 6000);
+      el.classList.add("anchor-pulse");
+      setTimeout(function () { el.classList.remove("anchor-pulse"); }, prefersReduced ? 2000 : 6000);
 
       el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "nearest" });
     }
@@ -78,34 +79,7 @@
       var anchor = btn.getAttribute("data-anchor");
       if (!anchor) return;
       var url = window.location.origin + window.location.pathname + "#" + anchor;
-      if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
-        showShareToast(btn, "Copy failed");
-        btn.blur();
-        return;
-      }
-      navigator.clipboard.writeText(url).then(function () {
-        showShareToast(btn, "Copied");
-      }).catch(function () {
-        showShareToast(btn, "Copy failed");
-      });
-      btn.blur();
-    }
-
-    function showShareToast(btn, text) {
-      var existing = btn.parentElement.querySelector(".article-share-toast");
-      if (existing) existing.remove();
-      btn.style.opacity = "1";
-      var toast = document.createElement("span");
-      toast.className = "article-share-toast";
-      toast.setAttribute("role", "status");
-      toast.setAttribute("aria-live", "polite");
-      toast.setAttribute("aria-atomic", "true");
-      toast.textContent = text;
-      btn.appendChild(toast);
-      setTimeout(function () {
-        toast.remove();
-        btn.style.opacity = "";
-      }, 1500);
+      copyLink(btn, url);
     }
 
     var articleUserScrolled = false;
