@@ -3,8 +3,14 @@
     <div class="row mb-3">
       <div class="col-md-6">
         <h1 class="display-4 text-start section-title">
-          <a href="#projects" class="heading-anchor" aria-label="Copy link to this section">🔗</a>
-          <a class="text-reset" href="{{ '/projects/' | prepend: site.baseurl }}">Projects</a>
+          {% if page.url == '/' %}
+            <a href="#projects" class="heading-anchor" aria-label="Copy link to this section">🔗</a>
+          {% endif %}
+          {% if page.url == '/projects/' %}
+            Projects
+          {% else %}
+            <a class="text-reset" href="{{ '/projects/' | prepend: site.baseurl }}">Projects</a>
+          {% endif %}
         </h1>
       </div>
     </div>
@@ -32,5 +38,6 @@
       <p class="text-center pt-4"><a href="{{ site.baseurl}}/projects/">See all {{ not_draft }} projects</a></p>
     {% endif %}
 
+{% include copy-link.html %}
   </div>
 </div>

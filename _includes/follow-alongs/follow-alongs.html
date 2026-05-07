@@ -3,8 +3,14 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <h1 class="display-4 text-start section-title">
-          <a href="#follow-alongs" class="heading-anchor" aria-label="Copy link to this section">🔗</a>
-          <a class="text-reset" href="{{ '/follow-alongs/' | prepend: site.baseurl }}">Follow-alongs</a>
+          {% if page.url == '/' %}
+            <a href="#follow-alongs" class="heading-anchor" aria-label="Copy link to this section">🔗</a>
+          {% endif %}
+          {% if page.url == '/follow-alongs/' %}
+            Follow-alongs
+          {% else %}
+            <a class="text-reset" href="{{ '/follow-alongs/' | prepend: site.baseurl }}">Follow-alongs</a>
+          {% endif %}
         </h1>
         <div>
           <p>
@@ -33,5 +39,6 @@
       <p class="text-center pt-4"><a href="{{ site.baseurl}}/follow-alongs/">See all {{ follow-along_pages.size }} follow-alongs</a></p>
     {% endif %}
 
+{% include copy-link.html %}
   </div>
 </div>

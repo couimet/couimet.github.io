@@ -1,6 +1,9 @@
 <script>
   window.copyLink = function (trigger, url) {
     function showToast(text) {
+      if (trigger._copyLinkToastTimer) {
+        clearTimeout(trigger._copyLinkToastTimer);
+      }
       var existing = trigger.querySelector(".copy-link-toast");
       if (existing) existing.remove();
       trigger.style.opacity = "1";
@@ -11,7 +14,11 @@
       toast.setAttribute("aria-atomic", "true");
       toast.textContent = text;
       trigger.appendChild(toast);
-      setTimeout(function () { toast.remove(); trigger.style.opacity = ""; }, 1500);
+      trigger._copyLinkToastTimer = setTimeout(function () {
+        toast.remove();
+        trigger.style.opacity = "";
+        trigger._copyLinkToastTimer = null;
+      }, 1500);
     }
 
     if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
@@ -27,4 +34,17 @@
     });
     trigger.blur();
   };
+
+  if (!window._copyLinkHeadingHandlerRegistered) {
+    window._copyLinkHeadingHandlerRegistered = true;
+    document.addEventListener("click", function (e) {
+      var anchor = e.target.closest(".heading-anchor");
+      if (!anchor) return;
+      var id = anchor.getAttribute("href");
+      if (!id || !id.startsWith("#")) return;
+      e.preventDefault();
+      var url = window.location.origin + window.location.pathname + id;
+      copyLink(anchor, url);
+    });
+  }
 </script>

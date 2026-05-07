@@ -219,16 +219,6 @@
 {% include copy-link.html %}
 <script>
   (function () {
-    function handleHeadingAnchorClick(e) {
-      var anchor = e.target.closest(".heading-anchor");
-      if (!anchor) return;
-      var id = anchor.getAttribute("href");
-      if (!id || !id.startsWith("#")) return;
-      e.preventDefault();
-      var url = window.location.origin + window.location.pathname + id;
-      copyLink(anchor, url);
-    }
-
     function revealHeadingFromHash() {
       if (!window.location.hash) return;
       var id = window.location.hash.slice(1);
@@ -263,7 +253,6 @@
       }
     }
 
-    document.addEventListener("click", handleHeadingAnchorClick);
     window.addEventListener("DOMContentLoaded", function () {
       injectAnchors();
       revealHeadingFromHash();
