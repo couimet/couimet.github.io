@@ -17,6 +17,7 @@ layout: default
     var userHasScrolled = false;
     var currentSectionHash = "";
     var ticking = false;
+    var loadSuppressUntil = Date.now() + 500;
 
     function getActiveSection() {
       // Active = last section whose top is above 20% of the viewport.
@@ -32,6 +33,7 @@ layout: default
     function updateHash() {
       ticking = false;
       if (!userHasScrolled) return;
+      if (Date.now() < loadSuppressUntil) return;
 
       var active = getActiveSection();
 
@@ -44,8 +46,13 @@ layout: default
       }
 
       var id = active.id;
-      // Don't clobber an article-level hash when re-entering the articles section
-      if (id === "articles" && window.location.hash.startsWith("#article-")) return;
+      // Don't clobber a sub-section hash when its parent section becomes active
+      if (window.location.hash) {
+        if ((id === "articles" && window.location.hash.startsWith("#article-")) ||
+            (id === "career-changelog" && window.location.hash.startsWith("#changelog-"))) {
+          return;
+        }
+      }
 
       // "about" is the implicit top — keep the URL clean with no hash
       if (id === "about") {

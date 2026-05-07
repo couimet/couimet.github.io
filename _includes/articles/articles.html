@@ -2,7 +2,8 @@
   <div class="container">
     <div class="row mb-3">
       <div class="col-md-6">
-        <h1 class="display-4 text-start">
+        <h1 class="display-4 text-start section-title">
+          <a href="#articles" class="heading-anchor" aria-label="Copy link to this section">🔗</a>
           <a class="text-reset" href="{{ '/articles/' | prepend: site.baseurl }}">Articles</a>
         </h1>
       </div>
@@ -79,6 +80,7 @@
       var url = window.location.origin + window.location.pathname + "#" + anchor;
       if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
         showShareToast(btn, "Copy failed");
+        btn.blur();
         return;
       }
       navigator.clipboard.writeText(url).then(function () {
@@ -86,19 +88,24 @@
       }).catch(function () {
         showShareToast(btn, "Copy failed");
       });
+      btn.blur();
     }
 
     function showShareToast(btn, text) {
       var existing = btn.parentElement.querySelector(".article-share-toast");
       if (existing) existing.remove();
+      btn.style.opacity = "1";
       var toast = document.createElement("span");
       toast.className = "article-share-toast";
       toast.setAttribute("role", "status");
       toast.setAttribute("aria-live", "polite");
       toast.setAttribute("aria-atomic", "true");
       toast.textContent = text;
-      btn.insertAdjacentElement("afterend", toast);
-      setTimeout(function () { toast.remove(); }, 1500);
+      btn.appendChild(toast);
+      setTimeout(function () {
+        toast.remove();
+        btn.style.opacity = "";
+      }, 1500);
     }
 
     var articleUserScrolled = false;
