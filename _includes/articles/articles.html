@@ -2,8 +2,15 @@
   <div class="container">
     <div class="row mb-3">
       <div class="col-md-6">
-        <h1 class="display-4 text-start">
-          <a class="text-reset" href="{{ '/articles/' | prepend: site.baseurl }}">Articles</a>
+        <h1 class="display-4 text-start section-title">
+          {% if page.url == '/' %}
+            <a href="#articles" class="heading-anchor" aria-label="Copy link to this section">🔗</a>
+          {% endif %}
+          {% if page.url == '/articles/' %}
+            Articles
+          {% else %}
+            <a class="text-reset" href="{{ '/articles/' | prepend: site.baseurl }}">Articles</a>
+          {% endif %}
         </h1>
       </div>
     </div>
@@ -51,6 +58,7 @@
   </div>
 </div>
 
+{% include copy-link.html %}
 <script>
   (function () {
     function revealAnchoredArticle() {
@@ -62,10 +70,10 @@
       if (!el) return;
 
       var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      el.classList.remove("pulse");
+      el.classList.remove("anchor-pulse");
       void el.offsetWidth;
-      el.classList.add("pulse");
-      setTimeout(function () { el.classList.remove("pulse"); }, prefersReduced ? 2000 : 6000);
+      el.classList.add("anchor-pulse");
+      setTimeout(function () { el.classList.remove("anchor-pulse"); }, prefersReduced ? 2000 : 6000);
 
       el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "nearest" });
     }
@@ -77,28 +85,7 @@
       var anchor = btn.getAttribute("data-anchor");
       if (!anchor) return;
       var url = window.location.origin + window.location.pathname + "#" + anchor;
-      if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
-        showShareToast(btn, "Copy failed");
-        return;
-      }
-      navigator.clipboard.writeText(url).then(function () {
-        showShareToast(btn, "Copied");
-      }).catch(function () {
-        showShareToast(btn, "Copy failed");
-      });
-    }
-
-    function showShareToast(btn, text) {
-      var existing = btn.parentElement.querySelector(".article-share-toast");
-      if (existing) existing.remove();
-      var toast = document.createElement("span");
-      toast.className = "article-share-toast";
-      toast.setAttribute("role", "status");
-      toast.setAttribute("aria-live", "polite");
-      toast.setAttribute("aria-atomic", "true");
-      toast.textContent = text;
-      btn.insertAdjacentElement("afterend", toast);
-      setTimeout(function () { toast.remove(); }, 1500);
+      copyLink(btn, url);
     }
 
     var articleUserScrolled = false;

@@ -1,0 +1,50 @@
+<script>
+  window.copyLink = function (trigger, url) {
+    function showToast(text) {
+      if (trigger._copyLinkToastTimer) {
+        clearTimeout(trigger._copyLinkToastTimer);
+      }
+      var existing = trigger.querySelector(".copy-link-toast");
+      if (existing) existing.remove();
+      trigger.style.opacity = "1";
+      var toast = document.createElement("span");
+      toast.className = "copy-link-toast";
+      toast.setAttribute("role", "status");
+      toast.setAttribute("aria-live", "polite");
+      toast.setAttribute("aria-atomic", "true");
+      toast.textContent = text;
+      trigger.appendChild(toast);
+      trigger._copyLinkToastTimer = setTimeout(function () {
+        toast.remove();
+        trigger.style.opacity = "";
+        trigger._copyLinkToastTimer = null;
+      }, 1500);
+    }
+
+    if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
+      showToast("Copy failed");
+      trigger.blur();
+      return;
+    }
+
+    navigator.clipboard.writeText(url).then(function () {
+      showToast("Copied");
+    }).catch(function () {
+      showToast("Copy failed");
+    });
+    trigger.blur();
+  };
+
+  if (!window._copyLinkHeadingHandlerRegistered) {
+    window._copyLinkHeadingHandlerRegistered = true;
+    document.addEventListener("click", function (e) {
+      var anchor = e.target.closest(".heading-anchor");
+      if (!anchor) return;
+      var id = anchor.getAttribute("href");
+      if (!id || !id.startsWith("#")) return;
+      e.preventDefault();
+      var url = window.location.origin + window.location.pathname + id;
+      copyLink(anchor, url);
+    });
+  }
+</script>
