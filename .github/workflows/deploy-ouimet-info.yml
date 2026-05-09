@@ -1,60 +1,34 @@
-# Option B: manually triggered deploy — credentials typed at trigger time, never stored.
+# Deploy to ouimet.info on every push to main via SSH keypair auth.
+# SSH keypairs are the best practice for CI/CD: no password to brute-force, easy to revoke,
+# and the private key never leaves GitHub Secrets.
 #
-# Migrating to Option C (automated on every push to main, SSH keypair auth):
-#   SSH keypairs are the best practice for CI/CD: no password to brute-force, easy to revoke,
-#   and the private key never leaves GitHub Secrets.
+# Server setup (run locally on any machine, then SSH into the server):
+#   ssh-keygen -t ed25519 -C "github-deploy-ouimet.info" -f ~/.ssh/ouimet_deploy
+#   ssh-copy-id -i ~/.ssh/ouimet_deploy.pub <your-ssh-user>@<your-ssh-host>
+#   cat ~/.ssh/ouimet_deploy   # copy this — it's the private key to paste into GitHub
 #
-#   One-time server setup (run locally, then SSH into the server):
-#     ssh-keygen -t ed25519 -C "github-deploy-ouimet.info" -f ~/.ssh/ouimet_deploy
-#     ssh-copy-id -i ~/.ssh/ouimet_deploy.pub <your-ssh-user>@<your-ssh-host>
-#     cat ~/.ssh/ouimet_deploy   # copy this — it's the private key to paste into GitHub
+# Get the host fingerprint (run locally, no authentication needed):
+#   ssh-keyscan -t ed25519 <your-ssh-host> | ssh-keygen -lf - -E sha256
+#   Copy the SHA256:... portion (including the SHA256: prefix) without the host name.
 #
-#   Get the host fingerprint (run locally, no authentication needed):
-#     ssh-keyscan -t ed25519 <your-ssh-host> | ssh-keygen -lf - -E sha256
-#     Copy the SHA256:... portion (including the SHA256: prefix).
-#
-#   1. In GitHub → Settings → Secrets and variables → Actions, create these secrets:
-#        OUIMET_INFO_SSH_HOST          the SSH hostname your provider gave you
-#        OUIMET_INFO_SSH_USERNAME      your SSH login (same username you use in terminal)
-#        OUIMET_INFO_SSH_PRIVATE_KEY   paste the private key generated above (entire file content)
-#        OUIMET_INFO_REMOTE_PATH       ~/ouimet_info
-#        OUIMET_INFO_SSH_FINGERPRINT   the SHA256:... value from ssh-keyscan above
-#   2. Replace the `on:` block below with:
-#        on:
-#          push:
-#            branches: ["main"]
-#          workflow_dispatch:
-#   3. Apply the inline # Option C substitutions shown on each credential line below.
-#      Note: `password:` becomes `key:` — it is a different field name, not just a value swap.
-#   4. Delete the "Mask password" step — secrets are masked automatically.
-name: Deploy to ouimet.info (manual)
+# Required repository secrets (Settings → Secrets and variables → Actions → Repository secrets):
+#   OUIMET_INFO_SSH_HOST          the SSH hostname your provider gave you
+#   OUIMET_INFO_SSH_USERNAME      your SSH login
+#   OUIMET_INFO_SSH_PRIVATE_KEY   SSH ed25519 private key
+#   OUIMET_INFO_REMOTE_PATH       ~/ouimet_info
+#   OUIMET_INFO_BACKUP_DIR        ~/ouimet_info_backups
+#   OUIMET_INFO_SSH_FINGERPRINT   SHA256:... host key fingerprint
+name: Deploy to ouimet.info
 
 on:
+  push:
+    branches: ["main"]
   workflow_dispatch:
-    inputs:
-      host:
-        description: 'SSH host (e.g. ssh.your-provider.com)'
-        required: true
-      username:
-        description: 'SSH username'
-        required: true
-      password:
-        description: 'SSH password (masked in logs)'
-        required: true
-      remote_path:
-        description: 'Remote web root path'
-        required: true
-        default: '~/ouimet_info'
-      fingerprint:
-        description: 'SHA256 fingerprint of server host key — get it with: ssh-keyscan -t ed25519 <host> | ssh-keygen -lf - -E sha256'
-        required: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Mask password  # Remove this step in Option C — secrets are masked automatically
-        run: echo "::add-mask::${{ inputs.password }}"
 
       - name: Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
@@ -73,17 +47,17 @@ jobs:
       - name: Backup existing site on server
         uses: appleboy/ssh-action@v1.2.5
         with:
-          host: ${{ inputs.host }}                  # Option C: ${{ secrets.OUIMET_INFO_SSH_HOST }}
-          username: ${{ inputs.username }}           # Option C: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
-          password: ${{ inputs.password }}           # Option C: key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}  ← field name changes from 'password' to 'key'
-          fingerprint: ${{ inputs.fingerprint }}     # Option C: ${{ secrets.OUIMET_INFO_SSH_FINGERPRINT }}
+          host: ${{ secrets.OUIMET_INFO_SSH_HOST }}
+          username: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
+          key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}
+          fingerprint: ${{ secrets.OUIMET_INFO_SSH_FINGERPRINT }}
           script: |
-            BACKUP_DIR="$HOME/ouimet_info_backups"
+            BACKUP_DIR="${{ secrets.OUIMET_INFO_BACKUP_DIR }}"
             BACKUP_FILE="$BACKUP_DIR/$(date +%Y%m%d-%H%M%S).tar.gz"
-            BACKUP_PARENT="$(dirname "${{ inputs.remote_path }}")"
-            BACKUP_NAME="$(basename "${{ inputs.remote_path }}")"
+            BACKUP_PARENT="$(dirname "${{ secrets.OUIMET_INFO_REMOTE_PATH }}")"
+            BACKUP_NAME="$(basename "${{ secrets.OUIMET_INFO_REMOTE_PATH }}")"
             mkdir -p "$BACKUP_DIR"
-            if [[ -d "${{ inputs.remote_path }}" ]]; then
+            if [[ -d "${{ secrets.OUIMET_INFO_REMOTE_PATH }}" ]]; then
               tar -czf "$BACKUP_FILE" -C "$BACKUP_PARENT" "$BACKUP_NAME"
               echo "Backup created at $BACKUP_FILE"
             else
@@ -95,10 +69,10 @@ jobs:
       - name: Upload built site
         uses: appleboy/scp-action@v1.0.0
         with:
-          host: ${{ inputs.host }}                  # Option C: ${{ secrets.OUIMET_INFO_SSH_HOST }}
-          username: ${{ inputs.username }}           # Option C: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
-          password: ${{ inputs.password }}           # Option C: key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}  ← field name changes from 'password' to 'key'
-          fingerprint: ${{ inputs.fingerprint }}     # Option C: ${{ secrets.OUIMET_INFO_SSH_FINGERPRINT }}
+          host: ${{ secrets.OUIMET_INFO_SSH_HOST }}
+          username: ${{ secrets.OUIMET_INFO_SSH_USERNAME }}
+          key: ${{ secrets.OUIMET_INFO_SSH_PRIVATE_KEY }}
+          fingerprint: ${{ secrets.OUIMET_INFO_SSH_FINGERPRINT }}
           source: '_site/*'
-          target: ${{ inputs.remote_path }}         # Option C: ${{ secrets.OUIMET_INFO_REMOTE_PATH }}
+          target: ${{ secrets.OUIMET_INFO_REMOTE_PATH }}
           strip_components: 1

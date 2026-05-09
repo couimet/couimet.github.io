@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Run this script ON your server after SSH-ing in.
+# Superseded by the automated GitHub Actions deploy workflow (.github/workflows/deploy-ouimet-info.yml)
+# for normal operation. Kept as a manual recovery tool — run this ON your server after SSH-ing in
+# if you need to roll back or sync from GitHub Releases directly.
 # It downloads the latest site.zip from the GitHub Release for this repo and
 # syncs it into the ouimet.info web root, creating a compressed backup first.
 # Requires: wget, unzip, rsync (all confirmed available on the server).
