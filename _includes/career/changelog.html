@@ -3,8 +3,14 @@
     <div class="row mb-3">
       <div class="col-md-6">
         <h1 class="display-4 text-start section-title">
-          <a href="#career-changelog" class="heading-anchor" aria-label="Copy link to this section">🔗</a>
-          <a class="text-reset" href="{{ '/career/changelog/' | prepend: site.baseurl }}">Career Changelog</a>
+          {% if page.url == '/' %}
+            <a href="#career-changelog" class="heading-anchor" aria-label="Copy link to this section">🔗</a>
+          {% endif %}
+          {% if page.url == '/career/changelog/' %}
+            Career Changelog
+          {% else %}
+            <a class="text-reset" href="{{ '/career/changelog/' | prepend: site.baseurl }}">Career Changelog</a>
+          {% endif %}
         </h1>
       </div>
     </div>
