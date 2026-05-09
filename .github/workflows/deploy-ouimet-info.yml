@@ -8,7 +8,12 @@
 #   cat ~/.ssh/ouimet_deploy   # copy this — it's the private key to paste into GitHub
 #
 # Get the host fingerprint (run locally, no authentication needed):
-#   ssh-keyscan -t ed25519 <your-ssh-host> | ssh-keygen -lf - -E sha256
+#   First scan ALL host keys the server offers:
+#     ssh-keyscan <your-ssh-host> 2>/dev/null | ssh-keygen -lf - -E sha256
+#   Your local `ssh` client and drone-ssh (GitHub Actions) may negotiate different host keys
+#   (Go's crypto/ssh prefers ECDSA; OpenSSH prefers ED25519). If the fingerprint you pick
+#   causes "handshake failed: host key fingerprint mismatch" in CI, try a different key type
+#   from the list above. On shared hosting the ECDSA key often works.
 #   Copy the SHA256:... portion (including the SHA256: prefix) without the host name.
 #
 # Required repository secrets (Settings → Secrets and variables → Actions → Repository secrets):
