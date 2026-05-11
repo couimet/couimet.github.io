@@ -1,0 +1,31 @@
+name: Sync JSON → YAML Resume
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - resume.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+
+      - name: Install converter
+        run: npm install -g json2yamlresume
+
+      - name: Convert JSON → YAML
+        run: json2yamlresume resume.json resume.yml
+
+      - name: Commit generated YAML
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add resume.yml
+          git commit -m "chore: sync YAML resume" || echo "No changes"
+          git push

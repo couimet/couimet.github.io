@@ -39,6 +39,10 @@
     </script>
     {% endif %}
 
+    {% if page.url == '/resume.html' %}
+    <link rel="alternate" type="application/json" href="{{ '/resume.json' | prepend: site.baseurl }}" />
+    <link rel="alternate" type="application/x-yaml" href="{{ '/resume.yml' | prepend: site.baseurl }}" />
+    {% endif %}
     <title>{{ title }}</title>
   </head>
   <body class="d-flex flex-column min-vh-100">
