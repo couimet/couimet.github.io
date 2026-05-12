@@ -20,6 +20,16 @@ Run the server:
 bundle exec jekyll serve
 ```
 
+## Resume
+
+The resume pipeline converts `resume.json` (JSON Resume format) into `resume.yml` (YAMLResume) and `resume-full.html` (styled HTML). The conversion runs automatically when `resume.json` changes on `main`.
+
+Run locally (requires Docker):
+
+```bash
+./scripts/sync-resume.sh
+```
+
 ## Deployment
 
 Pushes to `main` are automatically deployed to ouimet.info via `.github/workflows/deploy-ouimet-info.yml` (SSH keypair auth). See the workflow file header for required repository secrets.

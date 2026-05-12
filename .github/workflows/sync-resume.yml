@@ -16,17 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
 
-      - name: Install converter
-        run: npm install -g json2yamlresume@0.12.3
+      - name: Sync resume
+        run: ./scripts/sync-resume.sh
 
-      - name: Convert JSON → YAML
-        run: json2yamlresume resume.json resume.yml
-
-      - name: Commit generated YAML
+      - name: Commit generated YAML and HTML
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git pull --rebase origin main
-          git add resume.yml
-          git commit -m "chore: sync YAML resume" || echo "No changes"
+          git add -f resume.yml resume-full.html
+          git commit -m "chore: sync YAML resume and HTML" || echo "No changes"
           git push
