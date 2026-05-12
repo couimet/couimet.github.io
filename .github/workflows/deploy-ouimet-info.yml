@@ -1,4 +1,4 @@
-# Deploy to ouimet.info on every push to main via SSH keypair auth.
+# Deploy to ouimet.info after a successful GitHub Pages deploy, via SSH keypair auth.
 # SSH keypairs are the best practice for CI/CD: no password to brute-force, easy to revoke,
 # and the private key never leaves GitHub Secrets.
 #
@@ -26,17 +26,25 @@
 name: Deploy to ouimet.info
 
 on:
-  push:
-    branches: ["main"]
+  # Chained after the GitHub Pages deploy so both targets stay in lockstep on the freshest tree
+  workflow_run:
+    workflows: ["Deploy Jekyll site to Pages"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Skip when the upstream Pages deploy failed; always run on manual dispatch
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
 
       - name: Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+        with:
+          # workflow_run defaults to the upstream's head_sha; pin to main to include sync auto-commits
+          ref: main
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1

@@ -3,8 +3,6 @@ name: Sync JSON → YAML Resume
 on:
   push:
     branches: ["main"]
-    paths:
-      - resume.json
   workflow_dispatch:
 
 permissions:
@@ -25,5 +23,5 @@ jobs:
           git config user.email "actions@github.com"
           git pull --rebase origin main
           git add -f resume.yml resume-full.html
-          git commit -m "chore: sync YAML resume and HTML" || echo "No changes"
+          git commit -m "chore: sync YAML resume and HTML [skip ci]" || echo "No changes"
           git push
