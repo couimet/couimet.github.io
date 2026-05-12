@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="YAMLResume (https://yamlresume.dev)">
+
+
+  <title>Charles Ouimet Resume</title>
+  <style>
+    :root {
+      --text-font-size: 16px;
+      --text-font-family: var(--text-default-font-family);
+      --line-height: 1.5;
+    }
+
+    /* Modified from: https://www.joshwcomeau.com/css/custom-css-reset/ */
+
+    /* 1. Use a more-intuitive box-sizing model */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    /* 2. Remove default margin */
+    *:not(dialog) {
+      margin: 0;
+    }
+
+    body {
+      /* 3. Improve text rendering */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    :root {
+      --border-color: #d0d0d0;
+
+      /* text colors */
+      --text-color-primary: #000000;
+      --text-color-secondary: #333333;
+
+      /* spacing */
+      --spacing-xss: 2px;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 12px;
+      --spacing-lg: 16px;
+      --spacing-xl: 24px;
+      --spacing-xxl: 40px;
+      --spacing-xxxl: 80px;
+
+      /* font sizes */
+      --font-size-xs: 0.8rem;
+      --font-size-sm: 0.9rem;
+      --font-size-md: 1rem;
+      --font-size-lg: 1.1rem;
+      --font-size-xl: 1.25rem;
+      --font-size-xxl: 2.5rem;
+
+      /* layout */
+      --page-max-width: 900px;
+
+      /* typography */
+      --text-default-font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+        Cantarell, sans-serif;
+    }
+
+    html {
+      font-size: var(--text-font-size);
+    }
+
+    body {
+      /* font & text */
+      color: var(--text-color-primary);
+      font-family: var(--text-font-family);
+      /* this variable is defined by `typography.fontSize` in resume html layout */
+      text-autospace: normal;
+
+      /* layout */
+      line-height: var(--line-height);
+      max-width: var(--page-max-width);
+      margin: 0 auto;
+      padding: var(--spacing-xxxl) var(--spacing-xxl) var(--spacing-xxl);
+    }
+
+    /* header */
+    .resume-header {
+      margin-bottom: var(--spacing-xxl);
+      text-align: center;
+    }
+
+    .resume-name {
+      font-size: var(--font-size-xxl);
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .resume-headline {
+      font-size: var(--font-size-lg);
+      margin-bottom: var(--spacing-md);
+    }
+
+    /* contact info */
+    .resume-contact-info {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      column-gap: var(--spacing-lg);
+      row-gap: var(--spacing-xs);
+      margin-top: var(--spacing-sm);
+    }
+
+    .resume-contact-icon,
+    .resume-contact-label {
+      margin-right: var(--spacing-sm);
+      vertical-align: middle;
+    }
+
+    /* links: modern typographic style */
+    a {
+      color: var(--text-color-primary);
+      text-decoration: underline;
+      text-decoration-color: var(--border-color);
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+      text-decoration-skip-ink: auto;
+      transition: text-decoration-color 0.2s;
+    }
+
+    a:hover {
+      text-decoration-color: var(--text-color-primary);
+    }
+
+    /* sections */
+    .resume-section {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .resume-section-title {
+      font-size: var(--font-size-xl);
+      font-weight: 500;
+      margin-bottom: var(--spacing-md);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: var(--spacing-xs);
+    }
+
+    /* entries */
+    .resume-entry {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .resume-entry:last-child {
+      margin-bottom: 0;
+    }
+
+    .resume-entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .resume-entry-title {
+      font-weight: 500;
+      margin-bottom: var(--spacing-xss);
+    }
+
+    .resume-entry-summary p,
+    .resume-summary-content p {
+      margin-bottom: var(--spacing-xs);
+    }
+
+    /* lists */
+    .resume-entry-summary ul,
+    .resume-entry-summary ol,
+    .resume-summary-content ul,
+    .resume-summary-content ol {
+      padding-left: var(--spacing-lg);
+      list-style-type: circle;
+    }
+
+    /* labeled lists (courses, keywords, etc.) */
+    .resume-labeled-list span {
+      font-weight: 500;
+    }
+
+    /* skills grid */
+    .resume-skill-item,
+    .resume-language-item {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .resume-skill-name,
+    .resume-language-name {
+      font-weight: 500;
+    }
+
+    .resume-skill-level,
+    .resume-language-fluency {
+      font-weight: 400;
+    }
+
+    /* mobile */
+    @media (max-width: 768px) {
+      body {
+        padding: var(--spacing-xl);
+      }
+
+      .resume-header {
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .resume-contact-info {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .resume-entry-header {
+        flex-wrap: wrap;
+      }
+
+      .resume-skill-item,
+      .resume-language-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* footer */
+    .resume-footer {
+      margin-top: var(--spacing-xxl);
+      padding-top: var(--spacing-xl);
+      border-top: 1px solid var(--border-color);
+      font-size: var(--font-size-sm);
+      color: var(--text-color-secondary);
+    }
+
+    @media print {
+      .resume-footer {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="resume-header">
+    <h1 class="resume-name">Charles Ouimet</h1>
+    <p class="resume-headline">Principal Developer</p>
+    <div class="resume-contact-info">
+      <span class="resume-contact-item"><span class="resume-contact-icon">📧</span><a href="mailto:charles.ouimet@gmail.com" class="resume-contact-link">charles.ouimet@gmail.com</a></span>
+      <span class="resume-contact-item"><span class="resume-contact-icon">📞</span>514-220-4240</span>
+      <span class="resume-contact-item"><span class="resume-contact-icon">🔗</span><a href="https://ouimet.info" class="resume-contact-link">https://ouimet.info</a></span>
+    </div>
+    <div class="resume-contact-info resume-location-info">
+      <span class="resume-contact-item"><span class="resume-contact-icon">📍</span>Montréal, Québec, CA</span>
+    </div>
+    <div class="resume-contact-info resume-profiles-info">
+      <span class="resume-contact-item"><span class="resume-contact-label">LinkedIn</span>: <a href="https://ca.linkedin.com/in/charlesouimet" class="resume-contact-link">@charlesouimet</a></span>
+      <span class="resume-contact-item"><span class="resume-contact-label">GitHub</span>: <a href="https://github.com/couimet" class="resume-contact-link">@couimet</a></span>
+      <span class="resume-contact-item"><span class="resume-contact-label">Twitter</span>: <a href="https://x.com/charlesouimet/" class="resume-contact-link">@charlesouimet</a></span>
+      <span class="resume-contact-item"><span class="resume-contact-label">Telegram</span>: <a href="https://t.me/couimet" class="resume-contact-link">@@couimet</a></span>
+      <span class="resume-contact-item"><span class="resume-contact-label">Discord</span>: <a href="https://discord.com/users/couimet" class="resume-contact-link">@couimet</a></span>
+      <span class="resume-contact-item"><span class="resume-contact-label">Instagram</span>: <a href="https://www.instagram.com/charles.ouimet.geek/" class="resume-contact-link">@charles.ouimet.geek</a></span>
+    </div>
+  </header>
+  <section class="resume-section" data-section="summary">
+    <h2 class="resume-section-title">Basics</h2>
+    <div class="resume-section-content">
+      <div class="resume-summary-content">
+        <p>After 25 years of coding, I&#39;m still passionate about diving into the details and tackling complex problems. As a Principal Developer, I focus on building resilient APIs and architectures that strike the right balance between quality, cost, and pragmatism. Using small, collaborative, and iterative cycles, I ensure each release delivers impact—driving success together with the team.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="resume-section" data-section="education">
+    <h2 class="resume-section-title">Education</h2>
+    <div class="resume-section-content">
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">Université du Québec à Montréal (UQAM)</div>
+            <div class="resume-entry-organization">Bachelor, Computer Science</div>
+          </div>
+          <div class="resume-entry-date">Sep 1997–Jun 2001</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="resume-section" data-section="work">
+    <h2 class="resume-section-title">Work</h2>
+    <div class="resume-section-content">
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title"><a href="https://shopify.com">Shopify</a></div>
+            <div class="resume-entry-organization">Staff Developer</div>
+          </div>
+          <div class="resume-entry-date">Aug 2025–May 2026</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Contributed to the transition of the shop.app ecosystem to YugabyteDB, including ownership of migration for one of the highest QPS tables (top 20)</p>
+            </li>
+            <li>
+              <p>Technical design and implementation of an affiliate payout program in partnership with impact.com</p>
+            </li>
+            <li>
+              <p>Used Claude Code in daily development workflows; building commands to automate repetitive tasks and skills to encode domain-specific knowledge</p>
+            </li>
+            <li>
+              <p>Developed a Claude skill for ATC (Air Traffic Controller) support rotation, leveraging multiple Model Context Protocol (MCP) integrations to collect data and guide decisions based on team runbooks</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">Octav</div>
+            <div class="resume-entry-organization">Principal Developer</div>
+          </div>
+          <div class="resume-entry-date">Feb 2025–Jul 2025</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Extended a fork of the SonarWatch Portfolio to support additional protocols, exploring independence from Debank&#39;s API for on-chain portfolio data</p>
+            </li>
+            <li>
+              <p>Decomposed parts of a monolith into independent microservices to improve scalability and reduce resource contention</p>
+            </li>
+            <li>
+              <p>Migrated a standalone npm package repo to a Turborepo monorepo with changesets, streamlining dependency and version management</p>
+            </li>
+            <li>
+              <p>Created a centralized GitHub Actions repository to reduce duplication across CI/CD workflows and improve maintainability</p>
+            </li>
+            <li>
+              <p>Introduced structured logging across services, enabling efficient log filtering and analysis via AWS CloudWatch Log Insights</p>
+            </li>
+            <li>
+              <p>Designed CloudWatch custom metrics from structured logs to improve observability and operational insight</p>
+            </li>
+            <li>
+              <p>Developed a reusable npm package to avoid 3rd-party APIs throttling our calls</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title"><a href="https://flexport.com">Flexport</a></div>
+            <div class="resume-entry-organization">Senior Staff Developer</div>
+          </div>
+          <div class="resume-entry-date">Jun 2023–Oct 2024</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Reviewed design documents to help integrate Flexport&#39;s freight-forwarding core systems with the newly acquired fulfillment business (known internally as omni-channel)</p>
+            </li>
+            <li>
+              <p>Integrated observability-as-code into several services to enhance monitoring and maintainability</p>
+            </li>
+            <li>
+              <p>Led the migration of over 80 microservices to AWS SDK V3 and out of Node.js v16. Developed an abstraction layer to enable seamless transition between the SDK versions</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title"><a href="https://shopify.com">Shopify Logistics</a></div>
+            <div class="resume-entry-organization">Senior Staff Developer</div>
+          </div>
+          <div class="resume-entry-date">Jul 2022–Jun 2023</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Actively coded new features and provided technical direction for the prep team</p>
+            </li>
+            <li>
+              <p>Built presentations and video capsules covering patterns like the transactional outbox, sagas (orchestration vs. choreography), and more for the Technical Leadership Community</p>
+            </li>
+            <li>
+              <p>Using EventStorming and BPMN, facilitated conversations between tech and non-tech stakeholders, ensuring everyone spoke a common language and thought in terms of domain boundaries</p>
+            </li>
+            <li>
+              <p>Helped create observability guidelines and led the first implementation. Built and maintained npm packages to enable observability-as-code</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">Deliverr</div>
+            <div class="resume-entry-organization">Senior Developer</div>
+          </div>
+          <div class="resume-entry-date">Dec 2021–Jul 2022</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Led the team in adopting domain-driven design (DDD) and finite state machines over traditional CRUD-based REST APIs</p>
+            </li>
+            <li>
+              <p>Introduced EventStorming and BPMN diagrams to document workflows and guided the team in writing concise, effective technical design documents</p>
+            </li>
+            <li>
+              <p>Authored the original specification for integration events in our distributed ecosystem, ensuring a robust foundation for inter-service communication</p>
+            </li>
+            <li>
+              <p>Developed and maintained a suite of private npm packages to standardize reusable functionality across projects, including packages for the transactional outbox pattern, integration events, TSOA, CDC pipelines, and serverless components</p>
+            </li>
+            <li>
+              <p>Regularly reviewed PRs and technical design documents across teams</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title"><a href="https://ssense.com">SSENSE</a></div>
+            <div class="resume-entry-organization">Tech Lead</div>
+          </div>
+          <div class="resume-entry-date">Aug 2020–Dec 2021</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Complete BPMN documentation of the orders&#39; lifecycle by reverse-engineering the existing code to identify the optimal way to peel-off the order management system (OMS) from a monolith</p>
+            </li>
+            <li>
+              <p>Design of the OMS peel-off (DDD context maps and bounded contexts, serverless approach, integration into existing event-driven architecture, OpenAPI specs, data modeling)</p>
+            </li>
+            <li>
+              <p>Lead implementation of the OMS peel-off (DDD concepts, SOLID principles, hexagonal architecture, CQRS). Coded and supervised the most complex parts</p>
+            </li>
+            <li>
+              <p>Design and implementation of the OMS&#39; Distributed Order Management component</p>
+            </li>
+            <li>
+              <p>Design and implementation of a purely serverless system to manage customs (CBSA) export declarations (C4 diagrams, data flows, integration with a 3rd-party API)</p>
+            </li>
+            <li>
+              <p>Training other teams on serverless technologies</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title"><a href="https://ssense.com">SSENSE</a></div>
+            <div class="resume-entry-organization">Senior Developer</div>
+          </div>
+          <div class="resume-entry-date">Oct 2019–Aug 2020</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Contributed to the PIM system (Python back-end)</p>
+            </li>
+            <li>
+              <p>Contributed to the PO platform (React + Redux front-end)</p>
+            </li>
+            <li>
+              <p>Improved micro-services in a trunk-based development workflow with the use of feature flags</p>
+            </li>
+            <li>
+              <p>Winner of Hackathon 2019 to improve the onboarding experience of new developers</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title"><a href="https://zola.com">Zola</a></div>
+            <div class="resume-entry-organization">Senior Developer</div>
+          </div>
+          <div class="resume-entry-date">Jan 2019–Oct 2019</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Improved micro-services (mainly REST APIs), maintaining backwards-compatibility with the use of feature flags</p>
+            </li>
+            <li>
+              <p>Technologies: Java, Hibernate, Guice, Mockito, AWS</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">AFS Technologies Inc.</div>
+            <div class="resume-entry-organization">Architect &amp; Scrum Master</div>
+          </div>
+          <div class="resume-entry-date">Sep 2014–Dec 2018</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Long-term vision for the evolution of a SaaS REST application</p>
+            </li>
+            <li>
+              <p>Standardization of private and public APIs (payload and URL consistency, versioning, etc.)</p>
+            </li>
+            <li>
+              <p>Rigorous code reviews and training of team members in this craft</p>
+            </li>
+            <li>
+              <p>Technologies: Java, Hibernate, Spring, Mockito, Jenkins, Artifactory, SQL Server, SSAS, OLAP, ETL</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">AFS Technologies Inc.</div>
+            <div class="resume-entry-organization">Senior Developer</div>
+          </div>
+          <div class="resume-entry-date">Nov 2011–Sep 2014</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Full stack contributions to a SaaS REST application</p>
+            </li>
+            <li>
+              <p>Supervision and code review of offshore team (up to 9 people in India)</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title"><a href="https://videotron.com">Vidéotron Ltée</a></div>
+            <div class="resume-entry-organization">Senior Developer</div>
+          </div>
+          <div class="resume-entry-date">Apr 2011–Oct 2011</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Architectural guidance, selection of third-party libraries, analysis and code review</p>
+            </li>
+            <li>
+              <p>XML subject matter expert and technical reference in the department</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title"><a href="https://videotron.com">Vidéotron Ltée</a></div>
+            <div class="resume-entry-organization">Developer</div>
+          </div>
+          <div class="resume-entry-date">Jul 2006–Apr 2011</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Needs assessments and prototype presentations</p>
+            </li>
+            <li>
+              <p>Standardization of exchange formats between layers of the system (XML)</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title"><a href="https://markzware.com">Markzware Software</a></div>
+            <div class="resume-entry-organization">Senior Developer</div>
+          </div>
+          <div class="resume-entry-date">Mar 2001–Jun 2006</div>
+        </div>
+        <div class="resume-entry-summary">
+          <ul>
+            <li>
+              <p>Functional analysis and implementation; API maintenance and extension</p>
+            </li>
+            <li>
+              <p>Supervision of developers located in Europe and the United States</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="resume-section" data-section="skills">
+    <h2 class="resume-section-title">Skills</h2>
+    <div class="resume-section-content">
+      <div class="resume-skill-item">
+        <div class="resume-skill-name">Back-end</div>
+        <div>
+          <div class="resume-labeled-list"><span>Keywords</span>: TypeScript, viem, ethers, sequelize, zod, AWS, Lambda, Step Functions, SNS, SQS, S3, API Gateway, Kinesis, CloudWatch, Serverless Framework, Redis, Docker, Inversify, Express, tsoa, Koa, Middy, OAuth, Ruby on Rails, ActiveRecord, Sidekiq, GraphQL, Python, Java</div>
+        </div>
+      </div>
+      <div class="resume-skill-item">
+        <div class="resume-skill-name">Databases &amp; Runtimes</div>
+        <div>
+          <div class="resume-labeled-list"><span>Keywords</span>: MySQL, PostgreSQL, YugabyteDB, DynamoDB, Node.js, Maxwell</div>
+        </div>
+      </div>
+      <div class="resume-skill-item">
+        <div class="resume-skill-name">Tests &amp; CI/CD</div>
+        <div>
+          <div class="resume-labeled-list"><span>Keywords</span>: GitHub Actions, CircleCI, Buildkite, Jenkins, jest, chai, sinon, mocha, Mockito</div>
+        </div>
+      </div>
+      <div class="resume-skill-item">
+        <div class="resume-skill-name">Tools &amp; Infrastructure</div>
+        <div>
+          <div class="resume-labeled-list"><span>Keywords</span>: Claude Code, Cursor, Graphite, GitHub Copilot, ChatGPT, pnpm, npm, changesets, Turborepo, Visual Studio Code, MermaidJS, DataDog, split.io, LaunchDarkly, Metabase, Asana, Notion, Postman, Jira, Confluence, GitLab, Ansible, Kubernetes, Sentry, RuboCop</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="resume-section" data-section="awards">
+    <h2 class="resume-section-title">Awards</h2>
+    <div class="resume-section-content">
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">Canada&#39;s 50 Most Influential People in Graphic Communications</div>
+            <div class="resume-entry-organization">PrintAction Magazine</div>
+          </div>
+          <div class="resume-entry-date">Jul 2005</div>
+        </div>
+        <div class="resume-entry-summary">
+          <p>Recognized as one of Canada&#39;s 50 most influential people in graphic communications.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="resume-section" data-section="certificates">
+    <h2 class="resume-section-title">Certificates</h2>
+    <div class="resume-section-content">
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">Certified Cloud Practitioner</div>
+            <div class="resume-entry-organization">Amazon Web Services (AWS)</div>
+          </div>
+          <div class="resume-entry-date">Jan 2019</div>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">Professional Scrum Master I</div>
+            <div class="resume-entry-organization">Scrum Alliance</div>
+          </div>
+          <div class="resume-entry-date">Jan 2013</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="resume-section" data-section="references">
+    <h2 class="resume-section-title">References</h2>
+    <div class="resume-section-content">
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">Available upon request</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="resume-section" data-section="interests">
+    <h2 class="resume-section-title">Interests</h2>
+    <div class="resume-section-content">
+      <div class="resume-interest-item"><span class="resume-interest-name">Crypto / Blockchain / DeFi / Web3</span>: EVM, Solana, L2s, Smart Contracts, DEXes, AMMs, Liquidity Pools, Staking</div>
+      <div class="resume-interest-item"><span class="resume-interest-name">Domain-Driven Design</span>: Bounded Contexts, EventStorming, BPMN, CQRS, Hexagonal Architecture</div>
+      <div class="resume-interest-item"><span class="resume-interest-name">Event-Driven Architecture</span>: Transactional Outbox, Sagas, CDC, Integration Events</div>
+      <div class="resume-interest-item"><span class="resume-interest-name">Serverless</span>: AWS Lambda, Step Functions, API Gateway</div>
+    </div>
+  </section>
+
+  <section class="resume-section" data-section="volunteer">
+    <h2 class="resume-section-title">Volunteer</h2>
+    <div class="resume-section-content">
+      <div class="resume-entry">
+        <div class="resume-entry-header">
+          <div>
+            <div class="resume-entry-title">CIP4</div>
+            <div class="resume-entry-organization">Chair of Preflight Sub-committee</div>
+          </div>
+          <div class="resume-entry-date">Jan 2002–Dec 2005</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="resume-footer">Generated by <a href="https://yamlresume.dev">YAMLResume</a></footer>
+</body>
+
+</html>
