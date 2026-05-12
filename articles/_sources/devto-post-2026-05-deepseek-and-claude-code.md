@@ -60,6 +60,5 @@ Five days, $4 spent, zero rate-limit walls.
 
 If your employer foots the Anthropic bill, or your wallet can swing a Max plan, by all means — Opus 4.7 is still the best at the top end. If that's not you, eight env vars.
 
-```
+```text
 Co-Authored-By: Claude <noreply@anthropic.com> (running on deepseek-v4-pro)
-```
