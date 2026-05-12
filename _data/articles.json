@@ -1,5 +1,11 @@
 [
   {
+    "date": "2026-05-12",
+    "title": "Eight env vars and Claude Code stops eating my paycheck",
+    "link": "https://dev.to/couimet/eight-env-vars-and-claude-code-stops-eating-my-paycheck-2659",
+    "anchor": "deepseek-claude-code"
+  },
+  {
     "date": "2026-04-21",
     "title": "I thought I was DRY-ing. I may have been double-paying.",
     "link": "https://dev.to/couimet/i-thought-i-was-dry-ing-i-may-have-been-double-paying-5dli",
