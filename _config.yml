@@ -26,6 +26,7 @@ exclude:
   - LICENSE
   - README.md
   - .history
+  - articles/_sources
 include:
   - .nojekyll
   - _data
