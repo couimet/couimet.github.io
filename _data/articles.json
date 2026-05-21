@@ -1,5 +1,11 @@
 [
   {
+    "date": "2026-05-21",
+    "title": "I sold you on /scratchpad. Then I migrated to /note.",
+    "link": "https://dev.to/couimet/i-sold-you-on-scratchpad-then-i-migrated-to-note-4n1o",
+    "anchor": "scratchpad-to-note"
+  },
+  {
     "date": "2026-05-12",
     "title": "Eight env vars and Claude Code stops eating my paycheck",
     "link": "https://dev.to/couimet/eight-env-vars-and-claude-code-stops-eating-my-paycheck-2659",
