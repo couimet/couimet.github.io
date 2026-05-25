@@ -1,0 +1,39 @@
+{% assign project_slug = page.slug | default: page.path | split: '/' | last | replace: '.md', '' %}
+{% assign related = "" | split: "" %}
+{% for article in site.data.articles %}
+  {% if article.projects %}
+    {% if article.projects contains project_slug %}
+      {% assign related = related | push: article %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if related.size > 0 %}
+  {% assign related = related | sort: "date" | reverse %}
+  {% assign utm_campaign = "project-" | append: project_slug %}
+  <div class="mt-5">
+    <h2 class="h4 mb-3">Articles about this project</h2>
+    <div class="articles-scroll">
+      {% for article in related %}
+        {% assign link_base = article.link | split: '#' | first %}
+        {% assign link_fragment = article.link | remove_first: link_base %}
+        {% assign utm_separator = '?' %}
+        {% if link_base contains '?' %}
+          {% assign utm_separator = '&' %}
+        {% endif %}
+        {% capture article_href %}{{ link_base }}{{ utm_separator }}utm_source=ouimet.info&utm_medium=referral&utm_campaign={{ utm_campaign | url_encode }}{{ link_fragment }}{% endcapture %}
+        <article class="article-item px-3 py-2">
+          <p class="article-date mb-1">{{ article.date }}</p>
+          <a
+            class="article-link"
+            href="{{ article_href }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ article.title }}
+          </a>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
