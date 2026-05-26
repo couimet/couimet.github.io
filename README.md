@@ -1,6 +1,6 @@
 # Professional Portfolio
 
-For details on this professional portfolio, please see https://ouimet.info (aka https://couimet.github.io).
+For details on this professional portfolio, please see https://ouimet.info.
 
 ## Local Development
 
