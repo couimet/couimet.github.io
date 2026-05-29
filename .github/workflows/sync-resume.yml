@@ -21,7 +21,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git pull --rebase origin main
+          git pull --rebase --autostash origin main
           git add -f resume.yml resume-full.html
           git commit -m "chore: sync YAML resume and HTML [skip ci]" || echo "No changes"
           git push
