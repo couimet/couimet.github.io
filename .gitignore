@@ -10,5 +10,6 @@ _site/
 resume.yml
 resume-full.html
 
+# Claude skill working directories
 .claude-work/
 .claude/
