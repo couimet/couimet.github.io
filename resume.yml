@@ -48,13 +48,18 @@ content:
         - AMMs
         - Liquidity Pools
         - Staking
-    - name: Domain-Driven Design
+    - name: Clean Architecture
       keywords:
+        - Domain-Driven Design
         - Bounded Contexts
-        - EventStorming
-        - BPMN
         - CQRS
         - Hexagonal Architecture
+        - SOLID
+    - name: Modeling & Diagramming
+      keywords:
+        - EventStorming
+        - BPMN
+        - C4 model
     - name: Event-Driven Architecture
       keywords:
         - Transactional Outbox
@@ -123,6 +128,13 @@ content:
         - GraphQL
         - Python
         - Java
+        - JSON Schema
+        - OpenAPI
+        - SOAP
+    - name: Front-end
+      keywords:
+        - React
+        - Redux
     - name: Databases & Runtimes
       keywords:
         - MySQL
@@ -284,26 +296,48 @@ content:
       startDate: 2020-08-01
       endDate: 2021-12-01
       summary: >-
+        - Member of the Technology Architecture Group (TAG), a 6-10 person group
+        of architects, Staff & Principal Engineers responsible for the
+        department's tech standards.
+
+        - Oversaw projects of 3 other teams as a TAG member to ensure adherence
+        to the established standards.
+
         - Complete BPMN documentation of the orders' lifecycle by
         reverse-engineering the existing code to identify the optimal way to
         peel-off the order management system (OMS) from a monolith
 
-        - Design of the OMS peel-off (DDD context maps and bounded contexts,
-        serverless approach, integration into existing event-driven
-        architecture, OpenAPI specs, data modeling)
+        - Design of the OMS peel-off, driven by SSENSE's international expansion
+        from a single Montréal fulfillment center to a second physical facility
+        in Europe (DDD context maps and bounded contexts, serverless approach,
+        integration into existing event-driven architecture, OpenAPI specs, data
+        modeling)
 
         - Lead implementation of the OMS peel-off (DDD concepts, SOLID
-        principles, hexagonal architecture, CQRS). Coded and supervised the most
-        complex parts
+        principles, hexagonal architecture, CQRS, finite state machine modeled
+        from state diagrams of the complete order lifecycle). Coded and
+        supervised the most complex parts
 
         - Design and implementation of the OMS' Distributed Order Management
         component
+
+        - Built a separate service to manage the multiple legal entities
+        introduced by the international expansion (surfacing the right entity
+        across the website's terms-and-conditions)
+
+        - Designed an async shadow-order pipeline (API Gateway + JSON Schema +
+        SQS) to de-risk the OMS cutover
 
         - Design and implementation of a purely serverless system to manage
         customs (CBSA) export declarations (C4 diagrams, data flows, integration
         with a 3rd-party API)
 
-        - Training other teams on serverless technologies
+        - Drove dev onboarding automation as a follow-up from the Hackathon 2019
+        POC
+
+        - Other engineering teams reached out for serverless design reviews and
+        architecture consults, drawing on my TAG knowledge. Most of SSENSE ran
+        on Kubernetes; my teams were among the heaviest serverless users.
     - name: SSENSE
       position: Senior Developer
       url: https://ssense.com

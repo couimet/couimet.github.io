@@ -443,22 +443,37 @@
         <div class="resume-entry-summary">
           <ul>
             <li>
+              <p>Member of the Technology Architecture Group (TAG), a 6-10 person group of architects, Staff &amp; Principal Engineers responsible for the department&#39;s tech standards.</p>
+            </li>
+            <li>
+              <p>Oversaw projects of 3 other teams as a TAG member to ensure adherence to the established standards.</p>
+            </li>
+            <li>
               <p>Complete BPMN documentation of the orders&#39; lifecycle by reverse-engineering the existing code to identify the optimal way to peel-off the order management system (OMS) from a monolith</p>
             </li>
             <li>
-              <p>Design of the OMS peel-off (DDD context maps and bounded contexts, serverless approach, integration into existing event-driven architecture, OpenAPI specs, data modeling)</p>
+              <p>Design of the OMS peel-off, driven by SSENSE&#39;s international expansion from a single Montréal fulfillment center to a second physical facility in Europe (DDD context maps and bounded contexts, serverless approach, integration into existing event-driven architecture, OpenAPI specs, data modeling)</p>
             </li>
             <li>
-              <p>Lead implementation of the OMS peel-off (DDD concepts, SOLID principles, hexagonal architecture, CQRS). Coded and supervised the most complex parts</p>
+              <p>Lead implementation of the OMS peel-off (DDD concepts, SOLID principles, hexagonal architecture, CQRS, finite state machine modeled from state diagrams of the complete order lifecycle). Coded and supervised the most complex parts</p>
             </li>
             <li>
               <p>Design and implementation of the OMS&#39; Distributed Order Management component</p>
             </li>
             <li>
+              <p>Built a separate service to manage the multiple legal entities introduced by the international expansion (surfacing the right entity across the website&#39;s terms-and-conditions)</p>
+            </li>
+            <li>
+              <p>Designed an async shadow-order pipeline (API Gateway + JSON Schema + SQS) to de-risk the OMS cutover</p>
+            </li>
+            <li>
               <p>Design and implementation of a purely serverless system to manage customs (CBSA) export declarations (C4 diagrams, data flows, integration with a 3rd-party API)</p>
             </li>
             <li>
-              <p>Training other teams on serverless technologies</p>
+              <p>Drove dev onboarding automation as a follow-up from the Hackathon 2019 POC</p>
+            </li>
+            <li>
+              <p>Other engineering teams reached out for serverless design reviews and architecture consults, drawing on my TAG knowledge. Most of SSENSE ran on Kubernetes; my teams were among the heaviest serverless users.</p>
             </li>
           </ul>
         </div>
@@ -617,7 +632,13 @@
       <div class="resume-skill-item">
         <div class="resume-skill-name">Back-end</div>
         <div>
-          <div class="resume-labeled-list"><span>Keywords</span>: TypeScript, viem, ethers, sequelize, zod, AWS, Lambda, Step Functions, SNS, SQS, S3, API Gateway, Kinesis, CloudWatch, Serverless Framework, Redis, Docker, Inversify, Express, tsoa, Koa, Middy, OAuth, Ruby on Rails, ActiveRecord, Sidekiq, GraphQL, Python, Java</div>
+          <div class="resume-labeled-list"><span>Keywords</span>: TypeScript, viem, ethers, sequelize, zod, AWS, Lambda, Step Functions, SNS, SQS, S3, API Gateway, Kinesis, CloudWatch, Serverless Framework, Redis, Docker, Inversify, Express, tsoa, Koa, Middy, OAuth, Ruby on Rails, ActiveRecord, Sidekiq, GraphQL, Python, Java, JSON Schema, OpenAPI, SOAP</div>
+        </div>
+      </div>
+      <div class="resume-skill-item">
+        <div class="resume-skill-name">Front-end</div>
+        <div>
+          <div class="resume-labeled-list"><span>Keywords</span>: React, Redux</div>
         </div>
       </div>
       <div class="resume-skill-item">
@@ -700,7 +721,8 @@
     <h2 class="resume-section-title">Interests</h2>
     <div class="resume-section-content">
       <div class="resume-interest-item"><span class="resume-interest-name">Crypto / Blockchain / DeFi / Web3</span>: EVM, Solana, L2s, Smart Contracts, DEXes, AMMs, Liquidity Pools, Staking</div>
-      <div class="resume-interest-item"><span class="resume-interest-name">Domain-Driven Design</span>: Bounded Contexts, EventStorming, BPMN, CQRS, Hexagonal Architecture</div>
+      <div class="resume-interest-item"><span class="resume-interest-name">Clean Architecture</span>: Domain-Driven Design, Bounded Contexts, CQRS, Hexagonal Architecture, SOLID</div>
+      <div class="resume-interest-item"><span class="resume-interest-name">Modeling &amp; Diagramming</span>: EventStorming, BPMN, C4 model</div>
       <div class="resume-interest-item"><span class="resume-interest-name">Event-Driven Architecture</span>: Transactional Outbox, Sagas, CDC, Integration Events</div>
       <div class="resume-interest-item"><span class="resume-interest-name">Serverless</span>: AWS Lambda, Step Functions, API Gateway</div>
     </div>
