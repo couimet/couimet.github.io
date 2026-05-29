@@ -123,14 +123,19 @@
       "url": "https://ssense.com",
       "startDate": "2020-08-01",
       "endDate": "2021-12-01",
-      "summary": "Member of the Technical Architecture Group (6-10 persons). With architects, Staff & Principal Engineers, established the department's tech standards and oversaw projects of 3 other teams.",
+      "summary": "Tech Lead during SSENSE's international expansion from a single Montréal fulfillment center to a second physical facility in Europe. Member of the Technology Architecture Group (TAG); led the design and implementation of the distributed, fully-serverless OMS peel-off, alongside the legal-entity service and a CBSA export-declaration system.",
       "highlights": [
+        "Member of the Technology Architecture Group (TAG), a 6-10 person group of architects, Staff & Principal Engineers responsible for the department's tech standards.",
+        "Oversaw projects of 3 other teams as a TAG member to ensure adherence to the established standards.",
         "Complete BPMN documentation of the orders' lifecycle by reverse-engineering the existing code to identify the optimal way to peel-off the order management system (OMS) from a monolith",
-        "Design of the OMS peel-off (DDD context maps and bounded contexts, serverless approach, integration into existing event-driven architecture, OpenAPI specs, data modeling)",
-        "Lead implementation of the OMS peel-off (DDD concepts, SOLID principles, hexagonal architecture, CQRS). Coded and supervised the most complex parts",
+        "Design of the OMS peel-off, driven by SSENSE's international expansion from a single Montréal fulfillment center to a second physical facility in Europe (DDD context maps and bounded contexts, serverless approach, integration into existing event-driven architecture, OpenAPI specs, data modeling)",
+        "Lead implementation of the OMS peel-off (DDD concepts, SOLID principles, hexagonal architecture, CQRS, finite state machine modeled from state diagrams of the complete order lifecycle). Coded and supervised the most complex parts",
         "Design and implementation of the OMS' Distributed Order Management component",
+        "Built a separate service to manage the multiple legal entities introduced by the international expansion (surfacing the right entity across the website's terms-and-conditions)",
+        "Designed an async shadow-order pipeline (API Gateway + JSON Schema + SQS) to de-risk the OMS cutover",
         "Design and implementation of a purely serverless system to manage customs (CBSA) export declarations (C4 diagrams, data flows, integration with a 3rd-party API)",
-        "Training other teams on serverless technologies"
+        "Drove dev onboarding automation as a follow-up from the Hackathon 2019 POC",
+        "Other engineering teams reached out for serverless design reviews and architecture consults, drawing on my TAG knowledge. Most of SSENSE ran on Kubernetes; my teams were among the heaviest serverless users."
       ]
     },
     {
@@ -139,7 +144,7 @@
       "url": "https://ssense.com",
       "startDate": "2019-10-01",
       "endDate": "2020-08-01",
-      "summary": "Contributed to the Product Information Management (PIM) system and purchase orders (PO) platform.",
+      "summary": "Full-stack contributions on the Product Information Management (PIM) domain: PIM back-end in Python, and the purchase orders (PO) platform front-end in React + Redux.",
       "highlights": [
         "Contributed to the PIM system (Python back-end)",
         "Contributed to the PO platform (React + Redux front-end)",
@@ -290,7 +295,17 @@
         "Sidekiq",
         "GraphQL",
         "Python",
-        "Java"
+        "Java",
+        "JSON Schema",
+        "OpenAPI",
+        "SOAP"
+      ]
+    },
+    {
+      "name": "Front-end",
+      "keywords": [
+        "React",
+        "Redux"
       ]
     },
     {
@@ -364,13 +379,21 @@
       ]
     },
     {
-      "name": "Domain-Driven Design",
+      "name": "Clean Architecture",
       "keywords": [
+        "Domain-Driven Design",
         "Bounded Contexts",
+        "CQRS",
+        "Hexagonal Architecture",
+        "SOLID"
+      ]
+    },
+    {
+      "name": "Modeling & Diagramming",
+      "keywords": [
         "EventStorming",
         "BPMN",
-        "CQRS",
-        "Hexagonal Architecture"
+        "C4 model"
       ]
     },
     {
