@@ -12,4 +12,5 @@ resume-full.html
 
 # Claude skill working directories
 .claude-work/
-.claude/
+.claude/*
+!.claude/skills/

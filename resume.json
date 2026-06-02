@@ -108,7 +108,7 @@
       "position": "Senior Developer",
       "startDate": "2021-12-01",
       "endDate": "2022-07-01",
-      "summary": "Founding member of the prep team that launched key features to test market adoption, later spun off into a standalone domain using the strangler pattern and event-driven architecture.",
+      "summary": "Founding member of the prep team that built and spun off the prep service from Deliverr's inbound microservice via the strangler pattern. The prep service incubated DDD, finite state machines, EventStorming/BPMN, the transactional outbox pattern, and a standardized integration-events specification, with patterns later adopted across the ecosystem. Beyond prep, I maintained shared npm packages and reviewed PRs and technical design documents across teams.",
       "highlights": [
         "Led the team in adopting domain-driven design (DDD) and finite state machines over traditional CRUD-based REST APIs",
         "Introduced EventStorming and BPMN diagrams to document workflows and guided the team in writing concise, effective technical design documents",
