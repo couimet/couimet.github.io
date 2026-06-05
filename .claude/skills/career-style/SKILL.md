@@ -58,6 +58,20 @@ Factual, not summary.
 - **Link on first mention** within a bullet only. Subsequent mentions of the same term in the same bullet stay plain text. Across sibling bullets in the same role block, re-link sparingly when the link genuinely helps navigation (e.g., when a sub-bullet references a tool the lead-in didn't link).
 - **No first-person self-evaluation** ("I was the de facto expert", "I was uniquely qualified"). State what happened and let observers carry the implicit signal (e.g., "TAG members routed teams to me for serverless reviews" lets the reader infer expertise without claiming it).
 
+### Strict Keep-a-Changelog noun-phrase form
+
+Every entry under `Added` / `Changed` / `Deprecated` should read as a noun phrase describing what shipped, not as narrative or commentary.
+
+- **No first-person action verbs** in the bullet body: `I built`, `I led`, `I created`, `I maintained`, `I developed`, `I designed`, `I implemented`, `I authored`, `I introduced`, `I oversaw`, `I delivered`, `I shipped`, `I wrote`. Use noun-phrase form: `Presentations and video capsules on X` not `Presentations and video capsules I built on X`.
+- **No editorial flourishes**: `ramping observability up to the highest bar`, `world-class`, `best-in-class`, `highest-impact`, etc. State the fact; let the reader infer significance.
+- **No vague filler**: `and more`, `and beyond`, loose `etc.` outside parenthetical examples.
+- **No contrast clauses for framing**: drop `rather than X` / `instead of Y` unless the contrast carries a load-bearing fact rather than just orienting the reader.
+- **Two-sentence bullets must add facts in the second sentence**, not justify or re-explain the first. If sentence 2 reads as defense or context-setting for sentence 1, fold or cut.
+
+#### Exception: Key-relationships sub-bullets
+
+Sub-bullets inside a `Key relationships at <Role>:` parent ARE allowed first-person voice (`his mentorship was often framed around...`, `sponsored my level-up to...`). The entry IS the relationship; the personal lens is the point. Exception scoped to bullets inside `Key relationships at <Role>:` parents only.
+
 ### Summary-as-distillation
 
 In `resume.json:work[].summary`: every claim must be backed by a bullet in the same entry's `highlights[]`. The `highlights[]` array must read coherently if `summary` were stripped.
@@ -72,3 +86,4 @@ Two reasons:
 - For each summary claim, identify the backing highlight. If a claim has no backing highlight, either add a highlight or cut the claim from the summary.
 - For each `<li>` you wrote, verify it's a fact, not a summary or evaluation.
 - For each tool mention, verify it's the first mention in the role block. If not, drop the link; keep plain text.
+- For each `<li>` you wrote (outside `Key relationships at <Role>:` sub-bullets), verify it carries no first-person action verbs, no editorial flourishes, no vague filler (`and more` / loose `etc.`), and no framing-only contrast clauses. Two-sentence bullets must add a fact in sentence 2.
