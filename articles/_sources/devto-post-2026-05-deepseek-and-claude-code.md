@@ -1,3 +1,10 @@
+---
+title: 'Eight env vars and Claude Code stops eating my paycheck'
+published: https://dev.to/couimet/eight-env-vars-and-claude-code-stops-eating-my-paycheck-2659
+tags: claudecode, deepseek, ai, productivity
+cover_image:
+---
+
 # Eight env vars and Claude Code stops eating my paycheck
 
 > **Update (2026-06-04):** Running into model errors with this setup? [Read the investigation here.](https://dev.to/couimet/fix-theres-an-issue-with-the-selected-model-deepseek-v4-pro-in-claude-cli-44jg)
