@@ -28,7 +28,7 @@ The intended editing flow is changelog-first: changes land in `_includes/career/
 
 To enrich one role at a time, invoke the project-local skill:
 
-```
+```text
 /career-role-enrich <role-slug>
 ```
 
