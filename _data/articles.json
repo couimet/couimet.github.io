@@ -1,5 +1,11 @@
 [
   {
+    "date": "2026-06-04",
+    "title": "Fix: \"There's an issue with the selected model (deepseek-v4-pro)\" in Claude CLI",
+    "link": "https://dev.to/couimet/fix-theres-an-issue-with-the-selected-model-deepseek-v4-pro-in-claude-cli-44jg",
+    "anchor": "deepseek-model-not-found"
+  },
+  {
     "date": "2026-05-21",
     "title": "I sold you on /scratchpad. Then I migrated to /note.",
     "link": "https://dev.to/couimet/i-sold-you-on-scratchpad-then-i-migrated-to-note-4n1o",
