@@ -181,6 +181,7 @@ content:
         - Kubernetes
         - Sentry
         - RuboCop
+        - LocalStack
   volunteer:
     - organization: CIP4
       position: Chair of Preflight Sub-committee
