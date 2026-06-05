@@ -68,7 +68,7 @@
       <h2 id="changelog-7-0-0"><a href="#changelog-7-0-0" class="heading-anchor" aria-label="Copy link to this section">🔗</a>7.0.0 - Principal Software Developer @ Octav (2025)</h2>
       <h3 id="changelog-7-0-0-added"><a href="#changelog-7-0-0-added" class="heading-anchor" aria-label="Copy link to this section">🔗</a>Added</h3>
       <ul>
-        <li>Transition to crypto/blockchain world; thanks to <a href="https://www.linkedin.com/in/luc-blackburn-32854788/" target="_blank" rel="noopener noreferrer">Luc Blackburn</a> and <a href="https://www.linkedin.com/in/mbaril010/" target="_blank" rel="noopener noreferrer">Mathieu Baril</a> for providing me the opportunity to enter this world.</li>
+        <li>Transition to crypto/blockchain world; shout-out to <a href="https://www.linkedin.com/in/luc-blackburn-32854788/" target="_blank" rel="noopener noreferrer">Luc Blackburn</a> and <a href="https://www.linkedin.com/in/mbaril010/" target="_blank" rel="noopener noreferrer">Mathieu Baril</a> for providing the opportunity to enter this world.</li>
         <li>Many LinkedIn Learning certificates; <a href="https://www.linkedin.com/in/charlesouimet/details/certifications/" target="_blank" rel="noopener noreferrer">check them out</a>!</li>
         <li>Professional portfolio website: <a href="https://ouimet.info" target="_blank" rel="noopener noreferrer">ouimet.info</a>. I really like my <code>Career Changelog</code> section 🤓.</li>
         <li>
@@ -133,6 +133,7 @@
             <li>Introduction of <a href="https://www.inversify.io" target="_blank" rel="noopener noreferrer">inversify</a> for dependency injection in the prep service. First use of inversify anywhere at Deliverr; the cleanly-structured code that resulted became one of the visible incubation wins for the team.</li>
             <li>Small monorepo for the prep service with three independently-versioned packages: the backend service, the prep client (consumed by other services), and the prep-specific integration-events package (built on the shared skeleton above). Each evolved at its own pace via SemVer, avoiding version-skew bugs.</li>
             <li><a href="https://martinfowler.com/bliki/AnticorruptionLayer.html" target="_blank" rel="noopener noreferrer">Anti-corruption layer</a> when connecting prep to other domains, keeping the prep domain model clean from upstream concerns.</li>
+            <li id="changelog-deliverr-domain-probes">First adoption of <a href="https://martinfowler.com/articles/domain-oriented-observability.html" target="_blank" rel="noopener noreferrer">domain probes</a> in the Deliverr ecosystem; used in the prep service to increment metrics on business-significant events without polluting entity-focused services with cross-cutting observability concerns.</li>
           </ul>
         </li>
         <li>Ongoing contributions to the GitHub template repo that new Deliverr services cloned as their starting point. Patterns and components incubated in the prep service often graduated here for ecosystem-wide adoption.</li>
@@ -146,6 +147,7 @@
         </li>
         <li id="changelog-deliverr-tsoa">Adoption of <a href="https://tsoa-community.github.io/docs/" target="_blank" rel="noopener noreferrer">tsoa</a> in the prep service: shout-out to <a href="https://www.linkedin.com/in/galtidhar/" target="_blank" rel="noopener noreferrer">Gal Tidhar</a>, the first tsoa evangelist in the engineering org. The initial integration required Java installed on each engineer's laptop and couldn't run in CI without it. The resulting manual process was error-prone and drew pushback from the wider engineering org. I brought Docker wrapping (so neither laptops nor CI needed Java), automated the tsoa tooling in CI, and added a safety net that diffed CI-generated tsoa output against PR content to catch and block discrepancies. Other teams then adopted tsoa in their projects.</li>
         <li>Regular PR and technical design document reviews across teams beyond prep.</li>
+        <li id="changelog-deliverr-rookie-rockstar">Winner of the <code>Rookie Rockstar</code> award at the <code>Engie Awards 2022</code>, voted by engineering peers for the highest-impact contribution from a developer who joined Deliverr in the prior year; shout-out to <a href="https://www.linkedin.com/in/jhywon/" target="_blank" rel="noopener noreferrer">Jessy Won</a> (prep team's PM at the time) for writing the recipient text.</li>
         <li>Knowledge in the fulfillment and warehousing industry.</li>
         <li>Key relationships at Deliverr:
           <ul>
@@ -194,8 +196,13 @@
         <li>Back-end contributions to the <a href="https://en.wikipedia.org/wiki/Product_information_management" target="_blank" rel="noopener noreferrer">product information management (PIM)</a> system in <a href="https://www.python.org/" target="_blank" rel="noopener noreferrer">Python</a>.</li>
         <li id="changelog-ssense-added-po-platform">Contributions to SSENSE's internal purchase orders (PO) platform, used by buyers and merchandisers to create and manage POs with suppliers. Front-end implementation with <a href="https://react.dev/" target="_blank" rel="noopener noreferrer">React</a> + <a href="https://redux.js.org/" target="_blank" rel="noopener noreferrer">Redux</a>; shout-out to <a href="https://www.linkedin.com/in/franz-recinos-82973134/" target="_blank" rel="noopener noreferrer">Franz Recinos</a> for guidance on the React + Redux ecosystem.</li>
         <li>Winner of Hackathon 2019 with my idea to improve onboarding for new engineers.</li>
-        <li id="changelog-ssense-added-dev-onboarding">Follow-up from the Hackathon 2019 POC to improve the developer onboarding flow. I built a "Welcome" guide (a PDF generated from markdown files, with direct links to the IT HelpDesk request forms and the core systems a new dev needed access to), scripts to install the core dev toolchain on a fresh laptop, and a process with HR/talent and IT HelpDesk that automated the GitHub invitations. Great allies on this work: <a href="https://www.linkedin.com/in/nicolarodriguezdemers/" target="_blank" rel="noopener noreferrer">Nicola Rodriguez</a>, <a href="https://www.linkedin.com/in/robbatten/" target="_blank" rel="noopener noreferrer">Rob Batten</a>, <a href="https://www.linkedin.com/in/dkolegaev/" target="_blank" rel="noopener noreferrer">Dmitriy Kolegaev</a>, and <a href="https://www.linkedin.com/in/dominique-belangermx/" target="_blank" rel="noopener noreferrer">Dominique Belanger</a>.</li>
+        <li id="changelog-ssense-added-dev-onboarding">Follow-up from the Hackathon 2019 POC to improve the developer onboarding flow. I built a "Welcome" guide (a PDF generated from markdown files, with direct links to the IT HelpDesk request forms and the core systems a new dev needed access to), scripts to install the core dev toolchain on a fresh laptop, and a process with HR/talent and IT HelpDesk that automated the GitHub invitations.</li>
         <li>Knowledge in the luxury e-commerce industry, distributed order management systems (OMS) and product information management (PIM).</li>
+        <li>Key relationships at SSENSE:
+          <ul>
+            <li id="changelog-ssense-dev-onboarding-allies"><a href="https://www.linkedin.com/in/nicolarodriguezdemers/" target="_blank" rel="noopener noreferrer">Nicola Rodriguez</a>, <a href="https://www.linkedin.com/in/robbatten/" target="_blank" rel="noopener noreferrer">Rob Batten</a>, <a href="https://www.linkedin.com/in/dkolegaev/" target="_blank" rel="noopener noreferrer">Dmitriy Kolegaev</a>, and <a href="https://www.linkedin.com/in/dominique-belangermx/" target="_blank" rel="noopener noreferrer">Dominique Belanger</a>: allies on the developer onboarding work that followed the Hackathon 2019 POC.</li>
+          </ul>
+        </li>
         <li>Attendance at <a href="https://confoo.ca/en/yul2020" target="_blank" rel="noopener noreferrer">Confoo 2020</a> (which included booth duty to promote SSENSE's open engineering positions at the time). After the conference, I built and delivered an internal recap presentation to my SSENSE peers covering the sessions I attended, including my first in-person Bitcoin/crypto talk.</li>
         <li>Use of <code>TypeScript</code> and <code>Node.js</code>; shout-out to <a href="https://www.linkedin.com/in/yannickcordinier/" target="_blank" rel="noopener noreferrer">Yannick Cordinier</a>.</li>
         <li>Use of <a href="https://github.com/features/copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot</a> as my favourite coding buddy.</li>
@@ -204,13 +211,16 @@
         <li>Use of <a href="https://en.wikipedia.org/wiki/SOLID" target="_blank" rel="noopener noreferrer">SOLID principles</a>.</li>
         <li>Use of <a href="https://medium.com/ssense-tech/hexagonal-architecture-there-are-always-two-sides-to-every-story-bc0780ed7d9c" target="_blank" rel="noopener noreferrer">hexagonal architecture</a>; shout-out to <a href="https://www.linkedin.com/in/pablomtz/" target="_blank" rel="noopener noreferrer">Pablo Martinez</a>.</li>
         <li>Use of <a href="https://martinfowler.com/bliki/CQRS.html" target="_blank" rel="noopener noreferrer">CQRS</a>.</li>
+        <li id="changelog-ssense-domain-probes">Use of <a href="https://martinfowler.com/articles/domain-oriented-observability.html" target="_blank" rel="noopener noreferrer">domain probes</a> for domain-meaningful signals.</li>
         <li>Use of <a href="https://www.serverless.com/" target="_blank" rel="noopener noreferrer">serverless framework</a> with deployments to AWS.</li>
         <li>Use of additional <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer">AWS</a> components: <a href="https://aws.amazon.com/pm/dynamodb" target="_blank" rel="noopener noreferrer">DynamoDB</a>, <a href="https://aws.amazon.com/pm/lambda/" target="_blank" rel="noopener noreferrer">Lambda</a>, <a href="https://aws.amazon.com/step-functions/" target="_blank" rel="noopener noreferrer">Step Functions</a>, <a href="https://aws.amazon.com/api-gateway/" target="_blank" rel="noopener noreferrer">API Gateway</a>.</li>
         <li>Use of <a href="https://en.wikipedia.org/wiki/OpenAPI_Specification" target="_blank" rel="noopener noreferrer">OpenAPI Specification</a> to officialize our contracts; shout-out to <a href="https://www.linkedin.com/in/mbneto/" target="_blank" rel="noopener noreferrer">Mário Bittencourt</a> for <a href="https://medium.com/ssense-tech/shifting-perspectives-placing-api-design-at-the-core-of-development-6fd9fe5b69a3" target="_blank" rel="noopener noreferrer">his article</a>.</li>
         <li>Use of <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer">Docker</a> and <a href="https://docs.docker.com/compose/" target="_blank" rel="noopener noreferrer">Docker Compose</a>.</li>
+        <li>Use of <a href="https://github.com/localstack/localstack" target="_blank" rel="noopener noreferrer">LocalStack</a> for local testing of serverless components.</li>
         <li>Use of <a href="https://www.inversify.io" target="_blank" rel="noopener noreferrer">inversify</a>.</li>
         <li>Use of <a href="https://middy.js.org/" target="_blank" rel="noopener noreferrer">Middy</a>.</li>
         <li>Use of <a href="https://launchdarkly.com/" target="_blank" rel="noopener noreferrer">LaunchDarkly</a> for feature flags in SSENSE's trunk-based workflow.</li>
+        <li>Use of <a href="https://en.wikipedia.org/wiki/Continuous_deployment" target="_blank" rel="noopener noreferrer">continuous deployment (CD)</a> across all environments.</li>
       </ul>
       <h3 id="changelog-5-0-0-changed"><a href="#changelog-5-0-0-changed" class="heading-anchor" aria-label="Copy link to this section">🔗</a>Changed</h3>
       <ul>
@@ -226,12 +236,12 @@
         <li>Use of <a href="https://en.wikipedia.org/wiki/Microservices" target="_blank" rel="noopener noreferrer">microservices</a>.</li>
         <li>Use of <a href="https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development" target="_blank" rel="noopener noreferrer">trunk-based development</a>.</li>
         <li>Use of <a href="https://www.split.io/feature-flags-best-practices-ebook/" target="_blank" rel="noopener noreferrer">feature flags</a>.</li>
-        <li>Use of <a href="https://docs.ansible.com/" target="_blank" rel="noopener noreferrer">Ansible</a>.</li>
+        <li>Use of <a href="https://docs.ansible.com/" target="_blank" rel="noopener noreferrer">Ansible</a> scripts for manual deployments to staging and production environments, run after SSH-ing into a bastion host.</li>
         <li>Use of <a href="https://github.com/google/guice/" target="_blank" rel="noopener noreferrer">Guice</a>.</li>
       </ul>
       <h3 id="changelog-4-0-0-changed"><a href="#changelog-4-0-0-changed" class="heading-anchor" aria-label="Copy link to this section">🔗</a>Changed</h3>
       <ul>
-        <li>The type of companies I worked for; shout-out to <a href="https://www.linkedin.com/in/yavery/" target="_blank" rel="noopener noreferrer">Yan Avery</a> for providing me the opportunity to enter <i>startup world</i>.</li>
+        <li>The type of companies I worked for; shout-out to <a href="https://www.linkedin.com/in/yavery/" target="_blank" rel="noopener noreferrer">Yan Avery</a> for providing the opportunity to enter <i>startup world</i>.</li>
       </ul>
       <h2 id="changelog-3-0-0"><a href="#changelog-3-0-0" class="heading-anchor" aria-label="Copy link to this section">🔗</a>3.0.0 - Architect @ AFS Technologies (2011 to 2018)</h2>
       <h3 id="changelog-3-0-0-added"><a href="#changelog-3-0-0-added" class="heading-anchor" aria-label="Copy link to this section">🔗</a>Added</h3>

@@ -360,7 +360,8 @@
         "Ansible",
         "Kubernetes",
         "Sentry",
-        "RuboCop"
+        "RuboCop",
+        "LocalStack"
       ]
     }
   ],
