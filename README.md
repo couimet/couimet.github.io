@@ -51,7 +51,7 @@ Reference PRs:
 
 - SSENSE: https://github.com/couimet/couimet.github.io/pull/65
 - Deliverr: https://github.com/couimet/couimet.github.io/pull/67
-- Shopify Logistics: TBD
+- Shopify Logistics: https://github.com/couimet/couimet.github.io/pull/73
 
 ## Resume
 
