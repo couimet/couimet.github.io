@@ -28,23 +28,52 @@ The changelog organizes tools and practices additively across roles. Each `Use o
 
 ## Rule 2: Role-scoped IDs
 
-HTML `id` attributes on project bullets follow the pattern `changelog-<role>-added-<slug>`.
+HTML `id` attributes on bullets in `_includes/career/changelog.html` follow one of two role-scoped patterns at the top level, plus a sub-pattern for Key-relationships sub-bullets. The pattern in use depends on what the bullet is about, not on its position.
 
 ### When to assign an ID
 
-- **Yes**: distinct multi-faceted projects. Examples: `changelog-ssense-added-distributed-oms`, `changelog-ssense-added-cbsa-b13`, `changelog-ssense-added-po-platform`.
-- **No**: single-sentence tool / practice bullets (`Use of CQRS`, `Use of GitHub Copilot`).
+- **Yes**: distinct multi-faceted projects, patterns/concepts that get referenced elsewhere, people in Key relationships, awards, multi-faceted initiatives, tool/language adoption bullets that warrant a stable anchor.
+- **No**: single-sentence tool / practice bullets that nothing else references (most `Use of <tool>` bullets).
 - **No**: knowledge / context bullets (`Knowledge in the luxury e-commerce industry`).
 
 ### Slug shape
 
+Two top-level patterns, distinguished by a routing test, plus a three-sub-shape sub-pattern for Key-relationships sub-bullets.
+
+#### Top-level routing test: which pattern?
+
+Ask: "Is this bullet about adopting a single tool or language, with the slug capturing the tool/language name itself?"
+
+- **Yes → `-added-` form**: `changelog-<role>-added-<slug>`. The bullet's news IS the adoption; `<role>-added-<tool>` reads naturally as "added this tool at this role." Reserved for tool/language adoption bullets in the `Use of <tool>` style where the slug equals the tool/language name. Hypothetical example: `changelog-shopify-added-graphql`.
+- **No → no-`-added-` form**: `changelog-<role>-<slug>`. The slug self-describes whatever the bullet is about (project, pattern, concept, person, award, multi-faceted initiative); `-added-` adds nothing. Examples by category:
+  - Projects: `changelog-deliverr-prep-service`, `changelog-shopify-logistics-logistics-api`.
+  - Patterns / concepts: `changelog-deliverr-outbox-pattern`, `changelog-deliverr-integration-events`, `changelog-shopify-logistics-observability-as-code`, `changelog-deliverr-domain-probes`.
+  - Multi-faceted initiatives: `changelog-shopify-logistics-tlc`, `changelog-shopify-logistics-unified-messaging`, `changelog-shopify-logistics-domain-boundaries`.
+  - Awards: `changelog-deliverr-rookie-rockstar`.
+
+Edge case: a tool/language bullet that is multi-sentence narrative (not the bare `Use of <tool>` shape) routes to the no-`-added-` form because the slug self-describes and the bullet is doing more work than announcing the adoption. Example: `changelog-deliverr-tsoa` (the bullet is rich narrative about tsoa-backed contracts, not a one-line `Use of tsoa.`).
+
+#### Slug formatting
+
 - Lowercase, hyphenated.
-- Captures the project's essence in 1-3 words.
-- Examples: `distributed-oms`, `cbsa-b13`, `dev-onboarding`, `po-platform`.
+- Captures the bullet's essence in 1-3 words.
+- Examples: `distributed-oms`, `cbsa-b13`, `dev-onboarding`, `po-platform`, `tlc`, `outbox-pattern`, `rookie-rockstar`.
 
-### Legacy exception
+#### Sub-pattern: Key-relationships sub-bullets (three sub-shapes)
 
-The bullets at `_includes/career/changelog.html` with IDs `changelog-added-ruby` and `changelog-added-ruby-on-rails` are unscoped (no `<role>` segment) and stay that way. They describe one-time "first encounter with a tool" events that can never repeat. Do NOT rename them. Future "first encounter" bullets MAY use the unscoped pattern only when the encounter is genuinely irreproducible (rare).
+Sub-bullets inside a `Key relationships at <Role>:` parent follow their own routing test based on (a) how many people the sub-bullet covers and (b) what the common point is. Three sub-shapes:
+
+- **(i) Single person → `changelog-<role>-<first-name>`**: one person, name-only slug. Examples: `changelog-deliverr-mike`, `changelog-deliverr-flynn`, `changelog-shopify-logistics-artur`.
+- **(ii) Joint people sharing one reason → `changelog-<role>-<first1-and-first2>`**: two people sharing the same reason for being grouped, names joined with `-and-`. Example: `changelog-deliverr-steve-and-stewart`.
+- **(iii) Bundled allies sharing a common project context → `changelog-<role>-<project-slug>-allies`**: two or more people sharing a common project as the reason for being grouped, slugged as the project plus `-allies`. Examples: `changelog-ssense-dev-onboarding-allies`, `changelog-shopify-logistics-observability-spec-allies`.
+
+Routing test for sub-shape: how many people, and what's the common point? One name → name-only. Two names sharing one reason → `-and-` joint. Two-plus names with a shared project as the binding → `<project>-allies`.
+
+### Existing IDs are immutable without explicit approval
+
+Any ID already present in `_includes/career/changelog.html` stays as-is. Do NOT rename existing IDs as part of unrelated work — they may have been shared externally and renaming silently breaks anchor links. If a rename looks warranted, surface it as an explicit decision and wait for Charles's approval before changing the attribute.
+
+This rule covers every grandfathered case (the older unscoped Ruby/Rails IDs, the pre-convention SSENSE-era project IDs that still carry `-added-`, etc.) without enumerating them, and absorbs any future "existing ID that doesn't match the routing test" case automatically.
 
 ## Rule 3: Role-voice
 
@@ -57,6 +86,20 @@ Factual, not summary.
 - **No em-dashes (`—`)**. Use commas, semicolons, parentheses, or sentence breaks instead. Cross-reference `/humanizer`.
 - **Link on first mention** within a bullet only. Subsequent mentions of the same term in the same bullet stay plain text. Across sibling bullets in the same role block, re-link sparingly when the link genuinely helps navigation (e.g., when a sub-bullet references a tool the lead-in didn't link).
 - **No first-person self-evaluation** ("I was the de facto expert", "I was uniquely qualified"). State what happened and let observers carry the implicit signal (e.g., "TAG members routed teams to me for serverless reviews" lets the reader infer expertise without claiming it).
+
+### Strict Keep-a-Changelog noun-phrase form
+
+Every entry under `Added` / `Changed` / `Deprecated` should read as a noun phrase describing what shipped, not as narrative or commentary.
+
+- **No first-person action verbs** in the bullet body: `I built`, `I led`, `I created`, `I maintained`, `I developed`, `I designed`, `I implemented`, `I authored`, `I introduced`, `I oversaw`, `I delivered`, `I shipped`, `I wrote`. Use noun-phrase form: `Presentations and video capsules on X` not `Presentations and video capsules I built on X`.
+- **No editorial flourishes**: `ramping observability up to the highest bar`, `world-class`, `best-in-class`, `highest-impact`, etc. State the fact; let the reader infer significance.
+- **No vague filler**: `and more`, `and beyond`, loose `etc.` outside parenthetical examples.
+- **No contrast clauses for framing**: drop `rather than X` / `instead of Y` unless the contrast carries a load-bearing fact rather than just orienting the reader.
+- **Two-sentence bullets must add facts in the second sentence**, not justify or re-explain the first. If sentence 2 reads as defense or context-setting for sentence 1, fold or cut.
+
+#### Exception: Key-relationships sub-bullets
+
+Sub-bullets inside a `Key relationships at <Role>:` parent ARE allowed first-person voice (`his mentorship was often framed around...`, `sponsored my level-up to...`). The entry IS the relationship; the personal lens is the point. Exception scoped to bullets inside `Key relationships at <Role>:` parents only.
 
 ### Summary-as-distillation
 
@@ -72,3 +115,4 @@ Two reasons:
 - For each summary claim, identify the backing highlight. If a claim has no backing highlight, either add a highlight or cut the claim from the summary.
 - For each `<li>` you wrote, verify it's a fact, not a summary or evaluation.
 - For each tool mention, verify it's the first mention in the role block. If not, drop the link; keep plain text.
+- For each `<li>` you wrote (outside `Key relationships at <Role>:` sub-bullets), verify it carries no first-person action verbs, no editorial flourishes, no vague filler (`and more` / loose `etc.`), and no framing-only contrast clauses. Two-sentence bullets must add a fact in sentence 2.

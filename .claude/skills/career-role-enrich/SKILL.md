@@ -85,6 +85,9 @@ After applying, run post-edit verification:
 2. **Additive convention sweep**: `grep -n "Use of more" _includes/career/changelog.html`. Should return empty. Any match is a stale-wording bug; rename to `Use of additional`.
 3. **Em-dash sweep within the role's block**: extract the block's line range from Step 1, then `sed -n "<start>,<end>p" _includes/career/changelog.html | grep -n "—"`. Should return empty.
 4. **No `<strong>` micro-headings inside sub-bullets**: `grep -n "<li><strong>" _includes/career/changelog.html`. Should return empty.
+5. **First-person verb sweep within the role's block** (excluding `Key relationships at <Role>:` sub-bullets, which are allowed first-person voice per `career-style` Rule 3 exception): `sed -n "<start>,<end>p" _includes/career/changelog.html | sed '/<li>Key relationships at .*:/,/<\/ul>/d' | grep -nE "\bI (built|led|created|maintained|developed|designed|implemented|authored|introduced|oversaw|delivered|shipped|wrote)\b"`. Should return empty. Matches indicate narrative voice that needs reshaping into noun-phrase form. The middle `sed` deletes the Key-relationships parent through its closing `</ul>` so the first-person exception scoped to those sub-bullets doesn't produce false positives.
+6. **Vague-filler sweep within the role's block**: `sed -n "<start>,<end>p" _includes/career/changelog.html | grep -nE "(and more[.,]|\betc\.\s)"`. Investigate matches; `and more` is almost always cuttable; `etc.` outside parenthetical examples is usually filler.
+7. **Rigorous K-a-C re-read (manual)**: re-read the edited block as a stranger encountering this changelog cold. For each `<li>`, ask: is this a fact, or is it narrative/editorial framing? Flag any sentence whose value is `context` or `justification` rather than `what was added/changed/done`. Iterate with the user if anything looks off.
 
 ## Step 7: Wrap Up
 
@@ -123,4 +126,7 @@ Before reporting Step 7:
 - [ ] Resume edits applied; JSON validates
 - [ ] Em-dash sweep within role block returns empty
 - [ ] No `<strong>` micro-headings in sub-bullets
+- [ ] First-person verb sweep returns empty (excluding `Key relationships at <Role>:` sub-bullets)
+- [ ] Vague-filler sweep investigated (no remaining `and more` / loose `etc.`)
+- [ ] Rigorous K-a-C re-read complete (no narrative/editorial sentences remaining)
 - [ ] Skills additions reviewed (no duplicates from earlier roles)
