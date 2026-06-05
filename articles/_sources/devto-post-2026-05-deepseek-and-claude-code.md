@@ -1,6 +1,6 @@
 # Eight env vars and Claude Code stops eating my paycheck
 
-> **Update (2026-06-04):** Running into model errors with this setup? [Read the investigation here →](TBD)
+> **Update (2026-06-04):** Running into model errors with this setup? [Read the investigation here.](https://dev.to/couimet/fix-theres-an-issue-with-the-selected-model-deepseek-v4-pro-in-claude-cli-44jg)
 
 DeepSeek's quick-start page has been live for months. I'm late to it.
 

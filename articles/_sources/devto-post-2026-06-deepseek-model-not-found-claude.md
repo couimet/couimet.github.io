@@ -1,6 +1,6 @@
 ---
 title: 'Fix: "There''s an issue with the selected model (deepseek-v4-pro)" in Claude CLI'
-published:
+published: https://dev.to/couimet/fix-theres-an-issue-with-the-selected-model-deepseek-v4-pro-in-claude-cli-44jg
 tags: claudecode, deepseek, ai, debugging
 cover_image:
 ---
