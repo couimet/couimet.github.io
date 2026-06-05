@@ -72,7 +72,7 @@ The eight env vars still work. I'm still using them.
 
 ---
 
-If you got here from the error message, I hope this saved you the 30 minutes I lost. Never saw the original setup? [It's here](https://dev.to/couimet/eight-env-vars-and-claude-code-stops-eating-my-paycheck-2659), and it still works.
+If you got here from the error message, I hope this saved you the 30 minutes I lost. Never saw the original setup? [It's here.](https://dev.to/couimet/eight-env-vars-and-claude-code-stops-eating-my-paycheck-2659)
 
 ---
 
