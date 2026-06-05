@@ -1,5 +1,7 @@
 # Eight env vars and Claude Code stops eating my paycheck
 
+> **Update (2026-06-04):** Running into model errors with this setup? [Read the investigation here →](TBD)
+
 DeepSeek's quick-start page has been live for months. I'm late to it.
 
 I love what Anthropic ships. Opus 4.7 is the best coding model I've used. I also can't run it all day on a family budget, and Pro's 5-hour quota wall stopped my flow more times than I want to count. So a few days ago I exported eight env vars, pointed Claude Code at DeepSeek, and went back to building [rangeLink](https://ouimet.info/projects/rangelink-extension.html). Since then I've only spent $4 and haven't seen a rate limit.
