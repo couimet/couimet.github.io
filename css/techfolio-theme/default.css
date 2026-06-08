@@ -255,6 +255,31 @@ li[id].anchor-pulse {
   color: var(--bs-link-color);
 }
 
+.article-project-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+.article-project-pill {
+  background-color: var(--tf-pill-bg);
+  color: var(--bs-white);
+  font-size: 0.7rem;
+  font-weight: 500;
+  transition: opacity 0.15s ease;
+}
+
+a.article-project-pill:hover {
+  opacity: 0.85;
+}
+
+a.article-project-pill:focus-visible {
+  outline: 2px solid var(--bs-link-color);
+  outline-offset: 2px;
+}
+
 @media (max-width: 767.98px) {
   .articles-scroll {
     max-height: 260px;
