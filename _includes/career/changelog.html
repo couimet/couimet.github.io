@@ -303,12 +303,146 @@
 </div>
 
 {% include copy-link.html %}
+<style>
+  #shoutout-prank-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  #shoutout-prank-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 680px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  #shoutout-prank-card h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #212529;
+  }
+  #shoutout-prank-img {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+  }
+  #shoutout-prank-link {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-align: right;
+    margin: 0;
+  }
+  #shoutout-prank-link a {
+    color: #6c757d;
+  }
+  #shoutout-prank-dismiss {
+    align-self: flex-end;
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: #6c757d;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  #shoutout-prank-dismiss:hover {
+    background: #5a6268;
+  }
+</style>
 <script>
   (function () {
+    var SHOUTOUT_PRANK_PATTERN = /^changelog-shoutout-([a-z]+(?:-[a-z]+)*)$/;
+    var RICK_ROLL_IMG = "{{ '/img/rick-roll.jpg' | prepend: site.baseurl }}";
+    var RICK_ROLL_WATCH = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+    function slugToName(slug) {
+      return slug.split("-").map(function (w) {
+        return w.charAt(0).toUpperCase() + w.slice(1);
+      }).join(" ");
+    }
+
+    var shoutoutPrankEscHandler = null;
+
+    function closeShoutoutPrankModal() {
+      var overlay = document.getElementById("shoutout-prank-overlay");
+      if (overlay) overlay.remove();
+      if (shoutoutPrankEscHandler) {
+        document.removeEventListener("keydown", shoutoutPrankEscHandler);
+        shoutoutPrankEscHandler = null;
+      }
+    }
+
+    function showShoutoutPrankModal(name) {
+      closeShoutoutPrankModal();
+      var overlay = document.createElement("div");
+      overlay.id = "shoutout-prank-overlay";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-labelledby", "shoutout-prank-title");
+      var card = document.createElement("div");
+      card.id = "shoutout-prank-card";
+
+      var title = document.createElement("h2");
+      title.id = "shoutout-prank-title";
+      title.textContent = "Yes, you deserve a special shout-out, " + name + " 🎉";
+
+      var img = document.createElement("img");
+      img.id = "shoutout-prank-img";
+      img.src = RICK_ROLL_IMG;
+      img.alt = "Never Gonna Give You Up";
+
+      var watchLink = document.createElement("p");
+      watchLink.id = "shoutout-prank-link";
+      var a = document.createElement("a");
+      a.href = RICK_ROLL_WATCH;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = "Watch on YouTube";
+      watchLink.appendChild(document.createTextNode("Glutton for punishment? "));
+      watchLink.appendChild(a);
+      watchLink.appendChild(document.createTextNode(" I'll wait."));
+
+      var btn = document.createElement("button");
+      btn.id = "shoutout-prank-dismiss";
+      btn.textContent = "Dismiss";
+      btn.addEventListener("click", closeShoutoutPrankModal);
+
+      card.appendChild(title);
+      card.appendChild(img);
+      card.appendChild(watchLink);
+      card.appendChild(btn);
+      overlay.appendChild(card);
+      document.body.appendChild(overlay);
+      btn.focus();
+
+      overlay.addEventListener("click", function (e) {
+        if (e.target === overlay) closeShoutoutPrankModal();
+      });
+
+      shoutoutPrankEscHandler = function (e) {
+        if (e.key === "Escape") closeShoutoutPrankModal();
+      };
+      document.addEventListener("keydown", shoutoutPrankEscHandler);
+    }
+
     function revealHeadingFromHash() {
       if (!window.location.hash) return;
       var id = window.location.hash.slice(1);
       if (!id || !id.startsWith("changelog-")) return;
+
+      var shoutoutPrankMatch = SHOUTOUT_PRANK_PATTERN.exec(id);
+      if (shoutoutPrankMatch) {
+        showShoutoutPrankModal(slugToName(shoutoutPrankMatch[1]));
+        return;
+      }
 
       var el = document.getElementById(id);
       if (!el) return;
