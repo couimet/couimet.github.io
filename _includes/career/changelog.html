@@ -381,12 +381,17 @@
     }
 
     function showShoutoutPrankModal(name) {
+      closeShoutoutPrankModal();
       var overlay = document.createElement("div");
       overlay.id = "shoutout-prank-overlay";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-labelledby", "shoutout-prank-title");
       var card = document.createElement("div");
       card.id = "shoutout-prank-card";
 
       var title = document.createElement("h2");
+      title.id = "shoutout-prank-title";
       title.textContent = "Yes, you deserve a special shout-out, " + name + " 🎉";
 
       var img = document.createElement("img");
@@ -416,6 +421,7 @@
       card.appendChild(btn);
       overlay.appendChild(card);
       document.body.appendChild(overlay);
+      btn.focus();
 
       overlay.addEventListener("click", function (e) {
         if (e.target === overlay) closeShoutoutPrankModal();
