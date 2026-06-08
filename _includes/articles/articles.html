@@ -48,6 +48,26 @@
           >
             {{ article.title }}
           </a>
+          {% if article.projects %}
+            <span class="article-project-tags">
+              {% for project_slug in article.projects %}
+                {% assign proj_file = project_slug | append: ".md" %}
+                {% assign proj_page = site.pages | where: "name", proj_file | first %}
+                {% if proj_page %}
+                  {% assign proj_label = proj_page.title %}
+                  {% assign proj_url = proj_page.url %}
+                {% else %}
+                  {% assign proj_label = project_slug %}
+                  {% assign proj_url = nil %}
+                {% endif %}
+                {% if proj_url %}
+                  <a href="{{ proj_url | prepend: site.baseurl }}" class="badge rounded-pill article-project-pill">{{ proj_label }}</a>
+                {% else %}
+                  <span class="badge rounded-pill article-project-pill">{{ proj_label }}</span>
+                {% endif %}
+              {% endfor %}
+            </span>
+          {% endif %}
         </article>
       {% endfor %}
     </div>
