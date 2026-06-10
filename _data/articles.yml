@@ -1,0 +1,192 @@
+# Articles published by Charles Ouimet. Sorted by date descending.
+# Required: date, title, link (dev.to URL), anchor (career-changelog anchor).
+# Optional: sources (array of <org>/<repo>/<path> source files including companions and rendered artifacts),
+#           projects (related project page anchors),
+#           promotion (per-channel post URL + content).
+# For tone inventory across LinkedIn posts: yq '.[].promotion.linkedin.content' _data/articles.yml
+
+- date: "2026-06-09"
+  title: "Correlation ID vs Request ID: A Practical Guide"
+  link: https://dev.to/couimet/correlation-id-vs-request-id-a-practical-guide-2l6o
+  anchor: correlation-id-vs-request-id
+  sources:
+    - couimet/couimet.github.io/articles/_sources/devto-post-2026-06-correlation-id-vs-request-id.md
+    - couimet/couimet.github.io/articles/_sources/devto-post-2026-06-correlation-id-vs-request-id-kitchen-brigade.md
+    - couimet/couimet.github.io/articles/_sources/devto-post-2026-06-correlation-id-vs-request-id-shout-retry.md
+    - couimet/couimet.github.io/articles/_sources/devto-post-2026-06-correlation-id-vs-request-id-full-sequence.md
+    - couimet/couimet.github.io/articles/_sources/devto-post-2026-06-correlation-id-vs-request-id-kitchen-brigade.png
+    - couimet/couimet.github.io/articles/_sources/devto-post-2026-06-correlation-id-vs-request-id-shout-retry.png
+    - couimet/couimet.github.io/articles/_sources/devto-post-2026-06-correlation-id-vs-request-id-full-sequence.png
+  promotion:
+    linkedin:
+      url: https://www.linkedin.com/feed/update/urn:li:activity:7470449901873594368/
+      content: |
+        I wanted a clear article on correlation IDs vs request IDs to link from my Career Changelog, but I couldn't find one that contained all the pieces I wanted. (The changelog, if you're curious: https://ouimet.info/#career-changelog)
+
+        So I wrote one with a kitchen-brigade analogy: https://dev.to/couimet/correlation-id-vs-request-id-a-practical-guide-2l6o
+
+- date: "2026-06-04"
+  title: "Fix: \"There's an issue with the selected model (deepseek-v4-pro)\" in Claude CLI"
+  link: https://dev.to/couimet/fix-theres-an-issue-with-the-selected-model-deepseek-v4-pro-in-claude-cli-44jg
+  anchor: deepseek-model-not-found
+  sources:
+    - couimet/couimet.github.io/articles/_sources/devto-post-2026-06-deepseek-model-not-found-claude.md
+  promotion:
+    linkedin:
+      url: https://www.linkedin.com/feed/update/urn:li:activity:7468514830199586816/
+      content: |
+        I spent 30 minutes convinced Anthropic had patched Claude Code to stop my DeepSeek setup from working.
+
+        The timing lined up.
+
+        The error message looked suspicious.
+
+        The conspiracy theory was beautiful.
+
+        It was a missing newline in a shell script.
+
+        I wrote an entire article so the next person who Googles the error can save themselves the same trip through the five stages of debugging grief.
+
+        https://lnkd.in/eiwt5HYX
+
+- date: "2026-05-21"
+  title: I sold you on /scratchpad. Then I migrated to /note.
+  link: https://dev.to/couimet/i-sold-you-on-scratchpad-then-i-migrated-to-note-4n1o
+  anchor: scratchpad-to-note
+  sources:
+    - couimet/my-claude-skills/media/2026-05-devto-post-from-scratchpad-to-note.md
+    - couimet/my-claude-skills/media/2026-05-devto-post-from-scratchpad-to-note-workflow-diagram.md
+    - couimet/my-claude-skills/media/2026-05-devto-post-from-scratchpad-to-note-workflow-diagram.png
+  projects:
+    - my-claude-skills
+  promotion:
+    linkedin:
+      url: https://www.linkedin.com/feed/update/urn:li:activity:7463240605780074496/
+      content: |
+        I thought I was building good AI engineering hygiene.
+
+        I may also have been accidentally DOS-ing my token budget with my own process.
+
+        My original Claude Code workflow used structured /scratchpad files with step tracking, status fields, dependency arrays, and checkpointed execution.
+
+        I migrated most of the workflow to a much lighter /note format instead: same planning step, far less ceremony.
+
+        Wrote about the migration and what changed my mind:
+
+        https://lnkd.in/eevaRd66
+
+- date: "2026-05-12"
+  title: Eight env vars and Claude Code stops eating my paycheck
+  link: https://dev.to/couimet/eight-env-vars-and-claude-code-stops-eating-my-paycheck-2659
+  anchor: deepseek-claude-code
+  sources:
+    - couimet/couimet.github.io/articles/_sources/devto-post-2026-05-deepseek-and-claude-code.md
+  promotion:
+    linkedin:
+      url: https://www.linkedin.com/feed/update/urn:li:activity:7459974737033646080/
+      content: |
+        Claude Code can operate seamlessly on a non-Anthropic API without any awareness of the switch. I transitioned to DeepSeek, and after configuring eight environment variables, I continue to enjoy the full Claude Code user experience while benefiting from DeepSeek's pricing.
+
+        Five days into this transition:
+
+        - $4 spent
+        - Zero rate-limit interruptions
+        - Continuing to build RangeLink on the same setup
+
+        For more details, check out the article: https://lnkd.in/eNxHbg8s
+
+- date: "2026-04-21"
+  title: I thought I was DRY-ing. I may have been double-paying.
+  link: https://dev.to/couimet/i-thought-i-was-dry-ing-i-may-have-been-double-paying-5dli
+  anchor: dry-ing-double-paying
+  sources:
+    - couimet/my-claude-skills/media/2026-04-devto-post-audit-pivot.md
+  projects:
+    - my-claude-skills
+
+- date: "2026-03-16"
+  title: From Vide Coding to Supercharged Vibe Guiding
+  link: https://dev.to/couimet/from-vide-coding-to-supercharged-vibe-guiding-6nm
+  anchor: vibe-guiding
+  sources:
+    - couimet/my-claude-skills/media/2026-03-devto-post-vide-coding.md
+    - couimet/my-claude-skills/media/2026-03-devto-post-vide-coding-workflow-diagram.md
+    - couimet/my-claude-skills/media/2026-03-devto-post-vide-coding-workflow-diagram.png
+    - couimet/my-claude-skills/media/2026-03-devto-post-vide-coding-workflow-diagram.svg
+  projects:
+    - my-claude-skills
+  promotion:
+    linkedin:
+      url: https://www.linkedin.com/feed/update/urn:li:activity:7440803258048241664/
+      content: |
+        This isn't a typo:
+
+        vide coding ≠ vibe coding
+
+        And it leads to something better: vibe guiding.
+
+        https://lnkd.in/emZqCZSC
+
+- date: "2025-12-16"
+  title: "RangeLink v1.0.0: Perfected AI Workflows + The R-Keybinding Family"
+  link: https://dev.to/couimet/rangelink-v100-perfected-ai-workflows-the-r-keybinding-family-104b
+  anchor: rangelink-v1
+  sources:
+    - couimet/rangeLink/media/devto-post-vscode-extension-v1.0.0.md
+  projects:
+    - rangelink-extension
+  promotion:
+    linkedin:
+      url: https://www.linkedin.com/feed/update/urn:li:activity:7406515735004401664/
+      content: |
+        I don't throw a 1.0.0 around lightly 😅
+
+        RangeLink v1.0.0 is out 🚀 — not because it's "feature complete," but because the workflow finally feels right.
+
+        I wrote a quick breakdown of what changed and why this version matters:
+
+        👉 https://lnkd.in/enKMhW8m
+
+- date: "2025-11-12"
+  title: "RangeLink v0.3.0: One Keybinding to Rule Them All"
+  link: https://dev.to/couimet/rangelink-v030-one-keybinding-to-rule-them-all-2h01
+  anchor: rangelink-v03
+  sources:
+    - couimet/rangeLink/media/devto-post-vscode-extension-v0.3.0.md
+  projects:
+    - rangelink-extension
+  promotion:
+    linkedin:
+      url: https://www.linkedin.com/feed/update/urn:li:activity:7394227667971055616/
+      content: |
+        Didn't expect to post again so soon, but this one deserved it 😅
+
+        "RangeLink v0.3.0: One Keybinding to Rule Them All" just dropped.
+
+        It's a small release in numbers, but a big one in how it feels to use — one keyboard shortcut now does everything.
+
+        Still having a blast working on this little project.
+
+        👉 https://lnkd.in/e27RqDZf
+
+- date: "2025-11-08"
+  title: I Built a VS Code Extension to Stop the Copy-Paste Madness
+  link: https://dev.to/couimet/i-built-a-vs-code-extension-to-stop-the-copy-paste-madness-3d7l
+  anchor: copy-paste-madness
+  sources:
+    - couimet/rangeLink/media/devto-post-vscode-extension-v0.2.1.md
+  projects:
+    - rangelink-extension
+  promotion:
+    linkedin:
+      url: https://www.linkedin.com/feed/update/urn:li:activity:7393070596378558464/
+      content: |
+        Small personal milestone: I just published my first article 🎉
+
+        It's about a VS Code extension I've been working on called RangeLink — a tiny tool to make sharing code ranges less painful.
+
+        RangeLink won't cure cancer, but it definitely cured a bit of my copy-paste frustration 😅
+
+        Writing about it turned out to be just as fun as coding it.
+
+        👉 https://lnkd.in/e8BWqfdr

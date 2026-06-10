@@ -86,6 +86,12 @@
         <li id="changelog-octav-eslint-config">Creation of the <code>@octav/eslint-config</code> private npm package to centralize lint config across the Octav services and reduce drift between them, following the pattern established at <a href="#changelog-deliverr-eslint-config">Deliverr</a>. Built fresh on the recommended configs (<code>eslint:recommended</code>, <code>plugin:@typescript-eslint/recommended</code>, <code>plugin:prettier/recommended</code>), simpler than the Airbnb-derived Deliverr version (the open-source tooling had matured enough by Octav-era for the recommended packages to cover most of the ground).</li>
         <li>Centralized <a href="https://github.com/features/actions" target="_blank" rel="noopener noreferrer">GitHub Actions</a> repository to reduce duplication across CI/CD workflows and improve maintainability.</li>
         <li>Structured logging across services, enabling efficient log filtering and analysis via <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html" target="_blank" rel="noopener noreferrer">AWS CloudWatch Log Insights</a>.</li>
+        <li id="changelog-octav-distributed-tracing">Distributed-tracing tooling layered on top of the structured-logging foundation above.
+          <ul>
+            <li>Propagation of <a href="https://dev.to/couimet/correlation-id-vs-request-id-a-practical-guide-2l6o" target="_blank" rel="noopener noreferrer"><code>correlation_id</code> and <code>request_id</code> attributes</a> across HTTP request headers.</li>
+            <li>Axios interceptors that added and forwarded the tracing attributes transparently.</li>
+          </ul>
+        </li>
         <li>Use of <a href="https://developer.hashicorp.com/terraform" target="_blank" rel="noopener noreferrer">Terraform</a>.</li>
         <li>Use of Docker <a href="https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/" target="_blank" rel="noopener noreferrer">image layers</a> to provide seed data to dev and test environments.</li>
         <li>Use of <a href="https://bullmq.io/" target="_blank" rel="noopener noreferrer">BullMQ</a>.</li>
@@ -113,7 +119,7 @@
         </li>
         <li id="changelog-flexport-distributed-tracing">Distributed-tracing tooling for the ecosystem.
           <ul>
-            <li>Propagation of <code>correlation_id</code> and <code>request_id</code> attributes across HTTP request headers, SQS message metadata, and Kinesis Data Stream event metadata. Incubated in the prep service, then shared as npm packages for ecosystem-wide adoption. Improvement in trace and debug capability in DataDog across the distributed surface.</li>
+            <li>Propagation of <a href="https://dev.to/couimet/correlation-id-vs-request-id-a-practical-guide-2l6o" target="_blank" rel="noopener noreferrer"><code>correlation_id</code> and <code>request_id</code> attributes</a> across HTTP request headers, SQS message metadata, and Kinesis Data Stream event metadata. Incubated in the prep service, then shared as npm packages for ecosystem-wide adoption. Improvement in trace and debug capability in DataDog across the distributed surface.</li>
             <li>Axios interceptors that added and forwarded the tracing attributes transparently, removing the need for service teams to remember the propagation contract on every call site.</li>
           </ul>
         </li>
@@ -196,7 +202,7 @@
           <ul>
             <li><code>#serverless</code>: org-wide serverless guidance.</li>
             <li><code>#event-driven-architecture</code>: announcements and adoption signals for our internal integration-events packages, EDA-focused articles people came across, iterations and improvements to our transactional outbox implementations and CDC pipelines.</li>
-            <li><code>#domain-driven-design</code>: "DDD from the trenches" posts linking real PR comments on our team's work to the subtle differences between CRUD-stack organization and DDD aggregates / entities / value objects, and DDD-focused articles people came across.</li>
+            <li><code>#domain-driven-design</code>: "DDD from the trenches" posts linking real PR comments on our team's work to the subtle differences between CRUD-stack organization and DDD aggregates / entities / <a href="https://vimeo.com/13549100" target="_blank" rel="noopener noreferrer">value objects</a>, and DDD-focused articles people came across.</li>
             <li><code>#&lt;redacted&gt;</code>: coordination space for the maintainers of our shared npm packages (which spanned 60+ services across the ecosystem), covering release announcements (including new <code><a href="#changelog-deliverr-eslint-config">@deliverr/eslint-config-deliverr</a></code> versions), cross-package strategy, and adoption coordination across teams.</li>
           </ul>
         </li>

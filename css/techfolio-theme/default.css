@@ -280,6 +280,10 @@ a.article-project-pill:focus-visible {
   outline-offset: 2px;
 }
 
+.article-item .tf-social {
+  vertical-align: middle;
+}
+
 @media (max-width: 767.98px) {
   .articles-scroll {
     max-height: 260px;

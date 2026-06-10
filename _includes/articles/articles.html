@@ -68,6 +68,7 @@
               {% endfor %}
             </span>
           {% endif %}
+          {% if article.promotion.linkedin.url %} <a href="{{ article.promotion.linkedin.url }}" target="_blank" rel="noopener noreferrer" title="View LinkedIn post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#linkedin"/></svg></a>{% endif %}
         </article>
       {% endfor %}
     </div>
