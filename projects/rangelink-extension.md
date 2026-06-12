@@ -14,6 +14,7 @@ labels:
   - extension
   - productivity
 summary: "One keybinding to share precise, clickable code ranges with any AI or tool."
+showBuyMeACoffee: true
 ---
 
 RangeLink gives you a single muscle memory for AI-assisted development: select code, hit your RangeLink shortcut, and get a GitHub-style link with character-level ranges that works in PRs, chats, terminals, and docs. It removes copy/paste friction and shortcut-juggling between Claude, Cursor, GPT, and other tools by piping links straight into your bound destinations, so your AI always sees exactly the slice of code you mean.

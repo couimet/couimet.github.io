@@ -38,6 +38,8 @@ layout: home
   </div>
 
   {% include projects/project-articles.html %}
+
+  {% if page.showBuyMeACoffee %}{% include projects/project-buy-me-a-coffee.html %}{% endif %}
 </div>
 
 <p class="text-center pt-4"><a href="{{ site.baseurl}}/projects/">See all projects</a></p>
