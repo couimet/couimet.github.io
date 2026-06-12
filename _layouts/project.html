@@ -3,20 +3,20 @@ layout: home
 ---
 
 <div class="container py-4">
-  <div class="position-relative">
+  <div>
     {% if page.logourl or page.iconurl %}
       {% assign header_logo = page.logourl | default: page.iconurl %}
       <img
         src="{{ header_logo }}"
         alt="{{ page.title }} logo"
-        class="float-end ms-3 mb-2 d-none d-sm-block"
-        style="height: 96px; width: auto; object-fit: contain;"
+        class="float-end ms-3 mb-3 d-none d-sm-block"
+        style="height: 256px; width: auto; object-fit: contain;"
       />
       {% if page.iconurl %}
         <img
           src="{{ page.iconurl }}"
           alt="{{ page.title }} logo"
-          class="float-end ms-3 mb-2 d-sm-none"
+          class="float-end ms-3 mb-3 d-sm-none"
           style="height: 48px; width: auto; object-fit: contain;"
         />
       {% endif %}
