@@ -2,7 +2,7 @@
   "basics": {
     "name": "Charles Ouimet",
     "label": "Principal Software Developer",
-    "picture": "https://github.com/couimet.png",
+    "picture": "/img/charles-ouimet.jpg",
     "email": "charles.ouimet@gmail.com",
     "phone": "",
     "website": "https://ouimet.info",
@@ -20,7 +20,7 @@
       { "network": "telegram", "username": "couimet", "url": "https://t.me/couimet" },
       { "network": "discord", "username": "couimet", "url": "https://discord.com/users/couimet" },
       { "network": "twitter", "username": "charlesouimet", "url": "https://x.com/charlesouimet/" },
-      { "network": "instagram", "username": "charles.ouimet.geek", "url": "https://www.instagram.com/charles.ouimet.geek/" },
+      { "network": "instagram", "username": "charles.ouimet.geek", "url": "https://www.instagram.com/charles.ouimet.geek/" }
     ]
   },
   "interests": [
