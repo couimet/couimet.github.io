@@ -10,6 +10,7 @@ labels:
   - skills
   - workflows
 summary: "A library of reusable Claude skills focused on developer workflows."
+showBuyMeACoffee: true
 ---
 
 The `my-claude-skills` repo is where I experiment with building a small, composable skill system for Claude: workflow scaffolding that helps me move from vague ideas to concrete code and docs.
