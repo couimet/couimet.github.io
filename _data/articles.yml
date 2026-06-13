@@ -6,9 +6,6 @@
 # Supported promotion channels: linkedin, x.
 # For tone inventory: yq '.[].promotion.linkedin.content' _data/articles.yml (swap `linkedin` for `x` for X posts).
 
-# TODO(#93): fill remaining placeholders for v2.0.0 release before merging.
-#   - promotion.linkedin.url: replace TBD-LINKEDIN-URL with the LinkedIn post URL
-#   - promotion.x.url: replace TBD-X-URL with the X post URL
 - date: "2026-06-12"
   title: "RangeLink 2.0.0: Bind first. Every R-* follows"
   link: https://dev.to/couimet/rangelink-200-bind-first-every-r-follows-11nd
