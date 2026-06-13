@@ -70,7 +70,7 @@ def sized_icon(icon, target_size):
     scale = target_size / max(icon.size)
     new_w = int(icon.width * scale)
     new_h = int(icon.height * scale)
-    return icon.resize((new_w, new_h), Image.LANCZOS)
+    return icon.resize((new_w, new_h), Image.Resampling.LANCZOS)
 
 
 def main():
@@ -79,7 +79,7 @@ def main():
     icon = fetch_icon(icon_url)
     icon = sized_icon(icon, cfg.ICON_SIZE)
 
-    bannertitle = meta.get("bannertitle") or meta["title"].rstrip(" Extension")
+    bannertitle = meta.get("bannertitle") or meta["title"].removesuffix(" Extension")
     bannersubtitle = meta.get("bannersubtitle", "")
     bannertagline = meta.get("bannertagline") or meta.get("summary", "")
 

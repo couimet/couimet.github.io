@@ -31,7 +31,7 @@ def cropped_face(face_path, size):
     scale = size / min(src.size)
     new_w = int(src.width * scale)
     new_h = int(src.height * scale)
-    src = src.resize((new_w, new_h), Image.LANCZOS)
+    src = src.resize((new_w, new_h), Image.Resampling.LANCZOS)
     left = (new_w - size) // 2
     top = (new_h - size) // 2
     src = src.crop((left, top, left + size, top + size))
