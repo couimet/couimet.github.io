@@ -1,0 +1,40 @@
+{% assign link_base = include.article.link | split: '#' | first %}
+{% assign link_fragment = include.article.link | remove_first: link_base %}
+{% assign utm_separator = '?' %}
+{% if link_base contains '?' %}
+  {% assign utm_separator = '&' %}
+{% endif %}
+{% capture article_href %}{{ link_base }}{{ utm_separator }}utm_source=ouimet.info&utm_medium=referral&utm_campaign={{ include.utm_campaign | url_encode }}{{ link_fragment }}{% endcapture %}
+<article class="article-item px-3 py-2"{% if include.anchor %} id="article-{{ include.anchor }}"{% endif %}>
+  <p class="article-date mb-1">{{ include.article.date }}{% if include.show_share %} <button type="button" class="article-share" aria-label="Copy link to this article" title="Copy link to this article" data-anchor="article-{{ include.anchor }}">🔗</button>{% endif %}</p>
+  <a
+    class="article-link"
+    href="{{ article_href }}"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {{ include.article.title }}
+  </a>
+  {% if include.show_projects and include.article.projects %}
+    <span class="article-project-tags">
+      {% for project_slug in include.article.projects %}
+        {% assign proj_file = project_slug | append: ".md" %}
+        {% assign proj_page = site.pages | where: "name", proj_file | first %}
+        {% if proj_page %}
+          {% assign proj_label = proj_page.title %}
+          {% assign proj_url = proj_page.url %}
+        {% else %}
+          {% assign proj_label = project_slug %}
+          {% assign proj_url = nil %}
+        {% endif %}
+        {% if proj_url %}
+          <a href="{{ proj_url | prepend: site.baseurl }}" class="badge rounded-pill article-project-pill">{{ proj_label }}</a>
+        {% else %}
+          <span class="badge rounded-pill article-project-pill">{{ proj_label }}</span>
+        {% endif %}
+      {% endfor %}
+    </span>
+  {% endif %}
+  {% if include.article.promotion.linkedin.url %} <a href="{{ include.article.promotion.linkedin.url }}" target="_blank" rel="noopener noreferrer" title="View LinkedIn post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#linkedin"/></svg></a>{% endif %}
+  {% if include.article.promotion.x.url %} <a href="{{ include.article.promotion.x.url }}" target="_blank" rel="noopener noreferrer" title="View X post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#twitter-x"/></svg></a>{% endif %}
+</article>

@@ -15,25 +15,7 @@
     <h2 class="h4 mb-3">Articles about this project</h2>
     <div class="articles-scroll">
       {% for article in related %}
-        {% assign link_base = article.link | split: '#' | first %}
-        {% assign link_fragment = article.link | remove_first: link_base %}
-        {% assign utm_separator = '?' %}
-        {% if link_base contains '?' %}
-          {% assign utm_separator = '&' %}
-        {% endif %}
-        {% capture article_href %}{{ link_base }}{{ utm_separator }}utm_source=ouimet.info&utm_medium=referral&utm_campaign={{ utm_campaign | url_encode }}{{ link_fragment }}{% endcapture %}
-        <article class="article-item px-3 py-2">
-          <p class="article-date mb-1">{{ article.date }}</p>
-          <a
-            class="article-link"
-            href="{{ article_href }}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ article.title }}
-          </a>
-          {% if article.promotion.linkedin.url %} <a href="{{ article.promotion.linkedin.url }}" target="_blank" rel="noopener noreferrer" title="View LinkedIn post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#linkedin"/></svg></a>{% endif %}
-        </article>
+        {% include articles/article-item.html article=article utm_campaign=utm_campaign %}
       {% endfor %}
     </div>
   </div>
