@@ -1,16 +1,20 @@
 """Shared rendering helpers for social banner generation scripts.
 
-Imported by generate-social-banner.py and generate-social-banner-rangelink.py.
+Imported by generate.py and generate_rangelink.py.
 """
 
 from PIL import ImageDraw, ImageFont
 
-import _banner_settings as cfg
+import settings as cfg
 
 
 def load_font(size, weight="regular"):
     path = cfg.FONT_BOLD if weight == "bold" else cfg.FONT_REGULAR
     return ImageFont.truetype(path, size)
+
+
+def derive_bannertitle(meta):
+    return meta.get("bannertitle") or meta["title"].removesuffix(" Extension")
 
 
 def wrap_line(text, font, draw, max_width):

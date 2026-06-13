@@ -15,23 +15,23 @@ from urllib.request import urlopen
 import yaml
 from PIL import Image, ImageDraw
 
-import _banner_settings as cfg
-import _banner_utils as util
+import settings as cfg
+import utils as util
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 PROJECT_FILE = REPO_ROOT / "projects" / "rangelink-extension.md"
 OUT_PATH = REPO_ROOT / "img" / "social-banner-rangelink.jpg"
 
 TEXT_MAX_W = cfg.WIDTH - cfg.TEXT_REGION_X - cfg.PADDING_H
 
 
-def load_project_meta():
+def load_project_meta(project_md_path):
     """Parse Jekyll front matter from the project markdown file."""
-    with open(PROJECT_FILE) as f:
+    with open(project_md_path) as f:
         content = f.read()
     match = re.match(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
     if not match:
-        print(f"No front matter found in {PROJECT_FILE}", file=sys.stderr)
+        print(f"No front matter found in {project_md_path}", file=sys.stderr)
         sys.exit(1)
     return yaml.safe_load(match.group(1))
 
@@ -46,13 +46,16 @@ def resolve_icon_url(meta):
     sys.exit(1)
 
 
-def fetch_icon(url):
+def load_icon_bytes(url):
     try:
-        data = urlopen(url, timeout=10).read()
-        return Image.open(BytesIO(data)).convert("RGBA")
+        return urlopen(url, timeout=10).read()
     except Exception as exc:
         print(f"Failed to download icon from {url}: {exc}", file=sys.stderr)
         sys.exit(1)
+
+
+def decode_icon(data):
+    return Image.open(BytesIO(data)).convert("RGBA")
 
 
 def trim_to_content(icon):
@@ -73,13 +76,13 @@ def sized_icon(icon, target_size):
     return icon.resize((new_w, new_h), Image.Resampling.LANCZOS)
 
 
-def main():
-    meta = load_project_meta()
+def build_banner(project_md_path, out_path, icon_loader=load_icon_bytes):
+    meta = load_project_meta(project_md_path)
     icon_url = resolve_icon_url(meta)
-    icon = fetch_icon(icon_url)
+    icon = decode_icon(icon_loader(icon_url))
     icon = sized_icon(icon, cfg.ICON_SIZE)
 
-    bannertitle = meta.get("bannertitle") or meta["title"].removesuffix(" Extension")
+    bannertitle = util.derive_bannertitle(meta)
     bannersubtitle = meta.get("bannersubtitle", "")
     bannertagline = meta.get("bannertagline") or meta.get("summary", "")
 
@@ -110,8 +113,12 @@ def main():
     util.draw_text_block(draw, lines)
     util.draw_watermark(draw)
 
-    im.save(OUT_PATH, "JPEG", quality=cfg.JPG_QUALITY)
-    print(f"Written: {OUT_PATH}")
+    im.save(out_path, "JPEG", quality=cfg.JPG_QUALITY)
+    print(f"Written: {out_path}")
+
+
+def main():
+    build_banner(PROJECT_FILE, OUT_PATH)
 
 
 if __name__ == "__main__":

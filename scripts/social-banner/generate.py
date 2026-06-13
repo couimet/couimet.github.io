@@ -11,18 +11,18 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-import _banner_settings as cfg
-import _banner_utils as util
+import settings as cfg
+import utils as util
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 BIO_PATH = REPO_ROOT / "_data" / "bio.json"
 OUT_PATH = REPO_ROOT / "img" / "social-banner.jpg"
 
 TEXT_MAX_W = cfg.WIDTH - cfg.TEXT_REGION_X - cfg.PADDING_H
 
 
-def load_bio():
-    with open(BIO_PATH) as f:
+def load_bio(bio_path):
+    with open(bio_path) as f:
         return json.load(f)["basics"]
 
 
@@ -42,8 +42,8 @@ def cropped_face(face_path, size):
     return canvas
 
 
-def main():
-    bio = load_bio()
+def build_banner(bio_path, face_path, out_path):
+    bio = load_bio(bio_path)
 
     name = bio["name"]
     title = bio["label"]
@@ -52,13 +52,7 @@ def main():
     im = Image.new("RGB", (cfg.WIDTH, cfg.HEIGHT), cfg.BG_COLOR)
     draw = ImageDraw.Draw(im)
 
-    # Face photo
-    face_rel = bio["picture"].lstrip("/")
-    face_abs = REPO_ROOT / face_rel
-    if not face_abs.exists():
-        print(f"Face photo not found: {face_abs}", file=sys.stderr)
-        sys.exit(1)
-    face = cropped_face(str(face_abs), cfg.FACE_SIZE)
+    face = cropped_face(str(face_path), cfg.FACE_SIZE)
     face_y = (cfg.HEIGHT - cfg.FACE_SIZE) // 2
     im.paste(face, (cfg.FACE_X, face_y))
 
@@ -77,8 +71,17 @@ def main():
     util.draw_text_block(draw, lines)
     util.draw_watermark(draw)
 
-    im.save(OUT_PATH, "JPEG", quality=cfg.JPG_QUALITY)
-    print(f"Written: {OUT_PATH}")
+    im.save(out_path, "JPEG", quality=cfg.JPG_QUALITY)
+    print(f"Written: {out_path}")
+
+
+def main():
+    bio = load_bio(BIO_PATH)
+    face_abs = REPO_ROOT / bio["picture"].lstrip("/")
+    if not face_abs.exists():
+        print(f"Face photo not found: {face_abs}", file=sys.stderr)
+        sys.exit(1)
+    build_banner(BIO_PATH, face_abs, OUT_PATH)
 
 
 if __name__ == "__main__":

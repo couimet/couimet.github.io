@@ -1,0 +1,8 @@
+{
+  "basics": {
+    "name": "Test Person",
+    "label": "Test Engineer",
+    "summarySocialBanner": "Building reproducible test banners since 2026.",
+    "picture": "tests/fixtures/face.jpg"
+  }
+}

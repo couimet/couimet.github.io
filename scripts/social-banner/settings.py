@@ -2,8 +2,8 @@ from pathlib import Path
 
 """Shared settings for social banner generation scripts.
 
-Both generate-social-banner.py and generate-social-banner-rangelink.py
-import this module so colours, fonts, layout, and watermark stay in sync.
+Both generate.py and generate_rangelink.py import this module so colours,
+fonts, layout, and watermark stay in sync.
 """
 
 # ── Dimensions ──────────────────────────────────────────────────────────────
