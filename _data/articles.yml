@@ -3,7 +3,41 @@
 # Optional: sources (array of <org>/<repo>/<path> source files including companions and rendered artifacts),
 #           projects (related project page anchors),
 #           promotion (per-channel post URL + content).
-# For tone inventory across LinkedIn posts: yq '.[].promotion.linkedin.content' _data/articles.yml
+# Supported promotion channels: linkedin, x.
+# For tone inventory: yq '.[].promotion.linkedin.content' _data/articles.yml (swap `linkedin` for `x` for X posts).
+
+- date: "2026-06-12"
+  title: "RangeLink 2.0.0: Bind first. Every R-* follows"
+  link: https://dev.to/couimet/rangelink-200-bind-first-every-r-follows-11nd
+  anchor: rangelink-v2
+  sources:
+    - couimet/rangeLink/media/devto-post-vscode-extension-v2.0.0.md
+    - couimet/rangeLink/media/devto-post-vscode-extension-v2.0.0-R-D.png
+    - couimet/rangeLink/media/devto-post-vscode-extension-v2.0.0-R-M.png
+    - couimet/rangeLink/media/devto-post-vscode-extension-v2.0.0-contextual-menu-file-explorer.png
+  projects:
+    - rangelink-extension
+  promotion:
+    linkedin:
+      url: https://www.linkedin.com/feed/update/urn:li:activity:7471367701467336704/
+      content: |
+        RangeLink 2.0.0 is out 🚀
+
+        In v1, a destination was where R-L sent your link. In v2, a destination carries the whole R-* family — link, selection, file path, terminal output, all routed through one thing you bind once.
+
+        (And v2 also stops stomping on your system clipboard. About time 😅)
+
+        👉 https://dev.to/couimet/rangelink-200-bind-first-every-r-follows-11nd
+    x:
+      url: https://x.com/charlesouimet/status/2065604304933716368
+      content: |
+        RangeLink 2.0.0 🚀
+
+        • Every R-* keybinding now routes through one bound destination
+        • R-V also sends terminal selections
+        • Your clipboard finally stays yours
+
+        https://dev.to/couimet/rangelink-200-bind-first-every-r-follows-11nd
 
 - date: "2026-06-09"
   title: "Correlation ID vs Request ID: A Practical Guide"
