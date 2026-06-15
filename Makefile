@@ -1,4 +1,4 @@
-.PHONY: install install-deps install-hooks serve build test snapshot-sitemap verify-sitemap
+.PHONY: install install-deps install-hooks serve build test lint snapshot-sitemap verify-sitemap
 
 install: install-deps install-hooks
 
@@ -16,6 +16,11 @@ build:
 
 test:
 	python3 -m unittest discover -s scripts/tests -v
+
+lint: build
+	bundle exec htmlproofer _site --disable-external
+	markdownlint-cli2 "**/*.md"
+	python3 -m py_compile scripts/normalize-sitemap.py scripts/tests/test_normalize_sitemap.py
 
 snapshot-sitemap: build
 	@mkdir -p .snapshots

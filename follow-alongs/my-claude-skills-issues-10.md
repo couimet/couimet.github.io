@@ -17,7 +17,6 @@ labels:
   This follow-along is from March 2026. The toolkit has evolved since then — see the <a href="{{ site.baseurl }}/projects/my-claude-skills.html">project page</a> for current state and the articles below for newer ground.
 </div>
 
-
 <p>
   If you came here from my <a href="https://dev.to/couimet/from-vide-coding-to-supercharged-vibe-guiding-6nm" target="_blank" rel="noopener noreferrer">From Vide Coding to Supercharged Vibe Guiding</a> post, this is the part where we stop talking about the idea—and actually execute it.
 </p>
