@@ -48,10 +48,17 @@
     <title>{{ title }}</title>
     <link rel="canonical" href="{{ url }}">
     <meta http-equiv="refresh" content="0; url={{ url }}">
+    {%- if page.url == '/404.html' -%}
+    <script>location.replace({{ site.url | jsonify }} + window.location.pathname + window.location.search + window.location.hash)</script>
+    {%- else -%}
     <script>location.replace({{ url | jsonify }})</script>
+    {%- endif -%}
   </head>
   <body>
     <p>Redirecting to <a href="{{ url }}">{{ url }}</a>...</p>
+    <noscript>
+      <p>JavaScript is disabled. Continue to <a href="{{ url }}">{{ url }}</a>.</p>
+    </noscript>
   </body>
 </html>
 {%- else -%}
