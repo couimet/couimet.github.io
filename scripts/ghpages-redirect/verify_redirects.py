@@ -34,18 +34,30 @@ class _StubParser(HTMLParser):
         super().__init__()
         self.refresh_url: str | None = None
         self.canonical_url: str | None = None
+        self.noscript_url: str | None = None
+        self._in_noscript: bool = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag.lower() == "meta":
+        tag_lower = tag.lower()
+        if tag_lower == "noscript":
+            self._in_noscript = True
+        elif tag_lower == "meta":
             attr_map = {k.lower(): (v or "") for k, v in attrs}
             if attr_map.get("http-equiv", "").lower() == "refresh":
                 m = _REFRESH_CONTENT_RE.match(attr_map.get("content", ""))
                 if m:
                     self.refresh_url = m.group("url")
-        elif tag.lower() == "link":
+        elif tag_lower == "link":
             attr_map = {k.lower(): (v or "") for k, v in attrs}
             if attr_map.get("rel", "").lower() == "canonical":
                 self.canonical_url = attr_map.get("href", "")
+        elif tag_lower == "a" and self._in_noscript:
+            attr_map = {k.lower(): (v or "") for k, v in attrs}
+            self.noscript_url = attr_map.get("href", "")
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "noscript":
+            self._in_noscript = False
 
 
 def expected_url_for(html_path: Path, site_dir: Path) -> str:
@@ -98,6 +110,18 @@ def verify(site_dir: Path) -> list[Failure]:
                 Failure(
                     html_path,
                     f"canonical url mismatch: expected {expected!r}, got {parser.canonical_url!r}",
+                )
+            )
+
+        if parser.noscript_url is None:
+            failures.append(
+                Failure(html_path, "missing <noscript> fallback link")
+            )
+        elif parser.noscript_url != expected:
+            failures.append(
+                Failure(
+                    html_path,
+                    f"noscript url mismatch: expected {expected!r}, got {parser.noscript_url!r}",
                 )
             )
 
