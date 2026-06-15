@@ -22,9 +22,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+        with:
+          persist-credentials: false
       - name: Install uv
-        # pin to SHA later if desired
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@e4db8464a088ece1b920f60402e813ea4de65b8f  # v4
       - name: Install deps
         run: uv sync --frozen --extra dev
         working-directory: scripts/social-banner

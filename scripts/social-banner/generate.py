@@ -77,7 +77,11 @@ def build_banner(bio_path, face_path, out_path):
 
 def main():
     bio = load_bio(BIO_PATH)
-    face_abs = REPO_ROOT / bio["picture"].lstrip("/")
+    picture = bio.get("picture")
+    if not picture:
+        print("Missing 'picture' in bio.json basics", file=sys.stderr)
+        sys.exit(1)
+    face_abs = REPO_ROOT / picture.lstrip("/")
     if not face_abs.exists():
         print(f"Face photo not found: {face_abs}", file=sys.stderr)
         sys.exit(1)

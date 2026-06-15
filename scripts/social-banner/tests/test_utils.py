@@ -28,8 +28,8 @@ def test_wrap_line_single_word_fits_unchanged(draw_ctx, tagline_font):
     assert utils.wrap_line("hello", tagline_font, draw_ctx, 1000) == ["hello"]
 
 
-def test_wrap_line_empty_input_returns_original(draw_ctx, tagline_font):
-    assert utils.wrap_line("", tagline_font, draw_ctx, 1000) == [""]
+def test_wrap_line_empty_input_returns_empty_list(draw_ctx, tagline_font):
+    assert utils.wrap_line("", tagline_font, draw_ctx, 1000) == []
 
 
 def test_wrap_line_breaks_long_text(draw_ctx, tagline_font):
@@ -51,6 +51,7 @@ def test_wrap_line_keeps_short_text_on_one_line(draw_ctx, tagline_font):
         ({"bannertitle": "Custom", "title": "X Extension"}, "Custom"),
         ({"title": "No Suffix"}, "No Suffix"),
         ({"bannertitle": "", "title": "RangeLink Extension"}, "RangeLink"),
+        ({}, ""),
     ],
 )
 def test_derive_bannertitle(meta, expected):

@@ -10,6 +10,8 @@ import re
 import sys
 from io import BytesIO
 from pathlib import Path
+from urllib.error import URLError
+from urllib.parse import urlparse
 from urllib.request import urlopen
 
 import yaml
@@ -47,9 +49,12 @@ def resolve_icon_url(meta):
 
 
 def load_icon_bytes(url):
+    if urlparse(url).scheme not in ("http", "https"):
+        print(f"Refusing non-http(s) icon URL: {url}", file=sys.stderr)
+        sys.exit(1)
     try:
         return urlopen(url, timeout=10).read()
-    except Exception as exc:
+    except (URLError, OSError) as exc:
         print(f"Failed to download icon from {url}: {exc}", file=sys.stderr)
         sys.exit(1)
 

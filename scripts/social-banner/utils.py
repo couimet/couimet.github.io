@@ -14,11 +14,13 @@ def load_font(size, weight="regular"):
 
 
 def derive_bannertitle(meta):
-    return meta.get("bannertitle") or meta["title"].removesuffix(" Extension")
+    return meta.get("bannertitle") or meta.get("title", "").removesuffix(" Extension")
 
 
 def wrap_line(text, font, draw, max_width):
     """Break *text* into lines that each fit within *max_width*."""
+    if not text:
+        return []
     words = text.split()
     lines = []
     current = ""
@@ -32,7 +34,7 @@ def wrap_line(text, font, draw, max_width):
             current = word
     if current:
         lines.append(current)
-    return lines if lines else [text]
+    return lines
 
 
 def draw_text_block(draw, lines, start_y=None):
