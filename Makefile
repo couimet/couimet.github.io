@@ -17,6 +17,7 @@ build:
 snapshot-sitemap: build
 	@mkdir -p .snapshots
 	cp _site/sitemap.xml .snapshots/sitemap.xml
+	python3 scripts/sort-sitemap.py .snapshots/sitemap.xml
 
 verify-sitemap: snapshot-sitemap
 	git diff --exit-code .snapshots/sitemap.xml
