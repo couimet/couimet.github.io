@@ -1,16 +1,18 @@
-# Runs the banner-script Python test suite on every PR and on push to main.
-# Scoped via paths filter so it only fires when the banner project or this workflow changes.
+# Runs the per-subproject Python test suites on every PR and on push to main.
+# Scoped via paths filter so it only fires when one of the tracked projects or this workflow changes.
 name: Python tests
 
 on:
   pull_request:
     paths:
       - 'scripts/social-banner/**'
+      - 'scripts/ghpages-redirect/**'
       - '.github/workflows/python-tests.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/social-banner/**'
+      - 'scripts/ghpages-redirect/**'
       - '.github/workflows/python-tests.yml'
 
 permissions:
@@ -19,6 +21,12 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - scripts/social-banner
+          - scripts/ghpages-redirect
     steps:
       - name: Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
@@ -28,7 +36,7 @@ jobs:
         uses: astral-sh/setup-uv@e4db8464a088ece1b920f60402e813ea4de65b8f  # v4
       - name: Install deps
         run: uv sync --frozen --extra dev
-        working-directory: scripts/social-banner
+        working-directory: ${{ matrix.project }}
       - name: Run tests
         run: uv run pytest tests/ -v
-        working-directory: scripts/social-banner
+        working-directory: ${{ matrix.project }}
