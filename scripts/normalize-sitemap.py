@@ -30,8 +30,7 @@ def normalize(path, strip_lastmod=False):
         for url in urls:
             for lm in url.findall(f"{{{NS}}}lastmod"):
                 url.remove(lm)
-    root.clear()
-    root.extend(urls)
+    root[:] = urls
     ET.indent(tree, space="  ")
     tree.write(path, encoding="UTF-8", xml_declaration=True)
 

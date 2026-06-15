@@ -22,6 +22,15 @@ UNSORTED = """<?xml version='1.0' encoding='UTF-8'?>
 </urlset>
 """
 
+WITH_XSI = """<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <url>
+    <loc>https://ouimet.info/</loc>
+    <lastmod>2026-06-06T13:56:13-04:00</lastmod>
+  </url>
+</urlset>
+"""
+
 
 def _run(*args):
     subprocess.run(["python3", str(SCRIPT), *args], check=True)
@@ -74,6 +83,17 @@ class NormalizeSitemapTest(unittest.TestCase):
         try:
             _run("--strip-lastmod", f.name)
             self.assertEqual(_lastmods(f.name), [None, None, None])
+        finally:
+            Path(f.name).unlink()
+
+    def test_preserves_root_attributes(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".xml", delete=False) as f:
+            f.write(WITH_XSI)
+        try:
+            _run(f.name)
+            out = Path(f.name).read_text()
+            self.assertIn("xmlns:xsi=", out)
+            self.assertIn("xsi:schemaLocation=", out)
         finally:
             Path(f.name).unlink()
 
