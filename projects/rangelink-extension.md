@@ -7,6 +7,7 @@ published: true
 repourl: https://github.com/couimet/rangeLink/tree/main/packages/rangelink-vscode-extension#readme
 iconurl: https://raw.githubusercontent.com/couimet/rangeLink/3300130bc7d5cd9081285c06140015ac09ef0d1b/assets/icon.png
 logourl: https://raw.githubusercontent.com/couimet/rangeLink/3300130bc7d5cd9081285c06140015ac09ef0d1b/assets/icon_256.png
+sourceiconurl: https://raw.githubusercontent.com/couimet/rangeLink/main/assets/icon_large.png
 labels:
   - vscode
   - cursor
@@ -14,7 +15,10 @@ labels:
   - extension
   - productivity
 summary: "One keybinding to share precise, clickable code ranges with any AI or tool."
+bannertitle: RangeLink
+bannersubtitle: VS Code Extension
 showBuyMeACoffee: true
+og_image: /img/social-banner-rangelink.jpg
 ---
 
 RangeLink gives you a single muscle memory for AI-assisted development: select code, hit your RangeLink shortcut, and get a GitHub-style link with character-level ranges that works in PRs, chats, terminals, and docs. It removes copy/paste friction and shortcut-juggling between Claude, Cursor, GPT, and other tools by piping links straight into your bound destinations, so your AI always sees exactly the slice of code you mean.

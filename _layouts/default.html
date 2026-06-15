@@ -1,6 +1,14 @@
+{%- if jekyll.environment == 'development' -%}
+  {%- assign site_url = 'http://127.0.0.1:4000' -%}
+{%- else -%}
+  {%- assign site_url = site.url -%}
+{%- endif -%}
+
 {%- assign url = '/' | prepend: site.baseurl | prepend: site.url -%}
 {%- assign title = site.title -%}
 {%- assign description = site.description -%}
+{%- assign image = '/img/social-banner.jpg' | prepend: site_url -%}
+{%- assign og_type = 'website' -%}
 
 {%- if page.url != '/' -%}
   {%- if page.url -%}
@@ -11,7 +19,24 @@
   {%- endif -%}
   {%- if page.description -%}
     {%- assign description = page.description -%}
+  {%- elsif page.summary -%}
+    {%- assign description = page.summary -%}
   {%- endif -%}
+{%- endif -%}
+
+{%- if page.og_image -%}
+  {%- assign image = page.og_image -%}
+  {%- unless image contains '://' -%}
+    {%- assign image = image | remove_first: '/' | prepend: '/' | prepend: site_url -%}
+  {%- endunless -%}
+{%- elsif page.logourl -%}
+  {%- assign image = page.logourl -%}
+{%- elsif page.iconurl -%}
+  {%- assign image = page.iconurl -%}
+{%- endif -%}
+
+{%- if page.og_type -%}
+  {%- assign og_type = page.og_type -%}
 {%- endif -%}
 
 <!doctype html>
@@ -21,14 +46,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="title" content="{{ title | xml_escape }}">
     <meta name="description" content="{{ description | xml_escape }}">
-    <meta name="image" content="{{ site.data.bio.basics.picture | prepend: site.url }}">
-    <meta property="og:type" content="website">
+    <meta name="image" content="{{ image }}">
+    <meta property="og:type" content="{{ og_type }}">
     <meta property="og:site_name" content="{{ site.title | xml_escape }}">
     <link rel="canonical" href="{{ url }}">
     <meta property="og:url" content="{{ url }}">
     <meta property="og:title" content="{{ title | xml_escape }}">
     <meta property="og:description" content="{{ description | xml_escape }}">
-    <meta property="og:image" content="{{ site.data.bio.basics.picture | prepend: site.url }}">
+    <meta property="og:image" content="{{ image }}">
     <link rel="shortcut icon" href="{{ '/favicon.ico' | prepend: site.baseurl }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ site.baseurl}}/css/techfolio-theme/{{ site.techfolio-theme}}">

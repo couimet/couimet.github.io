@@ -1,0 +1,20 @@
+[project]
+name = "couimet-social-banner"
+version = "0.1.0"
+description = "Social banner generation for couimet.github.io"
+requires-python = ">=3.9"
+dependencies = ["Pillow==11.3.0", "PyYAML>=6"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["settings", "utils", "generate", "generate_rangelink"]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "tests"]
+testpaths = ["tests"]
