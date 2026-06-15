@@ -21,6 +21,7 @@ kramdown:
 strict_front_matter: true
 mathjax: true
 exclude:
+  - CLAUDE.md
   - Gemfile
   - Gemfile.lock
   - LICENSE
@@ -33,3 +34,4 @@ include:
   - _data
 plugins:
   - jekyll-gist
+  - jekyll-sitemap

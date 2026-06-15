@@ -2,3 +2,5 @@
 layout: null
 ---
 User-agent: *
+
+Sitemap: https://ouimet.info/sitemap.xml

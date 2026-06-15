@@ -1,0 +1,21 @@
+# Pre-commit hooks. Bootstrap once after clone with `make install` (which
+# runs `pre-commit install`). Install pre-commit itself via `brew install
+# pre-commit` or `pipx install pre-commit`.
+#
+# The CI workflow .github/workflows/verify-sitemap.yml is the final gate: it
+# re-runs the same snapshot rebuild and fails on diff even if a contributor
+# commits with `--no-verify`.
+
+repos:
+  - repo: local
+    hooks:
+      - id: snapshot-sitemap
+        name: Refresh .snapshots/sitemap.xml
+        entry: make snapshot-sitemap
+        language: system
+        pass_filenames: false
+        # Fire only when a staged file could affect the rendered sitemap.
+        # Inclusive defaults: false-positive rebuilds (~0.3s) are cheaper than
+        # missed rebuilds.
+        files: >
+          ^(projects/|follow-alongs/|articles/|career/|_data/|_layouts/|_includes/|_config\.yml$|index\.html$|404\.html$|resume.*\.html$)
