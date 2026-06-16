@@ -11,14 +11,28 @@ Install dependencies:
 ```bash
 rbenv install 3.1.4
 rbenv local 3.1.4
-bundle install
+make install
 ```
 
 Run the server:
 
 ```bash
-bundle exec jekyll serve
+make serve
 ```
+
+### Sitemap snapshot
+
+`.snapshots/sitemap.xml` is a tracked copy of the rendered `/sitemap.xml` so the page graph's evolution shows up in git history. CI runs `make verify-sitemap` on every PR and push to `main`, which rebuilds the site, refreshes the snapshot, and fails on `git diff --exit-code` if the build no longer matches the tracked file.
+
+When a change adds, removes, or renames a page, refresh the snapshot before committing:
+
+```bash
+make snapshot-sitemap
+```
+
+Then commit the updated `.snapshots/sitemap.xml` alongside the page change.
+
+The pre-commit hook (`.pre-commit-config.yaml`) runs `make snapshot-sitemap` automatically when a commit touches a sitemap-affecting path.
 
 ## Career Changelog
 

@@ -1,0 +1,34 @@
+name: Verify sitemap snapshot
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+        with:
+          persist-credentials: false
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@89f90524b88a01fe6e0b732220432cc6142926af  # v1
+        with:
+          bundler-cache: true
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@e58605a9b6da7c637471fab8847a5e5a6b8df081  # v5
+
+      # Rebuilds the site, copies _site/sitemap.xml to .snapshots/sitemap.xml,
+      # and fails on `git diff --exit-code` if the freshly built sitemap differs
+      # from the tracked snapshot. Refresh locally with `make snapshot-sitemap`
+      # and commit the result alongside the page changes that caused the drift.
+      - name: Verify sitemap snapshot
+        run: make verify-sitemap

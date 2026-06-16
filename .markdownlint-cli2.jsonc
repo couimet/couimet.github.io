@@ -1,0 +1,16 @@
+{
+  "config": {
+    "MD013": false,
+    "MD033": false,
+    "MD034": false,
+    "MD046": { "style": "fenced" }
+  },
+  "ignores": [
+    ".history/**",
+    "_site/**",
+    "vendor/**",
+    "articles/_sources/**",
+    ".claude/skills/**",
+    "LICENSE.md"
+  ]
+}
