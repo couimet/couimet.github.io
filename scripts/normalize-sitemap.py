@@ -2,7 +2,7 @@
 """Normalize a sitemap.xml for deterministic git tracking and comparison.
 
 - Sorts <url> blocks by <loc> (Jekyll doesn't guarantee enumeration order).
-- Strips namespace clutter (xmlns:xsi, xsi:schemaLocation).
+- Preserves root element attributes.
 - Optionally strips <lastmod> for comparison (--strip-lastmod).
 
 The snapshot keeps <lastmod> so the tracked file reflects the real output shape.

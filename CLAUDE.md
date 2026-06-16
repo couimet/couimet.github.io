@@ -20,8 +20,10 @@ Python linting and formatting uses `ruff` via `uv run`:
 
 ### Linting
 
-    make lint      # htmlproofer + markdownlint-cli2 + ruff check
-    make lint-fix  # markdownlint-cli2 --fix + ruff check --fix + ruff format
+```text
+make lint      # htmlproofer + markdownlint-cli2 + ruff check
+make lint-fix  # markdownlint-cli2 --fix + ruff check --fix + ruff format
+```
 
 - HTML: `htmlproofer` (Gemfile) validates built `_site/` for broken links, missing images, missing alt attributes.
 - Markdown: `markdownlint-cli2` (npm global) with `.markdownlint-cli2.jsonc` config. MD013/MD033/MD034 are disabled (line length, inline HTML, and bare URLs match prose-style conventions).

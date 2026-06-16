@@ -30,7 +30,7 @@ jobs:
           node-version: '22'
 
       - name: Install markdownlint-cli2
-        run: npm install -g markdownlint-cli2
+        run: npm install -g markdownlint-cli2@0.22.1
 
       - name: Lint
         run: make lint
