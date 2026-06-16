@@ -11,8 +11,6 @@ Install dependencies:
 ```bash
 rbenv install 3.1.4
 rbenv local 3.1.4
-# pre-commit (one-time, machine-wide)
-brew install pre-commit  # or: pipx install pre-commit
 make install
 ```
 

@@ -29,6 +29,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Install markdownlint-cli2
         run: npm install -g markdownlint-cli2@0.22.1
 

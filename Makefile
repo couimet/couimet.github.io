@@ -1,6 +1,13 @@
-.PHONY: install install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap
+.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap
 
-install: install-deps install-hooks
+install: install-prereqs install-deps install-hooks
+
+install-prereqs:
+	@ok=true; \
+	which uv >/dev/null 2>&1 || { echo "Missing: uv — install it: brew install uv   (or: curl -LsSf https://astral.sh/uv/install.sh | sh)"; ok=false; }; \
+	which pre-commit >/dev/null 2>&1 || { echo "Missing: pre-commit — install it: brew install pre-commit   (or: pipx install pre-commit)"; ok=false; }; \
+	which markdownlint-cli2 >/dev/null 2>&1 || { echo "Missing: markdownlint-cli2 — install it: npm install -g markdownlint-cli2@0.22.1"; ok=false; }; \
+	$$ok || { echo; echo "Install the missing prerequisites above, then re-run make install."; exit 1; }
 
 install-deps:
 	bundle install

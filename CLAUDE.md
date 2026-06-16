@@ -10,7 +10,7 @@ The site links out to the canonical published URL either way, so mirroring an ex
 
 ### Python
 
-Python packages are managed with `uv`, not `pip`. The repo-root `pyproject.toml` declares dev dependencies (currently `ruff`). `uv run <tool>` creates a project-local venv and runs the tool from there — each project gets its own isolated environment, and the version is pinned in `pyproject.toml`. No global installs needed.
+Python packages are managed with `uv`, not `pip`. The repo-root `pyproject.toml` declares dev dependencies (currently `ruff`). `uv run <tool>` creates a project-local venv and runs the tool from there — each project gets its own isolated environment, and the version is pinned in `pyproject.toml`. `uv` itself must be installed and on `PATH`; `make install` validates this before proceeding.
 
 Python linting and formatting uses `ruff` via `uv run`:
 
