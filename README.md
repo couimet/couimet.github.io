@@ -68,3 +68,5 @@ Run locally (requires Docker):
 Pushes to `main` are automatically deployed to ouimet.info via `.github/workflows/deploy-ouimet-info.yml` (SSH keypair auth). See the workflow file header for required repository secrets.
 
 The `scripts/sync-ouimet-info.sh` script is kept as a manual recovery tool for rollbacks and direct-from-release syncs.
+
+The site is built twice from the same source: once for ouimet.info (the canonical host) and once for couimet.github.io, which only emits redirect stubs. The github.io build is triggered by `.github/workflows/main.yml` and uses the `_config_ghpages.yml` overlay to enable the `ghpages_redirect` flag, which causes `_layouts/default.html` to emit a meta-refresh + canonical-link stub instead of the full page. The ouimet.info build does not pass the overlay, so it emits the real site.

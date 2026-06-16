@@ -1,0 +1,16 @@
+# Overlay config for the GitHub Pages build only.
+#
+# Two workflows build this repo:
+#   - .github/workflows/main.yml          → deploys to couimet.github.io (GitHub Pages)
+#   - .github/workflows/deploy-ouimet-info.yml → deploys to https://ouimet.info (canonical)
+#
+# The canonical site at ouimet.info serves the real content. The GitHub Pages
+# copy is a redirect shell: every HTML page is replaced with a tiny stub that
+# redirects to the matching path on ouimet.info, preserving the path.
+#
+# This overlay is layered on top of _config.yml only in main.yml (via
+# `--config _config.yml,_config_ghpages.yml`). When this flag is set,
+# _layouts/default.html emits the redirect stub instead of the full page.
+# The ouimet.info build does not include this overlay and is byte-for-byte
+# unchanged.
+ghpages_redirect: true

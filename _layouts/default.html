@@ -39,6 +39,29 @@
   {%- assign og_type = page.og_type -%}
 {%- endif -%}
 
+{%- if site.ghpages_redirect -%}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <link rel="canonical" href="{{ url }}">
+    <meta http-equiv="refresh" content="0; url={{ url }}">
+    {%- if page.url == '/404.html' -%}
+    <script>location.replace({{ site.url | jsonify }} + window.location.pathname + window.location.search + window.location.hash)</script>
+    {%- else -%}
+    <script>location.replace({{ url | jsonify }})</script>
+    {%- endif -%}
+  </head>
+  <body>
+    <p>Redirecting to <a href="{{ url }}">{{ url }}</a>...</p>
+    <noscript>
+      <p>JavaScript is disabled. Continue to <a href="{{ url }}">{{ url }}</a>.</p>
+    </noscript>
+  </body>
+</html>
+{%- else -%}
 <!doctype html>
 <html lang="en">
   <head>
@@ -76,3 +99,4 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
   </body>
 </html>
+{%- endif -%}
