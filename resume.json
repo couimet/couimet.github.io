@@ -1,12 +1,12 @@
 {
   "basics": {
     "name": "Charles Ouimet",
-    "label": "Principal Developer",
+    "label": "Staff Developer",
     "image": "https://github.com/couimet.png",
     "email": "charles.ouimet@gmail.com",
     "phone": "514-220-4240",
     "url": "https://ouimet.info",
-    "summary": "After 25 years of coding, I'm still passionate about diving into the details and tackling complex problems. As a Principal Developer, I focus on building resilient APIs and architectures that strike the right balance between quality, cost, and pragmatism. Using small, collaborative, and iterative cycles, I ensure each release delivers impact—driving success together with the team.",
+    "summary": "After 25+ years of coding, I'm still passionate about diving into the details and tackling complex problems. As a Staff Developer, I specialize in monolith decomposition, event-driven architecture, distributed transactions, and serverless infrastructure — augmented by AI-assisted development workflows that amplify speed without sacrificing quality. Using small, collaborative, and iterative cycles, I ensure each release delivers impact, driving success together with the team. My experience spans e-commerce, logistics and supply chain, crypto/DeFi, AdTech/growth, CPG, and telecom.",
     "location": {
       "city": "Montréal",
       "region": "Québec",
@@ -52,12 +52,12 @@
       "url": "https://shopify.com",
       "startDate": "2025-08-01",
       "endDate": "2026-05-01",
-      "summary": "Member of shop.app Buyer Acquisition (growth) team, focused on the Shop Cash domain.",
+      "summary": "Member of the shop.app Buyer Acquisition (growth) team, focused on the Shop Cash domain. Designed an affiliate payout program in the AdTech/growth space and contributed to the shop.app ecosystem migration to distributed SQL.",
       "highlights": [
-        "Contributed to the transition of the shop.app ecosystem to YugabyteDB, including ownership of migration for one of the highest QPS tables (top 20)",
-        "Technical design and implementation of an affiliate payout program in partnership with impact.com",
-        "Used Claude Code in daily development workflows; building commands to automate repetitive tasks and skills to encode domain-specific knowledge",
-        "Developed a Claude skill for ATC (Air Traffic Controller) support rotation, leveraging multiple Model Context Protocol (MCP) integrations to collect data and guide decisions based on team runbooks"
+        "Owned the migration of one of the highest-QPS tables (top 20) to YugabyteDB as part of the shop.app ecosystem transition to distributed SQL.",
+        "Designed an affiliate payout program in partnership with impact.com and implemented the foundational pieces.",
+        "Built custom Claude Code commands to automate repetitive tasks and developed a Claude skill for ATC (Air Traffic Controller) support rotation that leveraged multiple MCP integrations to collect data and guide decisions based on team runbooks.",
+        "Made my first open source contribution to the smart_todo Ruby gem, adding a context attribute referencing GitHub issues."
       ]
     },
     {
@@ -65,15 +65,14 @@
       "position": "Principal Developer",
       "startDate": "2025-02-01",
       "endDate": "2025-07-01",
-      "summary": "Dove into the crypto and DeFi space to learn about L2s, block explorers, smart contracts, DEXes, AMMs, liquidity pools, lending, borrowing, staking, and rewards on EVM-compatible chains and Solana.",
+      "summary": "Dove into the crypto and DeFi space, gaining hands-on knowledge across EVM-compatible chains and Solana. Decomposed a monolith into microservices, modernized the monorepo toolchain, and built company-wide observability infrastructure.",
       "highlights": [
-        "Extended a fork of the SonarWatch Portfolio to support additional protocols, exploring independence from Debank's API for on-chain portfolio data",
-        "Decomposed parts of a monolith into independent microservices to improve scalability and reduce resource contention",
-        "Migrated a standalone npm package repo to a Turborepo monorepo with changesets, streamlining dependency and version management",
-        "Created a centralized GitHub Actions repository to reduce duplication across CI/CD workflows and improve maintainability",
-        "Introduced structured logging across services, enabling efficient log filtering and analysis via AWS CloudWatch Log Insights",
-        "Designed CloudWatch custom metrics from structured logs to improve observability and operational insight",
-        "Developed a reusable npm package to avoid 3rd-party APIs throttling our calls"
+        "Extended a fork of the SonarWatch Portfolio by implementing the Stader protocol and peer-reviewing other protocol integrations, exploring independence from Debank's API for on-chain portfolio data across multiple EVM chains and Solana.",
+        "Decomposed parts of a monolith into independent microservices to improve scalability and reduce resource contention.",
+        "Simplified dependency management of shared packages by converting monolithic npm packages to a Turborepo monorepo using changesets and automated releases.",
+        "Reduced CI/CD duplication and improved pipeline consistency across repos by creating shared GitHub actions and workflows to improve maintainability.",
+        "Prevented third-party API throttling from impacting portfolio data availability by developing reusable infrastructure for resilient request management.",
+        "Eliminated fragmented logging across microservices by implementing structured logging adopted company-wide, giving teams centralized observability and faster issue investigation through AWS CloudWatch Log Insights and custom metrics. Layered request tracing on top with correlation_id and request_id propagation through HTTP headers via Axios interceptors."
       ]
     },
     {
@@ -82,11 +81,13 @@
       "url": "https://flexport.com",
       "startDate": "2023-06-01",
       "endDate": "2024-10-01",
-      "summary": "Stayed close to the prep team from Deliverr days after the acquisition, while focusing most of my time on work outside the team's core feature set. Continued reviewing designs and PRs to support them.",
+      "summary": "Focused on cross-cutting initiatives across the post-acquisition Flexport platform while staying close to the prep team from Deliverr days. Drove cross-AWS-account integrations, expanded the transactional outbox pattern and distributed tracing, and led modernization of the internal npm ecosystem and AWS SDK migration. Gained knowledge in global logistics and supply chain.",
       "highlights": [
-        "Reviewed design documents to help integrate Flexport's freight-forwarding core systems with the newly acquired fulfillment business (known internally as omni-channel)",
-        "Integrated observability-as-code into several services to enhance monitoring and maintainability",
-        "Led the migration of over 80 microservices to AWS SDK V3 and out of Node.js v16. Developed an abstraction layer to enable seamless transition between the SDK versions"
+        "Supported post-acquisition platform integration by guiding design and code reviews for cross-AWS-account SQS message flow between Flexport Core's freight-forwarding systems and the ex-Deliverr fulfillment business (omni-channel, DTC and B2B), and for the parcel team's integration with the duties team under the US Section 321 framework.",
+        "Expanded the transactional outbox pattern across the inbounds domain family by sponsoring a Senior developer's foundation work, reverse-engineering the shipments lifecycle into state diagrams, and steering downstream consumption by crossdock and prep domains. Replaced the prior CDC approach with business-significant integration events.",
+        "Improved service observability by extending the Shopify-Logistics-era observability-as-code initiative (broadening the monitors.json DSL past serverless) and building distributed tracing with correlation_id and request_id propagation through HTTP headers via reusable Axios interceptors, SQS message metadata, and Kinesis Data Stream events. Those additions improved end-to-end debug capability in DataDog across the distributed ecosystem.",
+        "Enabled low-friction modernization of 80+ microservices by building the foundation of an AWS SDK v3 compatibility layer that kept method signatures compatible with previous AWS SDK v2 integration.",
+        "Modernized the internal npm ecosystem by introducing peerDependencies (cutting Lambda bundle sizes and cold-start delays) and resolving circular dependencies across the package graph."
       ]
     },
     {
@@ -95,12 +96,13 @@
       "url": "https://shopify.com",
       "startDate": "2022-07-01",
       "endDate": "2023-06-01",
-      "summary": "Shopify Logistics combined three entities: Deliverr (fulfillment), 6 River Systems (robotics), and Shopify Fulfillment Network (SFN, internal). Continued with the prep team after acquisition and joined the Technical Leadership Community (TLC), a select group of 8-10 leaders guiding ~300 developers through the acquisition.",
+      "summary": "Continued leading the prep team after Shopify acquired Deliverr, actively coding new features while providing technical direction. Beyond the team, drove cross-cutting initiatives in observability, API design, and cross-cloud eventing standards as a member of the Technical Leadership Community (TLC).",
       "highlights": [
-        "Actively coded new features and provided technical direction for the prep team",
-        "Built presentations and video capsules covering patterns like the transactional outbox, sagas (orchestration vs. choreography), and more for the Technical Leadership Community",
-        "Using EventStorming and BPMN, facilitated conversations between tech and non-tech stakeholders, ensuring everyone spoke a common language and thought in terms of domain boundaries",
-        "Helped create observability guidelines and led the first implementation. Built and maintained npm packages to enable observability-as-code"
+        "Served on the Technical Leadership Community (TLC), a group of 8-10 leaders from across Shopify Logistics' sub-divisions meeting weekly. Acted as a sounding board for system design validation across the combined ~250-developer organization and built presentations on patterns including the transactional outbox and sagas (orchestration vs. choreography).",
+        "Co-authored an observability spec defining three pillars (availability, throughput, latency) and implemented observability-as-code for the inbounds sub-org's serverless services. Built a monitors.json DSL with automation that generated tagged DataDog monitors and SLOs with per-environment thresholds. Published the reference implementation (Koa middlewares, Lambda wrappers) as a standalone npm package after incubating it in the prep service.",
+        "Contributed to the prep portion of the Logistics API, a single point-of-entry API that centralized authn/authz, rate limiting, and orchestration for internal and external partners in place of exposing 60+ microservices directly.",
+        "Facilitated cross-team conversations on domain boundaries and sources of truth using EventStorming and BPMN, advocating event-driven architecture with integration events over direct API calls and CDC reverse-engineering.",
+        "Contributed to TLC specifications for cross-cloud (AWS ↔ GCP) eventing standards between Shopify Logistics and the rest of Shopify, building on Shopify's Monorail format and the prior Deliverr integration-events specification. Scope spanned merchants, products, and the fulfillment-center pick-pack-ship process."
       ]
     },
     {
@@ -108,48 +110,29 @@
       "position": "Senior Developer",
       "startDate": "2021-12-01",
       "endDate": "2022-07-01",
-      "summary": "Founding member of the prep team that built and spun off the prep service from Deliverr's inbound microservice via the strangler pattern. The prep service incubated DDD, finite state machines, EventStorming/BPMN, the transactional outbox pattern, and a standardized integration-events specification, with patterns later adopted across the ecosystem. Beyond prep, I maintained shared npm packages and reviewed PRs and technical design documents across teams.",
+      "summary": "Founding member of the prep team. The prep service incubated patterns — DDD, finite state machines, transactional outbox, and integration events — that ~10 existing services progressively adopted and that became the default for new services via the GitHub template repo.",
       "highlights": [
-        "Led the team in adopting domain-driven design (DDD) and finite state machines over traditional CRUD-based REST APIs",
-        "Introduced EventStorming and BPMN diagrams to document workflows and guided the team in writing concise, effective technical design documents",
-        "Authored the original specification for integration events in our distributed ecosystem, ensuring a robust foundation for inter-service communication",
-        "Developed and maintained a suite of private npm packages to standardize reusable functionality across projects, including packages for the transactional outbox pattern, integration events, TSOA, CDC pipelines, and serverless components",
-        "Regularly reviewed PRs and technical design documents across teams"
+        "Founded the prep team (4 engineers, growing to 8) and led the pivot from a CRUD MVP to a DDD service with a finite state machine enforcing the prep-job lifecycle. Used EventStorming and BPMN to map workflows with engineering, product, and business stakeholders. The POC started inside the existing inbound microservice, then spun off into its own standalone service using the strangler pattern.",
+        "Authored the original integration events specification for the Deliverr ecosystem — naming convention, versioning, and a shared npm skeleton. The pattern was adopted by multiple teams as the foundation for inter-service communication.",
+        "Incubated the transactional outbox pattern as the first service in the ecosystem to implement it. Solved the two-phase commit problem (DB transaction commit + message emit) and replaced the prior CDC reverse-engineering approach. Used SNS fan-out on the publishing side so any domain could subscribe without the publishing service needing to know about them.",
+        "Created @deliverr/eslint-config, a private npm package that centralized linting across 40+ services and the shared-packages monorepo. Ended per-project style drift through a backwards-compatible adoption path with SemVer releases. Retrofitted into the GitHub template repo, making it the default for new services.",
+        "Used the prep service as an incubator for patterns later adopted ecosystem-wide — inversify for dependency injection (first use at Deliverr), domain probes for business-significant observability (first adoption in the ecosystem), anti-corruption layers, and a monorepo structure with three independently-versioned packages.",
+        "Maintained shared npm packages (transactional outbox, integration events, TSOA, CDC pipelines, serverless components) and regularly reviewed PRs and technical design documents across teams."
       ]
     },
     {
       "name": "SSENSE",
       "position": "Tech Lead",
       "url": "https://ssense.com",
-      "startDate": "2020-08-01",
-      "endDate": "2021-12-01",
-      "summary": "Tech Lead during SSENSE's international expansion from a single Montréal fulfillment center to a second physical facility in Europe. Member of the Technology Architecture Group (TAG); led the design and implementation of the distributed, fully-serverless OMS peel-off, alongside the legal-entity service and a CBSA export-declaration system.",
-      "highlights": [
-        "Member of the Technology Architecture Group (TAG), a 6-10 person group of architects, Staff & Principal Engineers responsible for the department's tech standards.",
-        "Oversaw projects of 3 other teams as a TAG member to ensure adherence to the established standards.",
-        "Complete BPMN documentation of the orders' lifecycle by reverse-engineering the existing code to identify the optimal way to peel-off the order management system (OMS) from a monolith",
-        "Design of the OMS peel-off, driven by SSENSE's international expansion from a single Montréal fulfillment center to a second physical facility in Europe (DDD context maps and bounded contexts, serverless approach, integration into existing event-driven architecture, OpenAPI specs, data modeling)",
-        "Lead implementation of the OMS peel-off (DDD concepts, SOLID principles, hexagonal architecture, CQRS, finite state machine modeled from state diagrams of the complete order lifecycle). Coded and supervised the most complex parts",
-        "Design and implementation of the OMS' Distributed Order Management component",
-        "Built a separate service to manage the multiple legal entities introduced by the international expansion (surfacing the right entity across the website's terms-and-conditions)",
-        "Designed an async shadow-order pipeline (API Gateway + JSON Schema + SQS) to de-risk the OMS cutover",
-        "Design and implementation of a purely serverless system to manage customs (CBSA) export declarations (C4 diagrams, data flows, integration with a 3rd-party API)",
-        "Drove dev onboarding automation as a follow-up from the Hackathon 2019 POC",
-        "Other engineering teams reached out for serverless design reviews and architecture consults, drawing on my TAG knowledge. Most of SSENSE ran on Kubernetes; my teams were among the heaviest serverless users."
-      ]
-    },
-    {
-      "name": "SSENSE",
-      "position": "Senior Developer",
-      "url": "https://ssense.com",
       "startDate": "2019-10-01",
-      "endDate": "2020-08-01",
-      "summary": "Full-stack contributions on the Product Information Management (PIM) domain: PIM back-end in Python, and the purchase orders (PO) platform front-end in React + Redux.",
+      "endDate": "2021-12-01",
+      "summary": "Tech Lead during SSENSE's international expansion from a single Montréal fulfillment center to a second facility in Europe. Served on the Technology Architecture Group (TAG) and led the distributed, fully-serverless OMS peel-off and a CBSA export-declaration system. Hired as Senior Developer in October 2019; promoted to Tech Lead in August 2020.",
       "highlights": [
-        "Contributed to the PIM system (Python back-end)",
-        "Contributed to the PO platform (React + Redux front-end)",
-        "Improved micro-services in a trunk-based development workflow with the use of feature flags",
-        "Winner of Hackathon 2019 to improve the onboarding experience of new developers"
+        "Served on the Technology Architecture Group (TAG), a 6-10 person group of architects and Staff Engineers that set the department's tech standards. Oversaw projects from 3 other teams through design reviews and architecture consults.",
+        "Led the OMS peel-off from the company's monolith to support international expansion to a second fulfillment center. Reverse-engineered legacy order-handling code into BPMN documentation of the full order lifecycle over 3-4 weeks, then designed the distributed serverless replacement using DDD context maps, hexagonal architecture, and a finite state machine. Orchestrated the customer order lifecycle with AWS Step Functions across smaller-scoped Lambdas.",
+        "De-risked the OMS cutover by designing an async shadow-order pipeline (API Gateway + JSON Schema + SQS) that mirrored every production order to the new system with near-zero added latency. The checkout service never awaited the shadow call; replay from DLQ was available whenever a shadow request hit a bug.",
+        "Designed and guided implementation of a purely serverless CBSA export declaration system. Used the C4 model for documentation, DynamoDB Streams for event processing, and SOAP for 3rd-party API integration.",
+        "Contributed full-stack to the Product Information Management system (Python back-end) and the Purchase Orders platform (React + Redux front-end) as a Senior Developer."
       ]
     },
     {
@@ -158,59 +141,22 @@
       "url": "https://zola.com",
       "startDate": "2019-01-01",
       "endDate": "2019-10-01",
-      "summary": "Contributed to the Paper Products Division of the e-commerce platform, improving micro-services with backwards-compatibility in a trunk-based development workflow.",
-      "highlights": [
-        "Improved micro-services (mainly REST APIs), maintaining backwards-compatibility with the use of feature flags",
-        "Technologies: Java, Hibernate, Guice, Mockito, AWS"
-      ]
+      "summary": "Improved REST API micro-services in the Paper Products Division of the e-commerce platform, maintaining backwards-compatibility through feature flags in a trunk-based development workflow. Technologies: Java, Hibernate, Guice, Mockito, AWS."
     },
     {
       "name": "AFS Technologies Inc.",
-      "position": "Architect & Scrum Master",
-      "startDate": "2014-09-01",
-      "endDate": "2018-12-01",
-      "summary": "Provided long-term vision for the evolution of a SaaS REST application and standardized private and public APIs.",
-      "highlights": [
-        "Long-term vision for the evolution of a SaaS REST application",
-        "Standardization of private and public APIs (payload and URL consistency, versioning, etc.)",
-        "Rigorous code reviews and training of team members in this craft",
-        "Technologies: Java, Hibernate, Spring, Mockito, Jenkins, Artifactory, SQL Server, SSAS, OLAP, ETL"
-      ]
-    },
-    {
-      "name": "AFS Technologies Inc.",
-      "position": "Senior Developer",
+      "position": "Architect",
       "startDate": "2011-11-01",
-      "endDate": "2014-09-01",
-      "summary": "Full stack contributions to a SaaS REST application, with supervision and code review of an offshore team.",
-      "highlights": [
-        "Full stack contributions to a SaaS REST application",
-        "Supervision and code review of offshore team (up to 9 people in India)"
-      ]
+      "endDate": "2018-12-01",
+      "summary": "Provided long-term vision for the evolution of a SaaS REST application and standardized private and public APIs (payload and URL consistency, versioning). Conducted rigorous code reviews and trained team members in the craft. Supervised an offshore team of up to 9 developers in India. Hired as Senior Developer; promoted to Architect in 2014. Technologies: Java, Hibernate, Spring, Mockito, Jenkins, Artifactory, SQL Server, SSAS, OLAP, ETL."
     },
     {
       "name": "Vidéotron Ltée",
       "position": "Senior Developer",
-      "url": "https://videotron.com",
-      "startDate": "2011-04-01",
-      "endDate": "2011-10-01",
-      "summary": "Provided architectural guidance and served as XML subject matter expert for the department.",
-      "highlights": [
-        "Architectural guidance, selection of third-party libraries, analysis and code review",
-        "XML subject matter expert and technical reference in the department"
-      ]
-    },
-    {
-      "name": "Vidéotron Ltée",
-      "position": "Developer",
       "url": "https://videotron.com",
       "startDate": "2006-07-01",
-      "endDate": "2011-04-01",
-      "summary": "Conducted needs assessments, prototype presentations, and standardized exchange formats between layers of the system using XML.",
-      "highlights": [
-        "Needs assessments and prototype presentations",
-        "Standardization of exchange formats between layers of the system (XML)"
-      ]
+      "endDate": "2011-10-01",
+      "summary": "Provided architectural guidance and served as XML subject matter expert for the department. Standardized exchange formats between layers of the network management system using XML. Conducted needs assessments, prototype presentations, and code reviews. Hired as Developer; promoted to Senior Developer in 2011."
     },
     {
       "name": "Markzware Software",
@@ -218,14 +164,18 @@
       "url": "https://markzware.com",
       "startDate": "2001-03-01",
       "endDate": "2006-06-01",
-      "summary": "Functional analysis and implementation with API maintenance and extension. Supervised developers located in Europe and the United States.",
-      "highlights": [
-        "Functional analysis and implementation; API maintenance and extension",
-        "Supervision of developers located in Europe and the United States"
-      ]
+      "summary": "Remote role for this Santa Ana, California-based company. Led functional analysis and implementation with API maintenance and extension. Supervised developers located in Europe and the United States."
     }
   ],
   "volunteer": [
+    {
+      "organization": "Escadron 96 Alouettes",
+      "position": "Volunteer",
+      "url": "https://www.escadron96.com/",
+      "startDate": "2023-09-01",
+      "endDate": "2025-06-01",
+      "summary": "Volunteer parent supporting Cadets during weekly meetings with whatever duties needed attention."
+    },
     {
       "organization": "CIP4",
       "position": "Chair of Preflight Sub-committee",
@@ -245,17 +195,56 @@
   ],
   "awards": [
     {
+      "title": "Rookie Rockstar",
+      "date": "2022-06-01",
+      "awarder": "Deliverr — Engie Awards",
+      "summary": "Voted by engineering peers for the highest-impact contribution from a developer who joined Deliverr in the prior year."
+    },
+    {
+      "title": "Hackathon Winner",
+      "date": "2019-12-01",
+      "awarder": "SSENSE",
+      "summary": "Won the company-wide hackathon with an idea to improve the onboarding experience of new developers, later developed into an automated toolchain."
+    },
+    {
       "title": "Canada's 50 Most Influential People in Graphic Communications",
       "date": "2005-07-01",
       "awarder": "PrintAction Magazine",
       "summary": "Recognized as one of Canada's 50 most influential people in graphic communications."
     }
   ],
+  "projects": [
+    {
+      "name": "my-claude-skills",
+      "startDate": "2026-02-11",
+      "url": "https://ouimet.info/projects/my-claude-skills.html",
+      "description": "A library of reusable Claude Code skills focused on developer workflows — planning, execution, PR feedback, and issue lifecycle management.",
+      "highlights": [
+        "Composable skill system covering the full issue lifecycle from blank issue to merged PR"
+      ]
+    },
+    {
+      "name": "RangeLink Extension",
+      "startDate": "2025-10-27",
+      "url": "https://ouimet.info/projects/rangelink-extension.html",
+      "description": "VS Code/Cursor extension: one keybinding to share precise, clickable code ranges with any AI or tool.",
+      "highlights": [
+        "Published on the VS Code Marketplace under the MIT license"
+      ]
+    }
+  ],
   "certificates": [
+    {
+      "name": "CLaude 101",
+      "date": "2026-06-01",
+      "issuer": "Anthropic",
+      "url": "https://verify.skilljar.com/c/7wbgm6rhf585"
+    },
     {
       "name": "Certified Cloud Practitioner",
       "date": "2019-01-01",
-      "issuer": "Amazon Web Services (AWS)"
+      "issuer": "Amazon Web Services (AWS)",
+      "url": "https://www.credly.com/badges/c3ccd5a7-dc9e-433d-95c5-5a8278a00b60/linked_in_profile"
     },
     {
       "name": "Professional Scrum Master I",
@@ -265,40 +254,34 @@
   ],
   "skills": [
     {
-      "name": "Back-end",
+      "name": "Backend & Languages",
       "keywords": [
         "TypeScript",
-        "viem",
-        "ethers",
-        "sequelize",
-        "zod",
-        "AWS",
-        "Lambda",
-        "Step Functions",
-        "SNS",
-        "SQS",
-        "S3",
-        "API Gateway",
-        "Kinesis",
-        "CloudWatch",
-        "Serverless Framework",
-        "Redis",
-        "Docker",
-        "Inversify",
-        "Express",
-        "tsoa",
-        "Koa",
-        "Middy",
-        "OAuth",
-        "Ruby on Rails",
-        "ActiveRecord",
-        "Sidekiq",
-        "GraphQL",
-        "Python",
+        "Node.js",
         "Java",
+        "Python",
+        "Ruby",
+        "Ruby on Rails",
+        "Express",
+        "Koa",
+        "tsoa",
+        "Middy",
+        "Inversify",
+        "OAuth",
+        "GraphQL",
         "JSON Schema",
         "OpenAPI",
-        "SOAP"
+        "SOAP",
+        "viem",
+        "ethers",
+        "Zod",
+        "ActiveRecord",
+        "ActiveJob",
+        "Sidekiq",
+        "Sorbet",
+        "RBS",
+        "Maintenance Tasks",
+        "Sequelize"
       ]
     },
     {
@@ -309,59 +292,99 @@
       ]
     },
     {
-      "name": "Databases & Runtimes",
+      "name": "Cloud, Infrastructure & Distributed Systems",
+      "keywords": [
+        "AWS",
+        "Lambda",
+        "Step Functions",
+        "SNS",
+        "SQS",
+        "S3",
+        "API Gateway",
+        "Kinesis",
+        "CloudWatch",
+        "Parameter Store",
+        "Serverless Framework",
+        "Docker",
+        "Kubernetes",
+        "Redis",
+        "Terraform",
+        "Ansible",
+        "BullMQ",
+        "LocalStack"
+      ]
+    },
+    {
+      "name": "Databases & Data Systems",
       "keywords": [
         "MySQL",
         "PostgreSQL",
         "YugabyteDB",
         "DynamoDB",
-        "Node.js",
-        "Maxwell"
+        "BigQuery",
+        "Google Cloud Platform",
+        "Maxwell",
+        "Metabase",
+        "Knex"
       ]
     },
     {
-      "name": "Tests & CI/CD",
+      "name": "Testing & CI/CD",
       "keywords": [
         "GitHub Actions",
         "CircleCI",
         "Buildkite",
         "Jenkins",
-        "jest",
-        "chai",
-        "sinon",
-        "mocha",
-        "Mockito"
+        "Jest",
+        "Mocha",
+        "Chai",
+        "Sinon",
+        "Mockito",
+        "BATS"
       ]
     },
     {
-      "name": "Tools & Infrastructure",
+      "name": "Developer Productivity & Engineering Tooling",
       "keywords": [
         "Claude Code",
         "Cursor",
         "Graphite",
         "GitHub Copilot",
+        "CodeRabbit",
         "ChatGPT",
         "pnpm",
         "npm",
         "changesets",
         "Turborepo",
+        "esbuild",
+        "eslint",
         "Visual Studio Code",
         "MermaidJS",
-        "DataDog",
-        "split.io",
-        "LaunchDarkly",
-        "Metabase",
-        "Asana",
-        "Notion",
+        "Docusaurus",
         "Postman",
+        "RuboCop"
+      ]
+    },
+    {
+      "name": "Observability, Operations & Delivery",
+      "keywords": [
+        "DataDog",
+        "Sentry",
+        "LaunchDarkly",
+        "split.io"
+      ]
+    },
+    {
+      "name": "Collaboration & Workflow",
+      "keywords": [
+        "GitHub",
+        "GitLab",
         "Jira",
         "Confluence",
-        "GitLab",
-        "Ansible",
-        "Kubernetes",
-        "Sentry",
-        "RuboCop",
-        "LocalStack"
+        "Notion",
+        "Asana",
+        "BPMN",
+        "Event Storming"
       ]
     }
   ],

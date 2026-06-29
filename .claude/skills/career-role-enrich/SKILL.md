@@ -112,6 +112,7 @@ The skill does NOT invoke `/finish-issue` automatically. The user runs it when r
 - `/prose-style` — hard-wrap rule, code reference syntax, GitHub reference syntax. Auto-consulted when writing any file content.
 - `/humanizer` — em-dash overuse, AI vocabulary words, passive voice, filler phrases.
 - `career-style` (project-local, non-invocable) — additive `Use of X` convention, role-scoped IDs, role-voice. Auto-consulted by this skill.
+- `career-layering` (project-local, non-invocable) — three-layer information architecture (changelog → resume.json → docx/PDF), distillation rules, cross-file consistency. Auto-consulted by this skill.
 
 ## Quality Checklist
 
