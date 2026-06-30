@@ -67,10 +67,10 @@
       "endDate": "2025-07-01",
       "summary": "Dove into the crypto and DeFi space, gaining hands-on knowledge across EVM-compatible chains and Solana. Decomposed a monolith into microservices, modernized the monorepo toolchain, and built company-wide observability infrastructure.",
       "highlights": [
-        "Extended a fork of the SonarWatch Portfolio by implementing the Stader protocol and peer-reviewing other protocol integrations, exploring independence from Debank's API for on-chain portfolio data across multiple EVM chains and Solana.",
+        "Extended a fork of the SonarWatch Portfolio by implementing the Stader protocol and peer-reviewing other protocol integrations, exploring independence from Debank's API for on-chain portfolio data across multiple EVM-compatible chains and Solana.",
         "Decomposed parts of a monolith into independent microservices to improve scalability and reduce resource contention.",
         "Simplified dependency management of shared packages by converting monolithic npm packages to a Turborepo monorepo using changesets and automated releases.",
-        "Reduced CI/CD duplication and improved pipeline consistency across repos by creating shared GitHub actions and workflows to improve maintainability.",
+        "Reduced CI/CD duplication and improved pipeline consistency across repos by creating shared GitHub actions and workflows.",
         "Prevented third-party API throttling from impacting portfolio data availability by developing reusable infrastructure for resilient request management.",
         "Eliminated fragmented logging across microservices by implementing structured logging adopted company-wide, giving teams centralized observability and faster issue investigation through AWS CloudWatch Log Insights and custom metrics. Layered request tracing on top with correlation_id and request_id propagation through HTTP headers via Axios interceptors."
       ]
@@ -123,6 +123,7 @@
     {
       "name": "SSENSE",
       "position": "Tech Lead",
+      "docxLastRoleBeforeEarlierExperience": true,
       "url": "https://ssense.com",
       "startDate": "2019-10-01",
       "endDate": "2021-12-01",
@@ -132,7 +133,7 @@
         "Led the OMS peel-off from the company's monolith to support international expansion to a second fulfillment center. Reverse-engineered legacy order-handling code into BPMN documentation of the full order lifecycle over 3-4 weeks, then designed the distributed serverless replacement using DDD context maps, hexagonal architecture, and a finite state machine. Orchestrated the customer order lifecycle with AWS Step Functions across smaller-scoped Lambdas.",
         "De-risked the OMS cutover by designing an async shadow-order pipeline (API Gateway + JSON Schema + SQS) that mirrored every production order to the new system with near-zero added latency. The checkout service never awaited the shadow call; replay from DLQ was available whenever a shadow request hit a bug.",
         "Designed and guided implementation of a purely serverless CBSA export declaration system. Used the C4 model for documentation, DynamoDB Streams for event processing, and SOAP for 3rd-party API integration.",
-        "Contributed full-stack to the Product Information Management system (Python back-end) and the Purchase Orders platform (React + Redux front-end) as a Senior Developer."
+        "Contributed full-stack to the Product Information Management system (Python backend) and the Purchase Orders platform (React + Redux frontend) as a Senior Developer before promotion to Tech Lead in Aug 2020."
       ]
     },
     {
@@ -236,6 +237,7 @@
   "certificates": [
     {
       "name": "Claude 101",
+      "docxSkip": true,
       "date": "2026-06-01",
       "issuer": "Anthropic",
       "url": "https://verify.skilljar.com/c/7wbgm6rhf585"
@@ -285,7 +287,7 @@
       ]
     },
     {
-      "name": "Front-end",
+      "name": "Frontend",
       "keywords": [
         "React",
         "Redux"

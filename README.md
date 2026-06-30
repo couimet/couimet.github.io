@@ -55,27 +55,41 @@ Skill files (project-local):
 - `.claude/skills/career-role-enrich/SKILL.md`
 - `.claude/skills/career-style/SKILL.md`
 
-### Catch-up: bootstrapping from the PDF (temporary)
-
-The current `resume.json` was originally bootstrapped from a Word-authored resume PDF. Roles in the changelog are being back-ported from that PDF one at a time, treating it as the upstream source of truth until each role's narrative lives in `_includes/career/changelog.html` with the matching `resume.json:work[]` entry as a compact distillation.
-
-For roles still in catch-up, the `/career-role-enrich` skill's audit phase performs a three-way comparison (PDF × changelog × resume) to surface gaps. Once all roles are migrated, this subsection can be deleted and the audit phase can simplify (PDF reference dropped).
-
-Reference PRs:
-
-- SSENSE: https://github.com/couimet/couimet.github.io/pull/65
-- Deliverr: https://github.com/couimet/couimet.github.io/pull/67
-- Shopify Logistics: https://github.com/couimet/couimet.github.io/pull/73
-
 ## Resume
 
-The resume pipeline converts `resume.json` (JSON Resume format) into `resume.yml` (YAMLResume) and `resume-full.html` (styled HTML). The conversion runs automatically when `resume.json` changes on `main`.
+`resume.json` (JSON Resume format) is the single source of truth for the downloadable PDF, the `/resume.html` page, and the formatted `.docx` resume. Three scripts support the workflow:
 
-Run locally (requires Docker):
+### Sync pipeline
+
+Converts `resume.json` → `resume.yml` (YAMLResume) → `resume-full.html` (styled HTML). Runs automatically on push to `main` via `.github/workflows/sync-resume.yml`. The script validates that pinned tool versions match the latest npm releases and transforms `countryCode: "CA"` to `country: Canada` on the fly for yamlresume compatibility.
 
 ```bash
-./scripts/sync-resume.sh
+./scripts/sync-resume.sh          # requires Docker
 ```
+
+### Docx text extraction
+
+Generates a plain-text file from `resume.json` for copy-paste into a formatted `.docx` resume. Sections are delimited with `# ` comments. Work roles up to and including the `lastRoleBeforeEarlierExperience` marker get full bullet treatment; older roles appear in an Earlier Experience summary block with a CTA placeholder for an AI-generated narrative.
+
+```bash
+make extract-resume                # → resume-docx-content.txt
+```
+
+### Docx linting
+
+Compares a formatted `.docx` resume against `resume.json` and flags typos, date mismatches, missing content, double punctuation, trailing whitespace, and structural issues. Uses python-docx to extract text directly from the `.docx` file.
+
+```bash
+make lint-resume DOCX=~/Desktop/.../resume.docx
+```
+
+### Tests
+
+```bash
+make test
+```
+
+Runs Python unit tests and BATS tests covering the other tools/scripts.
 
 ## Deployment
 
