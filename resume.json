@@ -2,11 +2,11 @@
   "basics": {
     "name": "Charles Ouimet",
     "label": "Staff Developer",
-    "image": "https://github.com/couimet.png",
+    "image": "https://ouimet.info/img/charles-ouimet.jpg",
     "email": "charles.ouimet@gmail.com",
     "phone": "514-220-4240",
     "url": "https://ouimet.info",
-    "summary": "After 25+ years of coding, I'm still passionate about diving into the details and tackling complex problems. As a Staff Developer, I specialize in monolith decomposition, event-driven architecture, distributed transactions, and serverless infrastructure — augmented by AI-assisted development workflows that amplify speed without sacrificing quality. Using small, collaborative, and iterative cycles, I ensure each release delivers impact, driving success together with the team. My experience spans e-commerce, logistics and supply chain, crypto/DeFi, AdTech/growth, CPG, and telecom.",
+    "summary": "Staff-level backend developer with 25 years of experience building scalable distributed systems, resilient APIs, and cloud-native platforms across ecommerce, logistics and supply chain, SaaS, crypto, AdTech, CPG, and telecom. Specialized in backend modernization, event-driven architecture, observability, and AI-assisted development workflows, with deep hands-on expertise spanning monolith decomposition, distributed transactions, microservices, serverless infrastructure, and high-throughput production systems. Recognized for combining pragmatic architecture with strong engineering craftsmanship in fast-growing organizations. Fluent in English & French.",
     "location": {
       "city": "Montréal",
       "region": "Québec",
@@ -235,7 +235,7 @@
   ],
   "certificates": [
     {
-      "name": "CLaude 101",
+      "name": "Claude 101",
       "date": "2026-06-01",
       "issuer": "Anthropic",
       "url": "https://verify.skilljar.com/c/7wbgm6rhf585"
