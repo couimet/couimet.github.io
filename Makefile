@@ -1,4 +1,4 @@
-.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap
+.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap extract-resume lint-resume
 
 install: install-prereqs install-deps install-hooks
 
@@ -23,16 +23,17 @@ build:
 
 test:
 	uv run python -m unittest discover -s scripts/tests -v
+	bats tests/*.bats
 
 lint: build
 	bundle exec htmlproofer _site --disable-external
 	markdownlint-cli2 "**/*.md"
-	uv run ruff check scripts/normalize-sitemap.py scripts/tests/test_normalize_sitemap.py
+	uv run ruff check scripts/*.py scripts/tests/*.py
 
 lint-fix:
 	markdownlint-cli2 --fix "**/*.md"
-	uv run ruff check --fix scripts/normalize-sitemap.py scripts/tests/test_normalize_sitemap.py
-	uv run ruff format scripts/normalize-sitemap.py scripts/tests/test_normalize_sitemap.py
+	uv run ruff check --fix scripts/*.py scripts/tests/*.py
+	uv run ruff format scripts/*.py scripts/tests/*.py
 
 snapshot-sitemap: build
 	@mkdir -p .snapshots
@@ -45,3 +46,13 @@ verify-sitemap: build
 	uv run python scripts/normalize-sitemap.py --strip-lastmod /tmp/snap-sitemap.xml
 	uv run python scripts/normalize-sitemap.py --strip-lastmod /tmp/built-sitemap.xml
 	diff /tmp/snap-sitemap.xml /tmp/built-sitemap.xml
+
+extract-resume:
+	uv run python scripts/extract-resume-text.py
+
+lint-resume:
+	@if [ -z "$(DOCX)" ]; then \
+		echo "Usage: make lint-resume DOCX=path/to/resume.docx"; \
+		exit 1; \
+	fi
+	uv run python scripts/lint-resume-docx.py "$(DOCX)"

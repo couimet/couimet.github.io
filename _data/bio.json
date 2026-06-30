@@ -1,19 +1,19 @@
 {
   "basics": {
     "name": "Charles Ouimet",
-    "label": "Principal Software Developer",
+    "label": "Staff Developer",
     "picture": "/img/charles-ouimet.jpg",
     "email": "charles.ouimet@gmail.com",
     "phone": "",
     "website": "https://ouimet.info",
     "resumeUrlPdf": "https://ouimet.info/charles/resume/latest",
-    "summary": "I'm a Principal Software Developer specializing in backend development. Blockchain really piques my curiosity !",
+    "summary": "I'm a Staff Developer with experience spanning e-commerce, logistics and supply chain, SaaS, crypto/DeFi, AdTech/growth, CPG, and telecom. AI-assisted development and event-driven architectures really pique my curiosity!",
     "summaryLong": [
-      "I'm a Principal Software Developer with over 25 years of experience, and I still love coding, especially when it involves tackling complex problems and collaborating with teams. From high-level design to getting into the nitty-gritty of the code, I enjoy working through the tough questions, whether it's defining domain boundaries or optimizing architecture.",
+      "I'm a Staff Developer with over 25+ years of experience spanning e-commerce, logistics and supply chain, SaaS, crypto/DeFi, AdTech/growth, CPG, and telecom. I still love coding, especially when it involves tackling complex problems and collaborating with teams. From decomposing monoliths and designing event-driven architectures to getting into the nitty-gritty of distributed transactions and serverless infrastructure — all amplified by AI-assisted development workflows — I enjoy working through the tough questions, whether it's defining domain boundaries or optimizing architecture.",
       "I'm passionate about crypto/blockchain/DeFi/Web3, domain-driven design, event-driven systems, and patterns like sagas and the transactional outbox. I also geek out on AI-assisted development. While AI tools can crank out CRUD stacks fast, I believe the real value is in knowing when to lean on them and when human judgment makes the difference.",
       "I like to keep things light and fun, but I'm serious about delivering quality. Whether it's diving into code reviews or process improvements, I aim for a balance of high standards and practical solutions."
     ],
-    "summaryBuyMeACoffee": "I build things like RangeLink (a VS Code extension to stop the copy-paste madness) and my-claude-skills to fix annoyances I run into myself. By day I'm a Principal Software Developer navigating distributed systems, domain boundaries, and the occasional architectural rabbit hole. If something here helped you, or you just want to encourage more questionable side-project decisions — coffee's always appreciated.",
+    "summaryBuyMeACoffee": "I build things like RangeLink (a VS Code extension to stop the copy-paste madness) and my-claude-skills to fix annoyances I run into myself. By day I'm a Staff Developer navigating distributed systems, domain boundaries, and the occasional architectural rabbit hole. If something here helped you, or you just want to encourage more questionable side-project decisions — coffee's always appreciated.",
     "summarySocialBanner": "Backend architecture, distributed systems, AI-assisted workflows. Occasional side projects.",
     "location": { "address": "", "postalCode": "", "city": "Montréal", "countryCode": "CA", "region": "Québec" },
     "profiles": [
@@ -26,6 +26,7 @@
     ]
   },
   "interests": [
+    { "name": "AI-assisted development" },
     { "name": "Crypto/blockchain/DeFi/Web3" },
     { "name": "Domain-driven design" },
     { "name": "Event-driven architecture" },
@@ -34,29 +35,6 @@
     { "name": "TypeScript" },
     { "name": "Node.js" },
     { "name": "SQL/NoSQL" }
-  ],
-  "skills": [
-    {
-      "name": "Languages and Frameworks",
-      "keywords": [ "TypeScript", "Node.js", "Javascript", "Java" ]
-    }
-  ],
-  "education": [
-    {
-      "institution": "UQAM (Université du Québec à Montréal, Montréal, Qc, Canada",
-      "area": "Computer Science",
-      "studyType": "B.S.",
-      "startDate": "1997-09-01",
-      "endDate": "2001-06-01",
-      "courses": [
-      ]
-    }
-  ],
-  "work": [
-  ],
-  "volunteer": [
-  ],
-  "awards": [
   ],
   "references": [
     {

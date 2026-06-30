@@ -2,7 +2,7 @@
 layout: project
 type: project
 title: "RangeLink Extension"
-date: 2025-11-09
+date: 2025-10-27
 published: true
 repourl: https://github.com/couimet/rangeLink/tree/main/packages/rangelink-vscode-extension#readme
 iconurl: https://raw.githubusercontent.com/couimet/rangeLink/3300130bc7d5cd9081285c06140015ac09ef0d1b/assets/icon.png
