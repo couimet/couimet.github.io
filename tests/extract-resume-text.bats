@@ -48,7 +48,7 @@ run_extract() {
 @test "extract-resume-text output contains full-bullet jobs" {
   run_extract
   for company in "Shopify" "Octav" "Flexport" "Shopify Logistics" "Deliverr" "SSENSE"; do
-    run grep -c "## .* — ${company}" "$OUTPUT"
+    run grep -c "${company}," "$OUTPUT"
     [ "$status" -eq 0 ]
     [ "$output" -ge 1 ]
   done
@@ -122,7 +122,7 @@ with open('$BATS_TEST_TMPDIR/no-marker-resume.json', 'w') as f:
   [ "$status" -eq 1 ] || [ "$output" -eq 0 ]
   # All companies should appear as ## job headers
   for company in "Zola" "Markzware Software"; do
-    run grep -c "## .* — ${company}" "$OUTPUT"
+    run grep -c "${company}," "$OUTPUT"
     [ "$status" -eq 0 ]
     [ "$output" -ge 1 ]
   done

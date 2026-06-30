@@ -60,7 +60,8 @@ def emit_section(out: list[str], title: str) -> None:
 
 def emit_job_header(out: list[str], w: dict) -> None:
     dates = fmt_date_range(w["startDate"], w.get("endDate"))
-    out.append(f"## {w['position']} — {w['name']} | {dates}")
+    out.append(f"## {w['position']}")
+    out.append(f"{w['name']}, {dates}")
     out.append("")
 
 
@@ -147,7 +148,7 @@ def build_work(data: dict) -> list[str]:
         out.append("")
         for w in earlier:
             dates = fmt_date_range(w["startDate"], w.get("endDate"))
-            out.append(f"{w['position']} — {w['name']} | {dates}")
+            out.append(f"{w['position']} — {w['name']}, {dates}")
         out.append("")
         out.append(
             "[Copy the prompt below into Claude. First, create a RangeLink to the "
