@@ -10,18 +10,18 @@ import argparse
 import json
 import re
 import sys
-from calendar import month_abbr
 from difflib import SequenceMatcher
 from pathlib import Path
 
 import docx
 
-MONTH_ABBR = list(month_abbr)
+from resume_utils import fmt_date, get_cutoff
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def load_resume(path: Path) -> dict:
     with open(path) as f:
@@ -38,8 +38,11 @@ def extract_docx_text(path: Path) -> tuple[str, list[str]]:
 def best_match(needle: str, paragraphs: list[str]) -> tuple[float, str]:
     """Return (similarity, best_paragraph) for *needle* against each paragraph.
 
-    Similarity is 0.0–1.0. A score >= 0.95 means essentially identical;
-    >= 0.70 is a plausible fuzzy match; < 0.70 means likely missing.
+    Similarity is 0.0–1.0. The tiers used by callers:
+    >= 0.995 — essentially identical (no warning)
+    0.95–0.995 — minor difference worth flagging
+    0.70–0.95 — likely edited
+    < 0.70 — likely missing
     """
     needle_lower = needle.lower().strip()
     best_score = 0.0
@@ -62,12 +65,6 @@ def best_match(needle: str, paragraphs: list[str]) -> tuple[float, str]:
             best_score = score
             best_para = para
     return (best_score, best_para)
-
-
-def fmt_date_iso(iso: str) -> str:
-    """Convert '2025-08-01' to 'Aug 2025'."""
-    y, m, _ = iso.split("-")
-    return f"{MONTH_ABBR[int(m)]} {y}"
 
 
 # ---------------------------------------------------------------------------
@@ -98,8 +95,7 @@ def check_name_contact(data: dict, text: str) -> None:
 
 
 def check_company_names(data: dict, text: str) -> None:
-    marker_indices = [i for i, w in enumerate(data.get("work", [])) if w.get("docxLastRoleBeforeEarlierExperience")]
-    cutoff = marker_indices[0] if marker_indices else len(data["work"])
+    cutoff = get_cutoff(data["work"])
     for w in data["work"][: cutoff + 1]:
         name = w["name"]
         if name not in text:
@@ -107,8 +103,7 @@ def check_company_names(data: dict, text: str) -> None:
 
 
 def check_position_titles(data: dict, text: str) -> None:
-    marker_indices = [i for i, w in enumerate(data.get("work", [])) if w.get("docxLastRoleBeforeEarlierExperience")]
-    cutoff = marker_indices[0] if marker_indices else len(data["work"])
+    cutoff = get_cutoff(data["work"])
     for w in data["work"][: cutoff + 1]:
         pos = w["position"]
         if pos not in text:
@@ -116,11 +111,10 @@ def check_position_titles(data: dict, text: str) -> None:
 
 
 def check_date_ranges(data: dict, text: str) -> None:
-    marker_indices = [i for i, w in enumerate(data.get("work", [])) if w.get("docxLastRoleBeforeEarlierExperience")]
-    cutoff = marker_indices[0] if marker_indices else len(data["work"])
+    cutoff = get_cutoff(data["work"])
     for w in data["work"][: cutoff + 1]:
-        start = fmt_date_iso(w["startDate"])
-        end = fmt_date_iso(w["endDate"]) if w.get("endDate") else "Present"
+        start = fmt_date(w["startDate"])
+        end = fmt_date(w["endDate"]) if w.get("endDate") else "Present"
         if start not in text:
             warn(f"Start date '{start}' for {w['name']} not found in docx")
         if end != "Present" and end not in text:
@@ -128,8 +122,7 @@ def check_date_ranges(data: dict, text: str) -> None:
 
 
 def check_highlights(data: dict, paragraphs: list[str]) -> None:
-    marker_indices = [i for i, w in enumerate(data.get("work", [])) if w.get("docxLastRoleBeforeEarlierExperience")]
-    cutoff = marker_indices[0] if marker_indices else len(data["work"])
+    cutoff = get_cutoff(data["work"])
     for w in data["work"][: cutoff + 1]:
         for h in w.get("highlights", []):
             score, best = best_match(h, paragraphs)
@@ -138,24 +131,25 @@ def check_highlights(data: dict, paragraphs: list[str]) -> None:
             if score >= 0.95:
                 warn(
                     f"Highlight for {w['name']} has minor difference (similarity {score:.1%}):\n"
-                    f"  resume.json: \"{h}\"\n"
-                    f"  docx:        \"{best}\""
+                    f'  resume.json: "{h}"\n'
+                    f'  docx:        "{best}"'
                 )
             elif score >= 0.70:
                 warn(
                     f"Highlight for {w['name']} may be edited (similarity {score:.0%}):\n"
-                    f"  resume.json: \"{h}\"\n"
-                    f"  docx:        \"{best}\""
+                    f'  resume.json: "{h}"\n'
+                    f'  docx:        "{best}"'
                 )
             else:
-                warn(f"Highlight for {w['name']} may be missing (similarity {score:.0%}): \"{h}\"")
+                warn(
+                    f'Highlight for {w["name"]} may be missing (similarity {score:.0%}): "{h}"'
+                )
 
 
 def check_earlier_experience_cutoff(data: dict, paragraphs: list[str]) -> None:
-    marker_indices = [i for i, w in enumerate(data.get("work", [])) if w.get("docxLastRoleBeforeEarlierExperience")]
-    if not marker_indices:
+    cutoff = get_cutoff(data["work"])
+    if cutoff == len(data["work"]):
         return
-    cutoff = marker_indices[0]
     earlier = data["work"][cutoff + 1 :]
     for w in earlier:
         for h in w.get("highlights", []):
@@ -163,12 +157,12 @@ def check_earlier_experience_cutoff(data: dict, paragraphs: list[str]) -> None:
             if score >= 0.95:
                 warn(
                     f"Earlier Experience role '{w['name']}' may have full bullets in docx "
-                    f"(found highlight matching: \"{h[:60]}...\")"
+                    f'(found highlight matching: "{h[:60]}...")'
                 )
 
 
 def check_sections(text: str) -> None:
-    text_lower = text.lower()
+    lines_lower = [ln.strip().lower() for ln in text.splitlines()]
     required = [
         ("technical skills", "Technical Skills"),
         ("work experience", "Work Experience"),
@@ -178,7 +172,7 @@ def check_sections(text: str) -> None:
     ]
     seen: set[str] = set()
     for pattern, label in required:
-        if pattern in text_lower:
+        if any(pattern == ln or ln.startswith(pattern) for ln in lines_lower):
             seen.add(label)
     # At least one of "Work Experience" or "Experience" must be present
     for label in {"Technical Skills", "Earlier Experience", "Education"}:
@@ -195,23 +189,26 @@ def check_double_punctuation(text: str) -> None:
         (r"--(?!\d)", "double dash (outside date range)"),
     ]:
         for m in re.finditer(pattern, text):
-            ctx = text[max(0, m.start() - 20): m.end() + 20]
-            warn(f"Double punctuation ({label}): \"...{ctx}...\"")
+            ctx = text[max(0, m.start() - 20) : m.end() + 20]
+            warn(f'Double punctuation ({label}): "...{ctx}..."')
 
 
-def check_whitespace(text: str) -> None:
+def check_whitespace(text: str, data: dict | None = None) -> None:
+    basics = data.get("basics", {}) if data else {}
+    email = basics.get("email", "")
+    phone = basics.get("phone", "")
     for i, line in enumerate(text.splitlines(), 1):
         if line.endswith(" ") or line.endswith("\t"):
             snippet = line.strip()[-60:] if len(line.strip()) > 60 else line.strip()
-            warn(f"Trailing whitespace on line {i}: \"...{snippet}\"")
+            warn(f'Trailing whitespace on line {i}: "...{snippet}"')
         # Skip the contact-info line (contains phone numbers, emails, URLs
         # separated by spaces rather than middle dots)
-        if "@" in line and "514" in line:
+        if email and phone and email in line and phone in line:
             continue
         if "  " in line and "·" not in line:
             for m in re.finditer(r"(?<![\.\,\:\;])  (?![\.,\;:])", line):
-                ctx = line[max(0, m.start() - 10): m.end() + 10]
-                warn(f"Double space on line {i}: \"...{ctx}...\"")
+                ctx = line[max(0, m.start() - 10) : m.end() + 10]
+                warn(f'Double space on line {i}: "...{ctx}..."')
 
 
 def check_certificates_awards(data: dict, text: str) -> None:
@@ -236,6 +233,7 @@ def check_certificates_awards(data: dict, text: str) -> None:
 # Main
 # ---------------------------------------------------------------------------
 
+
 def lint_docx(docx_path: Path, resume_data: dict) -> list[str]:
     global WARNINGS
     WARNINGS = []
@@ -247,10 +245,13 @@ def lint_docx(docx_path: Path, resume_data: dict) -> list[str]:
         ("position titles", lambda: check_position_titles(resume_data, text)),
         ("date ranges", lambda: check_date_ranges(resume_data, text)),
         ("highlights", lambda: check_highlights(resume_data, paragraphs)),
-        ("earlier experience cutoff", lambda: check_earlier_experience_cutoff(resume_data, paragraphs)),
+        (
+            "earlier experience cutoff",
+            lambda: check_earlier_experience_cutoff(resume_data, paragraphs),
+        ),
         ("sections", lambda: check_sections(text)),
         ("double punctuation", lambda: check_double_punctuation(text)),
-        ("whitespace", lambda: check_whitespace(text)),
+        ("whitespace", lambda: check_whitespace(text, resume_data)),
         ("certificates & awards", lambda: check_certificates_awards(resume_data, text)),
     ]
     for label, fn in checks:

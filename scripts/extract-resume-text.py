@@ -11,16 +11,9 @@ cutoff between full-bullet roles and the Earlier Experience summary block.
 import argparse
 import json
 import sys
-from calendar import month_abbr
 from pathlib import Path
 
-MONTH_ABBR = list(month_abbr)  # ['', 'Jan', 'Feb', ..., 'Dec']
-
-
-def fmt_date(iso: str) -> str:
-    """Convert '2025-08-01' to 'Aug 2025'."""
-    y, m, _ = iso.split("-")
-    return f"{MONTH_ABBR[int(m)]} {y}"
+from resume_utils import fmt_date, get_cutoff
 
 
 def fmt_date_range(start: str, end: str | None) -> str:
@@ -34,23 +27,6 @@ def fmt_date_range(start: str, end: str | None) -> str:
 def load_resume(path: Path) -> dict:
     with open(path) as f:
         return json.load(f)
-
-
-def validate_marker(work: list[dict]) -> list[int]:
-    """Return indices of entries with docxLastRoleBeforeEarlierExperience set.
-
-    Raises SystemExit if more than one entry has the marker.
-    """
-    indices = [i for i, w in enumerate(work) if w.get("docxLastRoleBeforeEarlierExperience")]
-    if len(indices) > 1:
-        names = [work[i]["name"] for i in indices]
-        print(
-            f"ERROR: multiple work entries have docxLastRoleBeforeEarlierExperience: {names}. "
-            f"At most one entry may have this marker.",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    return indices
 
 
 def emit_section(out: list[str], title: str) -> None:
@@ -97,10 +73,8 @@ def build_header(data: dict) -> list[str]:
 def build_keywords(data: dict) -> list[str]:
     out: list[str] = []
     emit_section(out, "Keyword Sub-Tag")
-    out.append(
-        "Event-Driven Architecture · Monolith Decomposition · Observability · "
-        "AI-Assisted Development"
-    )
+    keywords = data["basics"].get("keywordSubTag", [])
+    out.append(" · ".join(keywords))
     out.append("")
     return out
 
@@ -127,8 +101,7 @@ def build_work(data: dict) -> list[str]:
     out: list[str] = []
     emit_section(out, "Work Experience")
     work = data.get("work", [])
-    marker_indices = validate_marker(work)
-    cutoff = marker_indices[0] if marker_indices else len(work)
+    cutoff = get_cutoff(work)
 
     # Full-bullet roles (up to and including the marker)
     for w in work[: cutoff + 1]:
@@ -163,8 +136,8 @@ def build_work(data: dict) -> list[str]:
             "RANGELINK), write a one-sentence summary for the Earlier Experience "
             "section of a staff-level backend developer resume. Mention the companies, "
             "roles, industries, and cross-cutting themes. Keep it under 280 characters. "
-            "Style reference: \"Held senior backend engineering and architect roles at "
-            "[companies], contributing to [industries] through [themes].\""
+            'Style reference: "Held senior backend engineering and architect roles at '
+            '[companies], contributing to [industries] through [themes]."'
         )
         out.append("")
         out.append("Roles:")

@@ -7,6 +7,12 @@
     "phone": "514-220-4240",
     "url": "https://ouimet.info",
     "summary": "Staff-level backend developer with 25 years of experience building scalable distributed systems, resilient APIs, and cloud-native platforms across ecommerce, logistics and supply chain, SaaS, crypto, AdTech, CPG, and telecom. Specialized in backend modernization, event-driven architecture, observability, and AI-assisted development workflows, with deep hands-on expertise spanning monolith decomposition, distributed transactions, microservices, serverless infrastructure, and high-throughput production systems. Recognized for combining pragmatic architecture with strong engineering craftsmanship in fast-growing organizations. Fluent in English & French.",
+    "keywordSubTag": [
+      "Event-Driven Architecture",
+      "Monolith Decomposition",
+      "Observability",
+      "AI-Assisted Development"
+    ],
     "location": {
       "city": "Montréal",
       "region": "Québec",

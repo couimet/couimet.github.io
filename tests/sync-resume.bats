@@ -112,7 +112,7 @@ run_script() {
 
 @test "sed transforms country: CA to country: Canada" {
   printf '    country: CA\n' > "$BATS_TEST_TMPDIR/test.yml"
-  sed -i '' 's/^    country: CA$/    country: Canada/' "$BATS_TEST_TMPDIR/test.yml"
+  sed -i.bak 's/^    country: CA$/    country: Canada/' "$BATS_TEST_TMPDIR/test.yml"
   run grep 'country: Canada' "$BATS_TEST_TMPDIR/test.yml"
   [ "$status" -eq 0 ]
 }
@@ -124,7 +124,7 @@ run_script() {
     city: Montréal
     country: GB
 EOF
-  sed -i '' 's/^    country: CA$/    country: Canada/' "$BATS_TEST_TMPDIR/test.yml"
+  sed -i.bak 's/^    country: CA$/    country: Canada/' "$BATS_TEST_TMPDIR/test.yml"
   run grep -c 'country: Canada' "$BATS_TEST_TMPDIR/test.yml"
   [ "$output" -eq 1 ]
   run grep -c 'country: US' "$BATS_TEST_TMPDIR/test.yml"
@@ -137,7 +137,7 @@ EOF
 
 @test "sed does not match country: CA when something follows" {
   printf '    country: CA  # inline comment\n' > "$BATS_TEST_TMPDIR/test.yml"
-  sed -i '' 's/^    country: CA$/    country: Canada/' "$BATS_TEST_TMPDIR/test.yml"
+  sed -i.bak 's/^    country: CA$/    country: Canada/' "$BATS_TEST_TMPDIR/test.yml"
   run grep 'country: Canada' "$BATS_TEST_TMPDIR/test.yml" || true
   [ "$status" -eq 1 ]
   run grep 'country: CA' "$BATS_TEST_TMPDIR/test.yml"

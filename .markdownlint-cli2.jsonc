@@ -11,6 +11,7 @@
     "vendor/**",
     "articles/_sources/**",
     ".claude/skills/**",
+    ".claude-work/**",
     "LICENSE.md"
   ]
 }

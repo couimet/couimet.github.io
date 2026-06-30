@@ -32,8 +32,8 @@ lint: build
 
 lint-fix:
 	markdownlint-cli2 --fix "**/*.md"
-	uv run ruff check --fix scripts/normalize-sitemap.py scripts/tests/test_normalize_sitemap.py
-	uv run ruff format scripts/normalize-sitemap.py scripts/tests/test_normalize_sitemap.py
+	uv run ruff check --fix scripts/*.py scripts/tests/*.py
+	uv run ruff format scripts/*.py scripts/tests/*.py
 
 snapshot-sitemap: build
 	@mkdir -p .snapshots

@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Convert resume.json (JSON Resume) → resume.yml (YAMLResume) → resume-full.html
 # Usage: ./scripts/sync-resume.sh
-# Requires: Docker
+# Requires: Docker (required), npm (optional, for version-check; skipped gracefully if absent)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
