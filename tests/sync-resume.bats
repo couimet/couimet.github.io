@@ -144,6 +144,121 @@ EOF
   [ "$status" -eq 0 ]
 }
 
+# --- Internal field stripping (unit) ---
+
+JQ_STRIP_FILTER='del(.basics.keywordSubTag) | walk(if type == "object" then with_entries(select(.key | startswith("docx") | not)) else . end)'
+
+# Create a minimal resume.json fixture with internal fields and run the jq strip filter.
+# $1: optional Python fragment to merge extra data into the fixture.
+# $2: output basename (default: stripped).
+run_strip() {
+  local extra="${1:-}"
+  local out="${2:-stripped}"
+  python3 -c "
+import json
+data = {
+  'basics': {
+    'name': 'Test User',
+    'label': 'Developer',
+    'keywordSubTag': ['Architecture', 'Observability']
+  },
+  'work': [
+    {'name': 'Acme', 'position': 'Dev', 'docxLastRoleBeforeEarlierExperience': True},
+    {'name': 'Beta', 'position': 'Lead'}
+  ]
+}
+$extra
+with open('$BATS_TEST_TMPDIR/fixture.json', 'w') as f:
+    json.dump(data, f)
+"
+  run jq "$JQ_STRIP_FILTER" "$BATS_TEST_TMPDIR/fixture.json"
+  # Write stripped output to a file for subsequent assertions.
+  jq "$JQ_STRIP_FILTER" "$BATS_TEST_TMPDIR/fixture.json" \
+    > "$BATS_TEST_TMPDIR/${out}.json"
+}
+
+@test "strip removes keywordSubTag from basics" {
+  run_strip
+  [ "$status" -eq 0 ]
+  run jq -r '.basics | has("keywordSubTag")' "$BATS_TEST_TMPDIR/stripped.json"
+  [ "$output" = "false" ]
+}
+
+@test "strip removes docxLastRoleBeforeEarlierExperience from work" {
+  run_strip
+  [ "$status" -eq 0 ]
+  run jq -r '.work | tostring | contains("docxLastRoleBeforeEarlierExperience")' "$BATS_TEST_TMPDIR/stripped.json"
+  [ "$output" = "false" ]
+}
+
+@test "strip removes docxSkip from certificates" {
+  run_strip '
+data["certificates"] = [
+  {"name": "Cert A", "docxSkip": True},
+  {"name": "Cert B"}
+]'
+  [ "$status" -eq 0 ]
+  run jq -r '.certificates | tostring | contains("docxSkip")' "$BATS_TEST_TMPDIR/stripped.json"
+  [ "$output" = "false" ]
+}
+
+@test "strip removes docxSkip from education, volunteer, awards, projects" {
+  run_strip '
+data["education"] = [{"institution": "U", "docxSkip": True}];
+data["volunteer"] = [{"organization": "Org", "docxSkip": True}];
+data["awards"] = [{"title": "Prize", "docxSkip": True}];
+data["projects"] = [{"name": "Proj", "docxSkip": True}]'
+  [ "$status" -eq 0 ]
+  run jq -r '[(.education,.volunteer,.awards,.projects) | tostring] | join(" ")' "$BATS_TEST_TMPDIR/stripped.json"
+  [[ "$output" != *"docxSkip"* ]]
+}
+
+@test "strip preserves standard fields" {
+  run_strip
+  [ "$status" -eq 0 ]
+  run jq -r '.basics.name' "$BATS_TEST_TMPDIR/stripped.json"
+  [[ "$output" == *"Test User"* ]]
+  run jq -r '.basics.label' "$BATS_TEST_TMPDIR/stripped.json"
+  [[ "$output" == *"Developer"* ]]
+  run jq -r '.work[0].name' "$BATS_TEST_TMPDIR/stripped.json"
+  [[ "$output" == *"Acme"* ]]
+  run jq -r '.work[1].position' "$BATS_TEST_TMPDIR/stripped.json"
+  [[ "$output" == *"Lead"* ]]
+}
+
+@test "strip preserves section entries without docx fields" {
+  run_strip '
+data["certificates"] = [{"name": "Cert A"}, {"name": "Cert B"}]'
+  [ "$status" -eq 0 ]
+  run jq '.certificates | length' "$BATS_TEST_TMPDIR/stripped.json"
+  [ "$output" -eq 2 ]
+}
+
+@test "strip handles missing optional sections" {
+  run_strip
+  [ "$status" -eq 0 ]
+  run jq -r '.basics | has("keywordSubTag")' "$BATS_TEST_TMPDIR/stripped.json"
+  [ "$output" = "false" ]
+}
+
+@test "strip preserves non-docx-prefixed fields with docx in the name" {
+  run_strip '
+data["work"][0]["needs_docx_review"] = True;
+data["work"][0]["mydocx"] = True'
+  [ "$status" -eq 0 ]
+  run jq -r '.work[0] | has("needs_docx_review")' "$BATS_TEST_TMPDIR/stripped.json"
+  [ "$output" = "true" ]
+  run jq -r '.work[0] | has("mydocx")' "$BATS_TEST_TMPDIR/stripped.json"
+  [ "$output" = "true" ]
+}
+
+@test "strip handles empty JSON object without error" {
+  echo '{}' > "$BATS_TEST_TMPDIR/empty.json"
+  run jq "$JQ_STRIP_FILTER" "$BATS_TEST_TMPDIR/empty.json"
+  [ "$status" -eq 0 ]
+  [[ "$output" == "{}" ]]
+}
+
 # --- Integration: resume.yml output validation ---
 
 @test "resume.yml exists after sync" {
