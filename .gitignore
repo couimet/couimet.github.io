@@ -10,6 +10,7 @@ _site/
 resume.yml
 resume-full.html
 resume-docx-content-*.txt
+resume-linkedin-content-*.txt
 
 # Python venvs and caches
 .venv/
