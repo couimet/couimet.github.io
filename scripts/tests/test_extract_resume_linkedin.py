@@ -70,19 +70,35 @@ class TestBuildHeadline(unittest.TestCase):
 
 class TestBuildAbout(unittest.TestCase):
     def setUp(self):
-        self.data = {"basics": {"summary": "Experienced developer."}}
+        self.bio = {
+            "basics": {
+                "summaryLong": [
+                    "I'm a Staff Developer with 25+ years of experience.",
+                    "I'm passionate about crypto and event-driven systems.",
+                ]
+            }
+        }
 
-    def test_outputs_section_header_and_summary(self):
-        result = build_about(self.data)
+    def test_outputs_section_header_and_paragraphs(self):
+        result = build_about(self.bio)
         self.assertIn("# About", result)
-        self.assertIn("Experienced developer.", result)
+        self.assertIn(
+            "I'm a Staff Developer with 25+ years of experience.", result
+        )
+        self.assertIn(
+            "I'm passionate about crypto and event-driven systems.", result
+        )
 
-    def test_replaces_literal_backslash_n_with_real_newlines(self):
-        self.data["basics"]["summary"] = "Line one.\\nLine two."
-        result = build_about(self.data)
-        joined = "\n".join(result)
-        self.assertIn("Line one.\nLine two.", joined)
-        self.assertNotIn("\\n", joined)
+    def test_paragraphs_are_separated_by_blank_lines(self):
+        result = build_about(self.bio)
+        idx1 = result.index(
+            "I'm a Staff Developer with 25+ years of experience."
+        )
+        idx2 = result.index(
+            "I'm passionate about crypto and event-driven systems."
+        )
+        self.assertEqual(result[idx1 + 1], "")
+        self.assertEqual(result[idx2 + 1], "")
 
 
 class TestBuildExperience(unittest.TestCase):
@@ -132,19 +148,18 @@ class TestBuildExperience(unittest.TestCase):
 
     def test_includes_highlights(self):
         result = build_experience(self.data)
-        self.assertIn("Shipped feature X", result)
-        self.assertIn("Mentored juniors", result)
+        self.assertIn("• Shipped feature X", result)
+        self.assertIn("• Mentored juniors", result)
 
-    def test_no_bullet_prefix_on_highlights(self):
+    def test_highlights_have_bullet_prefix(self):
         result = build_experience(self.data)
-        for line in result:
-            if line.startswith("#"):
-                continue
-            stripped = line.lstrip()
-            self.assertFalse(
-                stripped.startswith(("•", "-", "*")),
-                f"Line has bullet prefix: {line!r}",
-            )
+        highlight_lines = [
+            line for line in result if line.startswith("• ")
+        ]
+        self.assertEqual(len(highlight_lines), 3)
+        self.assertIn("• Shipped feature X", highlight_lines)
+        self.assertIn("• Mentored juniors", highlight_lines)
+        self.assertIn("• Built MVP", highlight_lines)
 
     def test_role_without_summary_still_renders(self):
         result = build_experience(self.data)
@@ -396,7 +411,8 @@ class TestBuildAwards(unittest.TestCase):
 class TestBuildOutput(unittest.TestCase):
     def test_includes_all_sections(self):
         data = load_resume(Path(SCRIPT_DIR) / ".." / "resume.json")
-        output = build_output(data)
+        bio = load_resume(Path(SCRIPT_DIR) / ".." / "_data" / "bio.json")
+        output = build_output(data, bio)
         for header in [
             "# Headline",
             "# About",
@@ -412,27 +428,28 @@ class TestBuildOutput(unittest.TestCase):
 
     def test_no_docx_only_sections(self):
         data = load_resume(Path(SCRIPT_DIR) / ".." / "resume.json")
-        output = build_output(data)
+        bio = load_resume(Path(SCRIPT_DIR) / ".." / "_data" / "bio.json")
+        output = build_output(data, bio)
         self.assertNotIn("# Header", output)
         self.assertNotIn("Keyword Sub-Tag", output)
         self.assertNotIn("Earlier Experience", output)
         self.assertNotIn("RANGELINK", output)
 
-    def test_no_bullet_prefixes_anywhere(self):
+    def test_no_other_bullet_prefixes(self):
         data = load_resume(Path(SCRIPT_DIR) / ".." / "resume.json")
-        output = build_output(data)
+        bio = load_resume(Path(SCRIPT_DIR) / ".." / "_data" / "bio.json")
+        output = build_output(data, bio)
         for line in output.split("\n"):
             stripped = line.lstrip()
             self.assertFalse(
-                stripped.startswith("• ")
-                or stripped.startswith("- ")
-                or stripped.startswith("* "),
-                f"Line has bullet prefix: {line!r}",
+                stripped.startswith("- ") or stripped.startswith("* "),
+                f"Line has stray bullet prefix: {line!r}",
             )
 
     def test_all_work_entries_present(self):
         data = load_resume(Path(SCRIPT_DIR) / ".." / "resume.json")
-        output = build_output(data)
+        bio = load_resume(Path(SCRIPT_DIR) / ".." / "_data" / "bio.json")
+        output = build_output(data, bio)
         # All 10 companies, including those after the docxLastRoleBeforeEarlierExperience marker
         for company in [
             "Shopify",
@@ -451,12 +468,13 @@ class TestBuildOutput(unittest.TestCase):
 
     def test_claude_101_certificate_excluded(self):
         data = load_resume(Path(SCRIPT_DIR) / ".." / "resume.json")
-        output = build_output(data)
+        bio = load_resume(Path(SCRIPT_DIR) / ".." / "_data" / "bio.json")
+        output = build_output(data, bio)
         self.assertNotIn("Claude 101", output)
 
     def test_empty_data_minimal_output(self):
         data = {
-            "basics": {"label": "Dev", "summary": ""},
+            "basics": {"label": "Dev"},
             "work": [],
             "skills": [],
             "education": [],
@@ -465,7 +483,8 @@ class TestBuildOutput(unittest.TestCase):
             "volunteer": [],
             "awards": [],
         }
-        output = build_output(data)
+        bio = {"basics": {"summaryLong": ["Minimal about."]}}
+        output = build_output(data, bio)
         self.assertIn("# Headline", output)
         self.assertIn("# About", output)
         self.assertIn("# Experience", output)

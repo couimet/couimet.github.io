@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Extract sections from resume.json for copy-paste into LinkedIn profile fields.
 
-Sections are delimited by ``# `` comment headers. Content is raw text
-without bullet prefixes — LinkedIn has its own list formatting.
+Sections are delimited by ``# `` comment headers. Highlight lines are
+prefixed with ``• `` for easy copy-paste into LinkedIn.
 """
 
 import argparse
@@ -40,15 +40,12 @@ def build_headline(data: dict) -> list[str]:
     return out
 
 
-def build_about(data: dict) -> list[str]:
+def build_about(bio: dict) -> list[str]:
     out: list[str] = []
     emit_section(out, "About")
-    summary = data["basics"]["summary"]
-    # Replace literal backslash-n with real newlines so paragraph breaks
-    # survive copy-paste into LinkedIn's About field.
-    summary = summary.replace("\\n", "\n")
-    out.append(summary)
-    out.append("")
+    for paragraph in bio["basics"]["summaryLong"]:
+        out.append(paragraph)
+        out.append("")
     return out
 
 
@@ -64,7 +61,7 @@ def build_experience(data: dict) -> list[str]:
             out.append(w["summary"])
             out.append("")
         for h in w.get("highlights", []):
-            out.append(h)
+            out.append(f"• {h}")
         out.append("")
     return out
 
@@ -143,10 +140,10 @@ def build_awards(data: dict) -> list[str]:
     return out
 
 
-def build_output(data: dict) -> str:
+def build_output(data: dict, bio: dict) -> str:
     sections: list[list[str]] = [
         build_headline(data),
-        build_about(data),
+        build_about(bio),
         build_experience(data),
         build_skills(data),
         build_education(data),
@@ -174,6 +171,11 @@ def main() -> None:
         default=f"resume-linkedin-content-{datetime.now().strftime('%Y%m%d-%H%M%S')}.txt",
         help="Output path for the generated text file (default: resume-linkedin-content-YYYYMMDD-HHMMSS.txt)",
     )
+    parser.add_argument(
+        "--bio",
+        default="_data/bio.json",
+        help="Path to bio.json for the About section (default: _data/bio.json)",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -181,8 +183,14 @@ def main() -> None:
         print(f"ERROR: {input_path} not found", file=sys.stderr)
         sys.exit(1)
 
+    bio_input = Path(args.bio)
+    if not bio_input.exists():
+        print(f"ERROR: {bio_input} not found", file=sys.stderr)
+        sys.exit(1)
+
     data = load_resume(input_path)
-    output = build_output(data)
+    bio = load_resume(bio_input)
+    output = build_output(data, bio)
 
     output_path = Path(args.output)
     output_path.write_text(output)
