@@ -157,3 +157,42 @@ with open('$BATS_TEST_TMPDIR/no-skip-resume.json', 'w') as f:
   [ "$status" -eq 0 ]
   [ "$output" -ge 1 ]
 }
+
+# --- Timestamped default output filename ---
+
+@test "extract-resume-text default output uses timestamped filename" {
+  cd "$BATS_TEST_TMPDIR"
+  run uv run python "$SCRIPT" --input "$RESUME_JSON"
+  [ "$status" -eq 0 ]
+  # Find the generated file matching the timestamped pattern
+  count=$(find . -maxdepth 1 -name 'resume-docx-content-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9].txt' | wc -l)
+  [ "$count" -eq 1 ]
+}
+
+@test "extract-resume-text default output file has section headers" {
+  cd "$BATS_TEST_TMPDIR"
+  run uv run python "$SCRIPT" --input "$RESUME_JSON"
+  [ "$status" -eq 0 ]
+  output_file=$(find . -maxdepth 1 -name 'resume-docx-content-*.txt' | head -1)
+  [ -n "$output_file" ]
+  run grep -c "^# Work Experience$" "$output_file"
+  [ "$status" -eq 0 ]
+  [ "$output" -ge 1 ]
+}
+
+@test "extract-resume-text explicit --output overrides timestamped default" {
+  run_extract
+  [ "$status" -eq 0 ]
+  [ -f "$OUTPUT" ]
+  # The custom path should be exactly as specified, not timestamped
+  [ "$(basename "$OUTPUT")" = "output.txt" ]
+}
+
+@test "extract-resume-text two runs produce different default filenames" {
+  cd "$BATS_TEST_TMPDIR"
+  uv run python "$SCRIPT" --input "$RESUME_JSON"
+  sleep 1
+  uv run python "$SCRIPT" --input "$RESUME_JSON"
+  count=$(find . -maxdepth 1 -name 'resume-docx-content-*.txt' | wc -l)
+  [ "$count" -eq 2 ]
+}
