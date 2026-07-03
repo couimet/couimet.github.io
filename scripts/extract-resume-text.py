@@ -11,6 +11,7 @@ cutoff between full-bullet roles and the Earlier Experience summary block.
 import argparse
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
 
 from resume_utils import fmt_date, get_cutoff
@@ -243,8 +244,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--output",
-        default="resume-docx-content.txt",
-        help="Output path for the generated text file (default: resume-docx-content.txt)",
+        default=f"resume-docx-content-{datetime.now().strftime('%Y%m%d-%H%M%S')}.txt",
+        help="Output path for the generated text file (default: resume-docx-content-YYYYMMDD-HHMMSS.txt)",
     )
     args = parser.parse_args()
 

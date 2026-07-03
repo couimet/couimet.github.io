@@ -72,7 +72,7 @@ Converts `resume.json` → `resume.yml` (YAMLResume) → `resume-full.html` (sty
 Generates a plain-text file from `resume.json` for copy-paste into a formatted `.docx` resume. Sections are delimited with `#`-prefixed comments. Work roles up to and including the `lastRoleBeforeEarlierExperience` marker get full bullet treatment; older roles appear in an Earlier Experience summary block with a CTA placeholder for an AI-generated narrative.
 
 ```bash
-make extract-resume                # → resume-docx-content.txt
+make extract-resume                # → resume-docx-content-YYYYMMDD-HHMMSS.txt
 ```
 
 ### Docx linting
