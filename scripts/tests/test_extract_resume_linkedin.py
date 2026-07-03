@@ -140,14 +140,11 @@ class TestBuildExperience(unittest.TestCase):
         for line in result:
             if line.startswith("#"):
                 continue
-            if (
-                line.startswith("Shipped")
-                or line.startswith("Mentored")
-                or line.startswith("Built MVP")
-            ):
-                self.assertFalse(
-                    line.startswith("•") or line.startswith("-") or line.startswith("*")
-                )
+            stripped = line.lstrip()
+            self.assertFalse(
+                stripped.startswith(("•", "-", "*")),
+                f"Line has bullet prefix: {line!r}",
+            )
 
     def test_role_without_summary_still_renders(self):
         result = build_experience(self.data)
@@ -297,13 +294,14 @@ class TestBuildProjects(unittest.TestCase):
     def test_project_without_description(self):
         self.data["projects"][0].pop("description")
         result = build_projects(self.data)
-        # Name should still appear, description should not
         self.assertIn("my-claude-skills", result)
+        self.assertNotIn("A library of Claude Code skills.", "\n".join(result))
 
     def test_project_without_url(self):
         self.data["projects"][0].pop("url")
         result = build_projects(self.data)
         self.assertIn("my-claude-skills", result)
+        self.assertNotIn("https://ouimet.info/projects/my-claude-skills.html", "\n".join(result))
 
 
 class TestBuildVolunteer(unittest.TestCase):
