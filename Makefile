@@ -50,6 +50,9 @@ verify-sitemap: build
 extract-resume:
 	uv run python scripts/extract-resume-text.py
 
+extract-resume-linkedin:
+	uv run python scripts/extract-resume-linkedin.py
+
 lint-resume:
 	@if [ -z "$(DOCX)" ]; then \
 		echo "Usage: make lint-resume DOCX=path/to/resume.docx"; \
