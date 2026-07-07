@@ -177,6 +177,7 @@ content:
         - CloudWatch
         - Parameter Store
         - Serverless Framework
+        - Kafka
         - Docker
         - Kubernetes
         - Redis
