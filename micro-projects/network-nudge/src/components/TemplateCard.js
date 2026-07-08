@@ -1,26 +1,24 @@
+import { renderPreview } from '../templates.js';
+
 import htm from 'htm';
-import { createElement, useCallback, useMemo, useState } from 'react';
+import { createElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const html = htm.bind(createElement);
 
-function renderCardPreview(template, sharedFieldValues) {
-  const values = {};
-  for (const f of template.fields) {
-    values[f.name] = sharedFieldValues[f.name] || `[${f.label}]`;
-  }
-  try {
-    return template.render(values);
-  } catch {
-    return '';
-  }
-}
-
 export function TemplateCard({ template, sharedFieldValues, onSelect }) {
   const [copied, setCopied] = useState(false);
+  const timeoutRef = useRef(null);
 
-  const preview = useMemo(() => renderCardPreview(template, sharedFieldValues), [template, sharedFieldValues]);
+  const preview = useMemo(() => renderPreview(template, sharedFieldValues), [template, sharedFieldValues]);
 
   const isComplete = !preview.includes('[');
+
+  // Clear copy-feedback timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleCopy = useCallback(
     async (e) => {
@@ -28,7 +26,8 @@ export function TemplateCard({ template, sharedFieldValues, onSelect }) {
       try {
         await navigator.clipboard.writeText(preview);
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => setCopied(false), 2000);
       } catch {
         // clipboard unavailable — no-op
       }

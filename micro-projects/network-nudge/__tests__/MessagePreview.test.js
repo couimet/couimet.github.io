@@ -24,6 +24,7 @@ describe('MessagePreview', () => {
 
   afterEach(() => {
     cleanup();
+    vi.unstubAllGlobals();
   });
 
   it('renders the composed message in a textarea', () => {

@@ -67,7 +67,6 @@ export function App({ careerUrlDefault, resumeUrlDefault } = {}) {
     currentStep: 0,
     selectedTemplateId: null,
     fieldValues: initialFieldValues({ careerUrlDefault, resumeUrlDefault }),
-    language: 'en',
   });
 
   // Restore from hash on mount

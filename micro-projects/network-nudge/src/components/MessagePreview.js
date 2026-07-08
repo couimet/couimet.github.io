@@ -1,5 +1,7 @@
+import { renderPreview } from '../templates.js';
+
 import htm from 'htm';
-import { createElement, Fragment, useEffect, useMemo, useState } from 'react';
+import { createElement, Fragment, useEffect, useMemo, useRef, useState } from 'react';
 
 const LINKEDIN_CHAR_LIMIT = 300;
 
@@ -16,22 +18,13 @@ function missingFieldLabels(fields) {
   return fields.filter((f) => !f.value).map((f) => f.label);
 }
 
-function renderMessage(template, fieldValues) {
-  const fields = fieldsWithValues(template, fieldValues);
-  const filled = Object.fromEntries(fields.map((f) => [f.name, f.value || `[${f.label}]`]));
-  try {
-    return template.render(filled);
-  } catch {
-    return '';
-  }
-}
-
 export function MessagePreview({ template, fieldValues }) {
   const [copied, setCopied] = useState(false);
   const [editedMessage, setEditedMessage] = useState(null);
   const [hasEdited, setHasEdited] = useState(false);
+  const timeoutRef = useRef(null);
 
-  const generatedMessage = useMemo(() => renderMessage(template, fieldValues), [template, fieldValues]);
+  const generatedMessage = useMemo(() => renderPreview(template, fieldValues), [template, fieldValues]);
 
   const message = hasEdited ? editedMessage : generatedMessage;
 
@@ -48,11 +41,19 @@ export function MessagePreview({ template, fieldValues }) {
     setHasEdited(false);
   }, [template.id]);
 
+  // Clear copy-feedback timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(message);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       // clipboard unavailable — no-op
     }
