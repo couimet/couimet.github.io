@@ -40,6 +40,12 @@ CI runs `make lint` on every PR and push to main via `.github/workflows/lint.yml
 
 When a change adds, removes, or renames a page, run `make snapshot-sitemap` and commit the updated `.snapshots/sitemap.xml`. CI and pre-commit enforce it.
 
+### Project pages and `.htaccess` redirects
+
+Project pages use `.html` extensions (e.g. `/projects/network-nudge.html`). Server-level 301 redirects handle the directory-style URLs (`/projects/network-nudge/`) via `.htaccess` on the `couimet/ouimet.info` Apache host.
+
+When adding a new project page to this repo, use `/create-github-issue` to create a corresponding issue on `couimet/ouimet.info` for the `.htaccess` redirect entry. When running `/finish-issue`, explicitly link that ouimet.info issue so the redirect work isn't forgotten.
+
 ### Resume files
 
 `resume.json` (source of truth for the downloadable PDF, ATS-focused) and `_data/bio.json` (drives the Jekyll `/resume.html` page, casual/personal tone) share overlapping fields: `basics.summary`/`summaryLong`, `basics.label`, interests, and skills. When updating one, check the other for consistency. They use different tones (formal vs. casual) but should agree on facts: job titles, industry domains, years of experience, and technology keywords. The CI pipeline (`scripts/sync-resume.sh`, triggered on push to main) auto-generates `resume.yml` and `resume-full.html` from `resume.json` — never edit those generated files directly.
