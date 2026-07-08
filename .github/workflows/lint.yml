@@ -31,8 +31,16 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@e58605a9b6da7c637471fab8847a5e5a6b8df081  # v5
 
+      - name: Install pnpm
+        run: npm install -g pnpm@10
+
       - name: Install markdownlint-cli2
         run: npm install -g markdownlint-cli2@0.22.1
+
+      - name: Install network-nudge dependencies
+        shell: bash
+        working-directory: micro-projects/network-nudge
+        run: pnpm install
 
       - name: Lint
         run: make lint

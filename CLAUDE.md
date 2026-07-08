@@ -31,6 +31,11 @@ make lint-fix  # markdownlint-cli2 --fix + ruff check --fix + ruff format
 
 CI runs `make lint` on every PR and push to main via `.github/workflows/lint.yml`.
 
+### CI workflow conventions
+
+- **Third-party actions** (e.g. `actions/checkout`): always pinned to a full commit SHA with a `# vX.Y.Z` version comment. Never use floating refs like `@v4` or `@main`.
+- **First-party actions** (`couimet/github-actions/*`): always use `@main`. We control the repo, so breaking changes are intentional and versioned. SHAs add pin-update churn with no benefit for actions we own.
+
 ### Sitemap
 
 When a change adds, removes, or renames a page, run `make snapshot-sitemap` and commit the updated `.snapshots/sitemap.xml`. CI and pre-commit enforce it.

@@ -12,6 +12,8 @@
     "articles/_sources/**",
     ".claude/skills/**",
     ".claude-work/**",
+    "node_modules/**",
+    "micro-projects/network-nudge/node_modules/**",
     "LICENSE.md"
   ]
 }

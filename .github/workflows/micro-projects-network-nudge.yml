@@ -1,0 +1,43 @@
+# Runs the Network Nudge test suite on every PR and on push to main.
+# Scoped via paths filter so it only fires when the project or this workflow changes.
+name: Micro-projects — Network Nudge
+
+on:
+  pull_request:
+    paths:
+      - 'micro-projects/network-nudge/**'
+      - '.github/workflows/micro-projects-network-nudge.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'micro-projects/network-nudge/**'
+      - '.github/workflows/micro-projects-network-nudge.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+        with:
+          persist-credentials: false
+      - name: Setup Node.js & pnpm
+        uses: couimet/github-actions/setup-node-pnpm@main
+        with:
+          node-version: '24'
+          working-directory: micro-projects/network-nudge
+      - name: Install dependencies
+        uses: couimet/github-actions/install-deps@main
+        with:
+          working-directory: micro-projects/network-nudge
+      - name: Run tests
+        shell: bash
+        working-directory: micro-projects/network-nudge
+        run: pnpm test
+      - name: Run lint
+        shell: bash
+        working-directory: micro-projects/network-nudge
+        run: pnpm lint

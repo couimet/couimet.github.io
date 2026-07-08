@@ -30,7 +30,9 @@ layout: home
       {% endfor %}
     </p>
 
+    {% if page.repourl %}
     <p class="mb-0"><a href="{{ page.repourl }}" target="_blank" rel="noopener noreferrer">Visit my repo</a></p>
+    {% endif %}
   </div>
 
   <div class="mt-3">

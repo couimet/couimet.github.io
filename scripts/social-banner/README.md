@@ -1,12 +1,13 @@
 # social-banner
 
-Reproducible social banner generation for ouimet.info. Two scripts produce
+Reproducible social banner generation for ouimet.info. Three scripts produce
 the JPGs that show up as `og:image` previews when pages are shared.
 
 | Script | Output |
 | --- | --- |
 | `generate.py` | `img/social-banner.jpg` — the default banner using `_data/bio.json` |
 | `generate_rangelink.py` | `img/social-banner-rangelink.jpg` — the project-specific banner for `projects/rangelink-extension.md` |
+| `generate_network_nudge.py` | `img/social-banner-network-nudge.jpg` — the project-specific banner for `projects/network-nudge.md` |
 
 ## Setup
 
@@ -24,9 +25,18 @@ That creates `.venv/` with the exact dependency tree captured in `uv.lock`.
 
 ## Regenerate banners
 
+From the repo root:
+
 ```sh
-uv run python generate.py
-uv run python generate_rangelink.py
+make banner
+```
+
+Or individually:
+
+```sh
+make banner-default
+make banner-rangelink
+make banner-network-nudge
 ```
 
 The scripts write to `../../img/` (repo root `img/`).

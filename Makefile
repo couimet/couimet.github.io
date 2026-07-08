@@ -1,4 +1,4 @@
-.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap extract-resume lint-resume
+.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap extract-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge
 
 install: install-prereqs install-deps install-hooks
 
@@ -25,12 +25,12 @@ test:
 	uv run python -m unittest discover -s scripts/tests -v
 	bats tests/*.bats
 
-lint: build
+lint: build nudge-lint
 	bundle exec htmlproofer _site --disable-external
 	markdownlint-cli2 "**/*.md"
 	uv run ruff check scripts/*.py scripts/tests/*.py
 
-lint-fix:
+lint-fix: nudge-fix
 	markdownlint-cli2 --fix "**/*.md"
 	uv run ruff check --fix scripts/*.py scripts/tests/*.py
 	uv run ruff format scripts/*.py scripts/tests/*.py
@@ -59,3 +59,23 @@ lint-resume:
 		exit 1; \
 	fi
 	uv run python scripts/lint-resume-docx.py "$(DOCX)"
+
+nudge-test:
+	cd micro-projects/network-nudge && pnpm test
+
+nudge-lint:
+	cd micro-projects/network-nudge && pnpm lint && pnpm format
+
+nudge-fix:
+	cd micro-projects/network-nudge && pnpm fix
+
+banner: banner-default banner-rangelink banner-network-nudge
+
+banner-default:
+	cd scripts/social-banner && uv run python generate.py
+
+banner-rangelink:
+	cd scripts/social-banner && uv run python generate_rangelink.py
+
+banner-network-nudge:
+	cd scripts/social-banner && uv run python generate_network_nudge.py

@@ -28,6 +28,7 @@ exclude:
   - README.md
   - .history
   - articles/_sources
+  - micro-projects/network-nudge/node_modules
   - scripts
 include:
   - .nojekyll
