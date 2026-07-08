@@ -37,5 +37,10 @@ jobs:
       - name: Install markdownlint-cli2
         run: npm install -g markdownlint-cli2@0.22.1
 
+      - name: Install network-nudge dependencies
+        shell: bash
+        working-directory: micro-projects/network-nudge
+        run: pnpm install
+
       - name: Lint
         run: make lint
