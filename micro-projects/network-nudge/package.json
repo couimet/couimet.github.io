@@ -1,0 +1,44 @@
+{
+  "name": "network-nudge",
+  "private": true,
+  "description": "Build personalized LinkedIn outreach messages from templates — pick a type, fill in the blanks, copy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/couimet/couimet.github.io"
+  },
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "fix": "pnpm lint:fix && pnpm format:fix",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run"
+  },
+  "prettier": "@couimet/eslint-config/prettier",
+  "devDependencies": {
+    "@couimet/eslint-config": "^0.6.0",
+    "@testing-library/jest-dom": "^6.6.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.6.1",
+    "eslint": "^10.5.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "htm": "^3.1.0",
+    "jsdom": "^25.0.0",
+    "prettier": "^3.5.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vitest": "^3.0.0"
+  },
+  "packageManager": "pnpm@10.19.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

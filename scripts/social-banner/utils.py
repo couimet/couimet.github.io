@@ -1,11 +1,35 @@
 """Shared rendering helpers for social banner generation scripts.
 
-Imported by generate.py and generate_rangelink.py.
+Imported by generate.py, generate_rangelink.py, and generate_network_nudge.py.
 """
 
-from PIL import ImageDraw, ImageFont
+import re
+import sys
+from pathlib import Path
+
+import yaml
+from PIL import Image, ImageDraw, ImageFont
 
 import settings as cfg
+
+
+def load_project_meta(project_md_path):
+    """Parse Jekyll front matter from a project markdown file."""
+    with open(project_md_path) as f:
+        content = f.read()
+    match = re.match(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
+    if not match:
+        print(f"No front matter found in {project_md_path}", file=sys.stderr)
+        sys.exit(1)
+    return yaml.safe_load(match.group(1))
+
+
+def sized_icon(icon, target_size):
+    """Scale *icon* so its larger dimension equals *target_size*, preserving aspect ratio."""
+    scale = target_size / max(icon.size)
+    new_w = int(icon.width * scale)
+    new_h = int(icon.height * scale)
+    return icon.resize((new_w, new_h), Image.Resampling.LANCZOS)
 
 
 def load_font(size, weight="regular"):
@@ -57,6 +81,51 @@ def draw_text_block(draw, lines, start_y=None):
             y += cfg.LINE_SPACING
 
     return y
+
+
+def compose_banner(meta, icon, out_path):
+    """Composite a project social banner: icon on the left, text on the right.
+
+    *meta* is the parsed Jekyll front matter dict.
+    *icon* is a PIL Image already scaled to cfg.ICON_SIZE.
+    *out_path* is the destination JPEG path.
+    """
+    from PIL import Image, ImageDraw
+
+    bannertitle = derive_bannertitle(meta)
+    bannersubtitle = meta.get("bannersubtitle", "")
+    bannertagline = meta.get("bannertagline") or meta.get("summary", "")
+
+    im = Image.new("RGB", (cfg.WIDTH, cfg.HEIGHT), cfg.BG_COLOR)
+    draw = ImageDraw.Draw(im)
+
+    # Icon — centre in left region
+    icon_x = cfg.PADDING_H + (cfg.LEFT_REGION_WIDTH - icon.width) // 2
+    icon_y = (cfg.HEIGHT - icon.height) // 2
+    if icon.mode == "RGBA":
+        im.paste(icon, (icon_x, icon_y), icon.split()[3])
+    else:
+        im.paste(icon, (icon_x, icon_y))
+
+    # Build line list
+    name_font = load_font(cfg.NAME_FONT_SIZE, cfg.NAME_FONT_WEIGHT)
+    title_font = load_font(cfg.TITLE_FONT_SIZE, cfg.TITLE_FONT_WEIGHT)
+    tagline_font = load_font(cfg.TAGLINE_FONT_SIZE, cfg.TAGLINE_FONT_WEIGHT)
+    text_max_w = cfg.WIDTH - cfg.TEXT_REGION_X - cfg.PADDING_H
+
+    lines = [
+        (bannertitle, name_font, cfg.NAME_COLOR),
+    ]
+    if bannersubtitle:
+        lines.append((bannersubtitle, title_font, cfg.TITLE_COLOR))
+    for wrapped in wrap_line(bannertagline, tagline_font, draw, text_max_w):
+        lines.append((wrapped, tagline_font, cfg.TAGLINE_COLOR))
+
+    draw_text_block(draw, lines)
+    draw_watermark(draw)
+
+    im.save(out_path, "JPEG", quality=cfg.JPG_QUALITY)
+    print(f"Written: {out_path}")
 
 
 def draw_watermark(draw):
