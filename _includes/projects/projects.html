@@ -16,7 +16,19 @@
     </div>
 
     <div class="row g-3">
-      {% assign project_pages = site.pages | where: "type", "project" | sort: "date" | reverse %}
+      {% assign all = site.pages | where: "type", "project" %}
+      {% assign pinned = "" | split: "" %}
+      {% assign unpinned = "" | split: "" %}
+      {% for p in all %}
+        {% if p.priority %}
+          {% assign pinned = pinned | push: p %}
+        {% else %}
+          {% assign unpinned = unpinned | push: p %}
+        {% endif %}
+      {% endfor %}
+      {% assign pinned = pinned | sort: "priority" %}
+      {% assign unpinned = unpinned | sort: "date" | reverse %}
+      {% assign project_pages = pinned | concat: unpinned %}
       {% for page in project_pages %}
         {% unless page.draft %}
           {% include projects/project-card.html page=page %}
