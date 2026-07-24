@@ -24,11 +24,12 @@ describe('TEMPLATES', () => {
         careerUrl: 'https://my-career.example.com',
         resumeUrl: 'https://my-resume.example.com',
       });
-      expect(result).toContain('Hi Alice!');
-      expect(result).toContain('https://example.com/job');
-      expect(result).toContain('good fit');
-      expect(result).toContain('https://my-career.example.com');
-      expect(result).toContain('https://my-resume.example.com');
+      expect(result).toEqual(
+        'Hi Alice!\n\n' +
+          "I came across https://example.com/job and I believe I'd be a good fit for the role.\n\n" +
+          'My background is at https://my-career.example.com and my latest résumé is at https://my-resume.example.com.\n\n' +
+          'Are you available to chat?',
+      );
     });
   });
 
@@ -42,10 +43,13 @@ describe('TEMPLATES', () => {
         careerUrl: 'https://my-career.example.com',
         resumeUrl: 'https://my-resume.example.com',
       });
-      expect(result).toContain('Hi Bob!');
-      expect(result).toContain('Acme Corp');
-      expect(result).toContain('https://example.com/job2');
-      expect(result).toContain('Are you available');
+      expect(result).toEqual(
+        'Hi Bob!\n\n' +
+          "I'm connecting with people at Acme Corp for this role:\n" +
+          'https://example.com/job2\n\n' +
+          'My background is at https://my-career.example.com and my latest résumé is at https://my-resume.example.com.\n\n' +
+          'Are you available for a chat?',
+      );
     });
   });
 
@@ -62,26 +66,32 @@ describe('TEMPLATES', () => {
         careerUrl: 'https://my-career.example.com',
         resumeUrl: 'https://my-resume.example.com',
       });
-      expect(result).toContain('Hi Carol!');
-      expect(result).toContain('Dave');
-      expect(result).toContain('https://linkedin.com/in/dave');
-      expect(result).toContain('Beta Inc');
-      expect(result).toContain('introducing me to him');
+      expect(result).toEqual(
+        'Hi Carol!\n\n' +
+          "I saw you're connected with Dave (https://linkedin.com/in/dave).\n\n" +
+          "I'm trying to create connections with people at Beta Inc for this role:\n" +
+          'https://example.com/job3\n\n' +
+          'Would you be comfortable introducing me to him through either email or LinkedIn chat?\n\n' +
+          'My background is at https://my-career.example.com and my latest résumé is at https://my-resume.example.com.\n\n' +
+          'Thanks in advance!',
+      );
     });
 
-    it('uses their pronoun when selected', () => {
+    it('produces the correct pronoun in the output', () => {
       const t = TEMPLATES.find((t) => t.id === 'mutual-intro');
-      const result = t.render({
-        recipientName: 'Eve',
-        targetName: 'Frank',
-        targetLinkedInUrl: 'https://linkedin.com/in/frank',
-        companyName: 'Gamma LLC',
-        roleUrl: 'https://example.com/job4',
-        pronoun: 'her',
+      const base = {
+        recipientName: 'Grace',
+        targetName: 'Heidi',
+        targetLinkedInUrl: 'https://linkedin.com/in/heidi',
+        companyName: 'Delta Inc',
+        roleUrl: 'https://example.com/job5',
         careerUrl: 'https://my-career.example.com',
         resumeUrl: 'https://my-resume.example.com',
-      });
-      expect(result).toContain('introducing me to her');
+      };
+
+      expect(t.render({ ...base, pronoun: 'him' })).toContain('introducing me to him');
+      expect(t.render({ ...base, pronoun: 'her' })).toContain('introducing me to her');
+      expect(t.render({ ...base, pronoun: 'them' })).toContain('introducing me to them');
     });
   });
 });
