@@ -39,6 +39,7 @@ describe('MessageForm', () => {
     render(html`<${MessageForm} template=${mutualTemplate} fieldValues=${{ pronoun: 'him' }} onChange=${onChange} />`);
     expect(screen.getByLabelText('him')).toBeTruthy();
     expect(screen.getByLabelText('her')).toBeTruthy();
+    expect(screen.getByLabelText('them')).toBeTruthy();
   });
 
   it('pre-fills field values from props', () => {

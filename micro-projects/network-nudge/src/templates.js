@@ -57,7 +57,7 @@ export const TEMPLATES = [
       { name: 'targetLinkedInUrl', label: 'Target person LinkedIn URL', type: 'url' },
       { name: 'companyName', label: 'Company name', type: 'text' },
       { name: 'roleUrl', label: 'Role URL', type: 'url' },
-      { name: 'pronoun', label: 'Their pronoun', type: 'radio', options: ['him', 'her'] },
+      { name: 'pronoun', label: 'Their pronoun', type: 'radio', options: ['him', 'her', 'them'] },
       ...sharedFields,
     ],
     render: ({ recipientName, targetName, targetLinkedInUrl, companyName, roleUrl, pronoun, careerUrl, resumeUrl }) =>
