@@ -532,6 +532,12 @@ content:
 locale:
   language: en
 layouts:
+  - engine: html
+    template: calm
+    typography:
+      fontSize: 16px
+    advanced:
+      showIcons: true
   - engine: latex
     template: moderncv-banking
     advanced:
@@ -549,10 +555,34 @@ layouts:
       paperSize: a4
     typography:
       fontSize: 10pt
-  - engine: markdown
-  - engine: html
+  - engine: docx
     template: calm
+    page:
+      margins:
+        top: 2.5cm
+        bottom: 2.5cm
+        left: 1.5cm
+        right: 1.5cm
+      showPageNumbers: false
+      paperSize: a4
+    sections:
+      order:
+        - basics
+        - education
+        - work
+        - languages
+        - skills
+        - awards
+        - certificates
+        - publications
+        - references
+        - projects
+        - interests
+        - volunteer
     typography:
-      fontSize: 16px
+      fontSize: 10pt
+      lineSpacing: normal
     advanced:
+      showUrls: true
       showIcons: true
+  - engine: markdown
