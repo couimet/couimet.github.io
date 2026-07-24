@@ -1,3 +1,6 @@
+from io import BytesIO
+from unittest.mock import patch
+
 import pytest
 from PIL import Image, ImageDraw, ImageFont
 
@@ -56,3 +59,28 @@ def test_wrap_line_keeps_short_text_on_one_line(draw_ctx, tagline_font):
 )
 def test_derive_bannertitle(meta, expected):
     assert utils.derive_bannertitle(meta) == expected
+
+
+def test_download_icon_accepts_valid_image():
+    """A small image passes the pixel-limit check."""
+    valid = Image.new("RGBA", (100, 100))
+    buf = BytesIO()
+    valid.save(buf, format="PNG")
+    buf.seek(0)
+
+    with patch("utils.urlopen", return_value=buf):
+        result = utils.download_icon("https://example.com/icon.png")
+    assert result.size == (100, 100)
+    assert result.mode == "RGBA"
+
+
+def test_download_icon_rejects_oversized_image():
+    """An image exceeding MAX_ICON_PIXELS raises SystemExit."""
+    oversized = Image.new("RGBA", (5000, 5000))
+    buf = BytesIO()
+    oversized.save(buf, format="PNG")
+    buf.seek(0)
+
+    with patch("utils.urlopen", return_value=buf):
+        with pytest.raises(SystemExit):
+            utils.download_icon("https://example.com/huge.png")

@@ -1,4 +1,4 @@
-from pathlib import Path
+"""Tests for generate_network_nudge banner rendering."""
 
 import pytest
 from PIL import Image
@@ -48,3 +48,5 @@ def test_compose_banner_uses_summary_fallback_when_bannertagline_missing(tmp_pat
     assert out_path.exists()
     with Image.open(out_path) as im:
         assert im.size == (cfg.WIDTH, cfg.HEIGHT)
+
+    assert_matches_golden(out_path, GOLDEN_DIR / "banner-network-nudge-fallback.jpg")

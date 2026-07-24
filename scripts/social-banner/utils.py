@@ -1,16 +1,20 @@
-"""Shared rendering helpers for social banner generation scripts.
-
-Imported by generate.py, generate_rangelink.py, and generate_network_nudge.py.
-"""
+"""Shared rendering helpers for social banner generation scripts."""
 
 import re
 import sys
+from io import BytesIO
 from pathlib import Path
+from urllib.error import URLError
+from urllib.parse import urlparse
+from urllib.request import urlopen
 
 import yaml
 from PIL import Image, ImageDraw, ImageFont
 
 import settings as cfg
+
+MAX_ICON_BYTES = 10 * 1024 * 1024  # 10 MB
+MAX_ICON_PIXELS = 20_000_000
 
 
 def load_project_meta(project_md_path):
@@ -30,6 +34,54 @@ def sized_icon(icon, target_size):
     new_w = int(icon.width * scale)
     new_h = int(icon.height * scale)
     return icon.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+
+def resolve_icon_url(meta):
+    """Return the best-resolution icon URL from project front matter."""
+    for key in ("sourceiconurl", "logourl", "iconurl"):
+        url = meta.get(key)
+        if url:
+            return url
+    print("No icon URL found in project front matter", file=sys.stderr)
+    sys.exit(1)
+
+
+def download_icon(url):
+    """Download and decode an icon from *url*, returning a PIL Image.
+
+    Only http/https schemes are allowed. The response is capped at
+    MAX_ICON_BYTES before passing bytes to Image.open.
+    """
+    if urlparse(url).scheme not in ("http", "https"):
+        print(f"Refusing non-http(s) icon URL: {url}", file=sys.stderr)
+        sys.exit(1)
+    try:
+        with urlopen(url, timeout=10) as resp:
+            data = resp.read(MAX_ICON_BYTES + 1)
+            if len(data) > MAX_ICON_BYTES:
+                print(f"Icon exceeds {MAX_ICON_BYTES} byte limit: {url}", file=sys.stderr)
+                sys.exit(1)
+    except (URLError, OSError) as exc:
+        print(f"Failed to download icon from {url}: {exc}", file=sys.stderr)
+        sys.exit(1)
+    image = Image.open(BytesIO(data))
+    if image.width * image.height > MAX_ICON_PIXELS:
+        print(
+            f"Icon exceeds {MAX_ICON_PIXELS} pixel limit "
+            f"({image.width}x{image.height}): {url}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    return image.convert("RGBA")
+
+
+def trim_to_content(icon):
+    """Crop *icon* to the bounding box of fully opaque pixels."""
+    alpha = icon.split()[3]
+    bbox = alpha.getbbox()
+    if bbox is None:
+        return icon
+    return icon.crop(bbox)
 
 
 def load_font(size, weight="regular"):
