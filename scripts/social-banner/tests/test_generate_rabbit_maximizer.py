@@ -1,7 +1,5 @@
 """Tests for generate_rabbit_maximizer banner rendering."""
 
-from io import BytesIO
-
 import pytest
 from PIL import Image
 
@@ -16,20 +14,18 @@ def fake_icon_bytes():
     return (FIXTURES_DIR / "icon.png").read_bytes()
 
 
-def load_fake_icon(icon_bytes):
-    """Simulate the download + trim + scale pipeline from generate_rabbit_maximizer."""
+def icon_from_fixture(icon_bytes):
+    """Load the fixture icon through the same trim + scale pipeline as main()."""
+    from io import BytesIO
+
     icon = Image.open(BytesIO(icon_bytes)).convert("RGBA")
-    alpha = icon.split()[3]
-    bbox = alpha.getbbox()
-    if bbox is not None:
-        icon = icon.crop(bbox)
-    return util.sized_icon(icon, cfg.ICON_SIZE)
+    return util.sized_icon(util.trim_to_content(icon), cfg.ICON_SIZE)
 
 
 def test_compose_banner_writes_valid_jpeg_matching_golden(tmp_path, fake_icon_bytes):
     out_path = tmp_path / "banner-rabbit-maximizer.jpg"
     meta = util.load_project_meta(FIXTURES_DIR / "rabbit-maximizer.md")
-    icon = load_fake_icon(fake_icon_bytes)
+    icon = icon_from_fixture(fake_icon_bytes)
 
     util.compose_banner(meta, icon, out_path)
 
@@ -52,10 +48,12 @@ def test_compose_banner_uses_title_fallback_when_bannertitle_missing(tmp_path, f
     )
     out_path = tmp_path / "banner-fallback.jpg"
     meta = util.load_project_meta(project_md)
-    icon = load_fake_icon(fake_icon_bytes)
+    icon = icon_from_fixture(fake_icon_bytes)
 
     util.compose_banner(meta, icon, out_path)
 
     assert out_path.exists()
     with Image.open(out_path) as im:
         assert im.size == (cfg.WIDTH, cfg.HEIGHT)
+
+    assert_matches_golden(out_path, GOLDEN_DIR / "banner-rabbit-maximizer-fallback.jpg")
