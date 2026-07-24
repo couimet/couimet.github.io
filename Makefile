@@ -1,4 +1,4 @@
-.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap extract-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge
+.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap extract-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
 
 install: install-prereqs install-deps install-hooks
 
@@ -69,7 +69,7 @@ nudge-lint:
 nudge-fix:
 	cd micro-projects/network-nudge && pnpm fix
 
-banner: banner-default banner-rangelink banner-network-nudge
+banner: banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
 
 banner-default:
 	cd scripts/social-banner && uv run python generate.py
@@ -79,3 +79,6 @@ banner-rangelink:
 
 banner-network-nudge:
 	cd scripts/social-banner && uv run python generate_network_nudge.py
+
+banner-rabbit-maximizer:
+	cd scripts/social-banner && uv run python generate_rabbit_maximizer.py

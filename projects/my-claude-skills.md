@@ -3,6 +3,7 @@ layout: project
 type: project
 title: "my-claude-skills"
 date: 2026-02-11
+priority: 4
 repourl: https://github.com/couimet/my-claude-skills
 labels:
   - ai

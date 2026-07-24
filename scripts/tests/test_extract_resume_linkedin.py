@@ -82,21 +82,13 @@ class TestBuildAbout(unittest.TestCase):
     def test_outputs_section_header_and_paragraphs(self):
         result = build_about(self.bio)
         self.assertIn("# About", result)
-        self.assertIn(
-            "I'm a Staff Developer with 25+ years of experience.", result
-        )
-        self.assertIn(
-            "I'm passionate about crypto and event-driven systems.", result
-        )
+        self.assertIn("I'm a Staff Developer with 25+ years of experience.", result)
+        self.assertIn("I'm passionate about crypto and event-driven systems.", result)
 
     def test_paragraphs_are_separated_by_blank_lines(self):
         result = build_about(self.bio)
-        idx1 = result.index(
-            "I'm a Staff Developer with 25+ years of experience."
-        )
-        idx2 = result.index(
-            "I'm passionate about crypto and event-driven systems."
-        )
+        idx1 = result.index("I'm a Staff Developer with 25+ years of experience.")
+        idx2 = result.index("I'm passionate about crypto and event-driven systems.")
         self.assertEqual(result[idx1 + 1], "")
         self.assertEqual(result[idx2 + 1], "")
 
@@ -153,9 +145,7 @@ class TestBuildExperience(unittest.TestCase):
 
     def test_highlights_have_bullet_prefix(self):
         result = build_experience(self.data)
-        highlight_lines = [
-            line for line in result if line.startswith("• ")
-        ]
+        highlight_lines = [line for line in result if line.startswith("• ")]
         self.assertEqual(len(highlight_lines), 3)
         self.assertIn("• Shipped feature X", highlight_lines)
         self.assertIn("• Mentored juniors", highlight_lines)
@@ -316,7 +306,9 @@ class TestBuildProjects(unittest.TestCase):
         self.data["projects"][0].pop("url")
         result = build_projects(self.data)
         self.assertIn("my-claude-skills", result)
-        self.assertNotIn("https://ouimet.info/projects/my-claude-skills.html", "\n".join(result))
+        self.assertNotIn(
+            "https://ouimet.info/projects/my-claude-skills.html", "\n".join(result)
+        )
 
 
 class TestBuildVolunteer(unittest.TestCase):
