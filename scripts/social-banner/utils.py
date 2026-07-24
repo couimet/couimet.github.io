@@ -14,6 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 import settings as cfg
 
 MAX_ICON_BYTES = 10 * 1024 * 1024  # 10 MB
+MAX_ICON_PIXELS = 20_000_000
 
 
 def load_project_meta(project_md_path):
@@ -63,7 +64,15 @@ def download_icon(url):
     except (URLError, OSError) as exc:
         print(f"Failed to download icon from {url}: {exc}", file=sys.stderr)
         sys.exit(1)
-    return Image.open(BytesIO(data)).convert("RGBA")
+    image = Image.open(BytesIO(data))
+    if image.width * image.height > MAX_ICON_PIXELS:
+        print(
+            f"Icon exceeds {MAX_ICON_PIXELS} pixel limit "
+            f"({image.width}x{image.height}): {url}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    return image.convert("RGBA")
 
 
 def trim_to_content(icon):
