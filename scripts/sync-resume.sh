@@ -7,8 +7,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PINNED_J2Y_VERSION="0.13.1"
-PINNED_YR_VERSION="0.13.1"
+PINNED_J2Y_VERSION="0.13.2"
+PINNED_YR_VERSION="0.13.2"
 
 echo "==> Checking for newer tool versions..."
 
