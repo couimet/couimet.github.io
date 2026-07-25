@@ -1,4 +1,4 @@
-.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap extract-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
+.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions extract-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
 
 install: install-prereqs install-deps install-hooks
 
@@ -21,11 +21,11 @@ serve:
 build:
 	bundle exec jekyll build
 
-test:
+test: validate-articles validate-promotions
 	uv run python -m unittest discover -s scripts/tests -v
 	bats tests/*.bats
 
-lint: build nudge-lint
+lint: build nudge-lint validate-articles validate-promotions
 	bundle exec htmlproofer _site --disable-external
 	markdownlint-cli2 "**/*.md"
 	uv run ruff check scripts/*.py scripts/tests/*.py
@@ -46,6 +46,12 @@ verify-sitemap: build
 	uv run python scripts/normalize-sitemap.py --strip-lastmod /tmp/snap-sitemap.xml
 	uv run python scripts/normalize-sitemap.py --strip-lastmod /tmp/built-sitemap.xml
 	diff /tmp/snap-sitemap.xml /tmp/built-sitemap.xml
+
+validate-articles:
+	uv run python scripts/validate-articles.py
+
+validate-promotions:
+	uv run python scripts/validate-promotions.py
 
 extract-resume:
 	uv run python scripts/extract-resume-text.py
