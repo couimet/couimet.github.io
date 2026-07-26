@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import jsonschema
+from jsonschema import Draft202012Validator
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ def main():
         data = yaml.safe_load(f)
 
     try:
-        jsonschema.validate(data, schema)
+        jsonschema.validate(data, schema, format_checker=Draft202012Validator.FORMAT_CHECKER)
     except jsonschema.ValidationError as e:
         print(f"ERROR: {FILE.name} — {e.message}", file=sys.stderr)
         sys.exit(1)

@@ -22,6 +22,7 @@ fi
 #   pip install jsonschema pyyaml && ./validate.sh schema.json file.yml
 python3 -c '
 import json, sys
+from jsonschema import Draft202012Validator
 import jsonschema, yaml
 
 with open(sys.argv[1]) as f:
@@ -30,7 +31,7 @@ with open(sys.argv[2]) as f:
     data = yaml.safe_load(f)
 
 try:
-    jsonschema.validate(data, schema)
+    jsonschema.validate(data, schema, format_checker=Draft202012Validator.FORMAT_CHECKER)
 except jsonschema.ValidationError as e:
     print(f"ERROR: {sys.argv[2]} — {e.message}", file=sys.stderr)
     sys.exit(1)

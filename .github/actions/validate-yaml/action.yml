@@ -22,5 +22,5 @@ runs:
         FILE: ${{ inputs.file }}
       run: |
         cd "${{ github.action_path }}"
-        uv sync --frozen
-        uv run validate.sh "$GITHUB_WORKSPACE/$SCHEMA" "$GITHUB_WORKSPACE/$FILE"
+        uv sync --locked
+        uv run --locked validate.sh "$GITHUB_WORKSPACE/$SCHEMA" "$GITHUB_WORKSPACE/$FILE"

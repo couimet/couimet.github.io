@@ -10,7 +10,7 @@ dev = [
     "pytest>=9.1.1",
     "pillow>=12.3.0",
     "pyyaml>=6.0.3",
-    "jsonschema>=4",
+    "jsonschema[format]>=4",
 ]
 
 [tool.ruff.lint]

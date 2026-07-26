@@ -9,41 +9,41 @@ INVALID="$FIXTURES/invalid-missing-context.yml"
 
 setup() {
   cd "$ACTION_DIR"
-  uv sync --frozen --quiet
+  uv sync --locked --quiet
 }
 
 @test "valid YAML file passes validation" {
-  run uv run "$VALIDATE" "$SCHEMA" "$VALID"
+  run uv run --locked "$VALIDATE" "$SCHEMA" "$VALID"
   [ "$status" -eq 0 ]
   [[ "$output" == *"OK:"* ]]
 }
 
 @test "invalid YAML file fails validation" {
-  run uv run "$VALIDATE" "$SCHEMA" "$INVALID"
+  run uv run --locked "$VALIDATE" "$SCHEMA" "$INVALID"
   [ "$status" -eq 1 ]
   [[ "$output" == *"ERROR:"* ]]
 }
 
 @test "missing schema argument fails" {
-  run uv run "$VALIDATE" "" "$VALID"
+  run uv run --locked "$VALIDATE" "" "$VALID"
   [ "$status" -eq 1 ]
   [[ "$output" == *"Schema file not found"* ]]
 }
 
 @test "missing file argument fails" {
-  run uv run "$VALIDATE" "$SCHEMA" ""
+  run uv run --locked "$VALIDATE" "$SCHEMA" ""
   [ "$status" -eq 1 ]
   [[ "$output" == *"YAML file not found"* ]]
 }
 
 @test "nonexistent schema file fails" {
-  run uv run "$VALIDATE" "/nonexistent/schema.json" "$VALID"
+  run uv run --locked "$VALIDATE" "/nonexistent/schema.json" "$VALID"
   [ "$status" -eq 1 ]
   [[ "$output" == *"Schema file not found"* ]]
 }
 
 @test "nonexistent YAML file fails" {
-  run uv run "$VALIDATE" "$SCHEMA" "/nonexistent/file.yml"
+  run uv run --locked "$VALIDATE" "$SCHEMA" "/nonexistent/file.yml"
   [ "$status" -eq 1 ]
   [[ "$output" == *"YAML file not found"* ]]
 }
