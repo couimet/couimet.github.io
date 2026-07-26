@@ -1,0 +1,167 @@
+# Social media promotion inventory — single file to browse for tone reference.
+# Schema: _data/promotions.schema.json. CI validates on every push.
+#
+# date:    ISO 8601 date of the post.
+# context: free-form text — a link, description, or project reference.
+# Channels are keyed by name (linkedin, x, etc.), each with url and content.
+
+- date: "2026-07-07"
+  context: https://ouimet.info/projects/network-nudge.html
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7480441101800218625/
+    content: |
+      I got tired of copy-pasting outreach templates and manually replacing placeholders — and inevitably shipping one with a stale name or wrong URL.
+
+      So I built Network Nudge: pick a template, fill in the shared fields once, and the preview updates live across all three message types. The copy button stays locked until every placeholder is filled, and the character counter flags when you're over LinkedIn's 300-char limit.
+
+      👉 https://ouimet.info/projects/network-nudge/
+  x:
+    url: https://x.com/charlesouimet/status/2074675781020569799?s=20
+    content: |
+      Network Nudge — an outreach message builder I shipped today 🚀
+
+      • 3 templates: direct application, cold reach-out, mutual intro request
+      • Fill shared fields once, previews update live across all cards
+      • Copy button locked until every placeholder is filled
+      • LinkedIn 300-char limit enforced per template
+
+      https://ouimet.info/projects/network-nudge/
+
+- date: "2026-06-12"
+  context: https://dev.to/couimet/rangelink-200-bind-first-every-r-follows-11nd
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7471367701467336704/
+    content: |
+      RangeLink 2.0.0 is out 🚀
+
+      In v1, a destination was where R-L sent your link. In v2, a destination carries the whole R-* family — link, selection, file path, terminal output, all routed through one thing you bind once.
+
+      (And v2 also stops stomping on your system clipboard. About time 😅)
+
+      👉 https://dev.to/couimet/rangelink-200-bind-first-every-r-follows-11nd
+  x:
+    url: https://x.com/charlesouimet/status/2065604304933716368
+    content: |
+      RangeLink 2.0.0 🚀
+
+      • Every R-* keybinding now routes through one bound destination
+      • R-V also sends terminal selections
+      • Your clipboard finally stays yours
+
+      https://dev.to/couimet/rangelink-200-bind-first-every-r-follows-11nd
+
+- date: "2026-06-09"
+  context: https://dev.to/couimet/correlation-id-vs-request-id-a-practical-guide-2l6o
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7470449901873594368/
+    content: |
+      I wanted a clear article on correlation IDs vs request IDs to link from my Career Changelog, but I couldn't find one that contained all the pieces I wanted. (The changelog, if you're curious: https://ouimet.info/#career-changelog)
+
+      So I wrote one with a kitchen-brigade analogy: https://dev.to/couimet/correlation-id-vs-request-id-a-practical-guide-2l6o
+
+- date: "2026-06-04"
+  context: https://dev.to/couimet/fix-theres-an-issue-with-the-selected-model-deepseek-v4-pro-in-claude-cli-44jg
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7468514830199586816/
+    content: |
+      I spent 30 minutes convinced Anthropic had patched Claude Code to stop my DeepSeek setup from working.
+
+      The timing lined up.
+
+      The error message looked suspicious.
+
+      The conspiracy theory was beautiful.
+
+      It was a missing newline in a shell script.
+
+      I wrote an entire article so the next person who Googles the error can save themselves the same trip through the five stages of debugging grief.
+
+      https://lnkd.in/eiwt5HYX
+
+- date: "2026-05-21"
+  context: https://dev.to/couimet/i-sold-you-on-scratchpad-then-i-migrated-to-note-4n1o
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7463240605780074496/
+    content: |
+      I thought I was building good AI engineering hygiene.
+
+      I may also have been accidentally DOS-ing my token budget with my own process.
+
+      My original Claude Code workflow used structured /scratchpad files with step tracking, status fields, dependency arrays, and checkpointed execution.
+
+      I migrated most of the workflow to a much lighter /note format instead: same planning step, far less ceremony.
+
+      Wrote about the migration and what changed my mind:
+
+      https://lnkd.in/eevaRd66
+
+- date: "2026-05-12"
+  context: https://dev.to/couimet/eight-env-vars-and-claude-code-stops-eating-my-paycheck-2659
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7459974737033646080/
+    content: |
+      Claude Code can operate seamlessly on a non-Anthropic API without any awareness of the switch. I transitioned to DeepSeek, and after configuring eight environment variables, I continue to enjoy the full Claude Code user experience while benefiting from DeepSeek's pricing.
+
+      Five days into this transition:
+
+      - $4 spent
+      - Zero rate-limit interruptions
+      - Continuing to build RangeLink on the same setup
+
+      For more details, check out the article: https://lnkd.in/eNxHbg8s
+
+- date: "2026-03-16"
+  context: https://dev.to/couimet/from-vide-coding-to-supercharged-vibe-guiding-6nm
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7440803258048241664/
+    content: |
+      This isn't a typo:
+
+      vide coding ≠ vibe coding
+
+      And it leads to something better: vibe guiding.
+
+      https://lnkd.in/emZqCZSC
+
+- date: "2025-12-16"
+  context: https://dev.to/couimet/rangelink-v100-perfected-ai-workflows-the-r-keybinding-family-104b
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7406515735004401664/
+    content: |
+      I don't throw a 1.0.0 around lightly 😅
+
+      RangeLink v1.0.0 is out 🚀 — not because it's "feature complete," but because the workflow finally feels right.
+
+      I wrote a quick breakdown of what changed and why this version matters:
+
+      👉 https://lnkd.in/enKMhW8m
+
+- date: "2025-11-12"
+  context: https://dev.to/couimet/rangelink-v030-one-keybinding-to-rule-them-all-2h01
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7394227667971055616/
+    content: |
+      Didn't expect to post again so soon, but this one deserved it 😅
+
+      "RangeLink v0.3.0: One Keybinding to Rule Them All" just dropped.
+
+      It's a small release in numbers, but a big one in how it feels to use — one keyboard shortcut now does everything.
+
+      Still having a blast working on this little project.
+
+      👉 https://lnkd.in/e27RqDZf
+
+- date: "2025-11-08"
+  context: https://dev.to/couimet/i-built-a-vs-code-extension-to-stop-the-copy-paste-madness-3d7l
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7393070596378558464/
+    content: |
+      Small personal milestone: I just published my first article 🎉
+
+      It's about a VS Code extension I've been working on called RangeLink — a tiny tool to make sharing code ranges less painful.
+
+      RangeLink won't cure cancer, but it definitely cured a bit of my copy-paste frustration 😅
+
+      Writing about it turned out to be just as fun as coding it.
+
+      👉 https://lnkd.in/e8BWqfdr

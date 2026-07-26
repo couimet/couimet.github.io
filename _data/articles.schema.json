@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Articles",
+  "description": "Schema for _data/articles.yml — articles published by Charles Ouimet.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "date": {
+        "type": "string",
+        "format": "date",
+        "description": "ISO 8601 publication date (YYYY-MM-DD)."
+      },
+      "title": {
+        "type": "string",
+        "description": "Article title."
+      },
+      "link": {
+        "type": "string",
+        "format": "uri",
+        "description": "Canonical published URL (usually dev.to)."
+      },
+      "anchor": {
+        "type": "string",
+        "description": "Career-changelog anchor slug (e.g. rangelink-v2)."
+      },
+      "sources": {
+        "type": "array",
+        "description": "Source files in <org>/<repo>/<path> format. May include companion markdown and rendered artifacts.",
+        "items": { "type": "string" }
+      },
+      "projects": {
+        "type": "array",
+        "description": "Related project page anchors or repo references.",
+        "items": { "type": "string" }
+      },
+      "promotion": {
+        "type": "object",
+        "description": "Per-channel social media post URLs. Full content lives in _data/promotions.yml.",
+        "properties": {
+          "linkedin": { "$ref": "#/$defs/promotionChannel" },
+          "x": { "$ref": "#/$defs/promotionChannel" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": ["date", "title", "link", "anchor"],
+    "additionalProperties": false
+  },
+  "$defs": {
+    "promotionChannel": {
+      "type": "object",
+      "description": "A social media post reference.",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Public URL of the post on that platform."
+        }
+      },
+      "required": ["url"],
+      "additionalProperties": false
+    }
+  }
+}

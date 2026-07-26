@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Social Media Promotions",
+  "description": "Schema for _data/promotions.yml — a flat inventory of social media posts.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "date": {
+        "type": "string",
+        "format": "date",
+        "description": "ISO 8601 date of the post (YYYY-MM-DD)."
+      },
+      "context": {
+        "type": "string",
+        "description": "Free-form text explaining the post — a link, description, or project reference."
+      },
+      "linkedin": {
+        "$ref": "#/$defs/channel"
+      },
+      "x": {
+        "$ref": "#/$defs/channel"
+      }
+    },
+    "required": ["date", "context"],
+    "minProperties": 3,
+    "additionalProperties": false
+  },
+  "$defs": {
+    "channel": {
+      "type": "object",
+      "description": "A social media channel block.",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Public URL of the post on that platform."
+        },
+        "content": {
+          "type": "string",
+          "description": "Full text content of the post."
+        }
+      },
+      "required": ["url", "content"],
+      "additionalProperties": false
+    }
+  }
+}
