@@ -15,6 +15,15 @@
         "type": "string",
         "description": "Free-form text explaining the post — a link, description, or project reference."
       },
+      "projects": {
+        "type": "array",
+        "description": "Related project page slugs. Uses the same convention as articles.yml.",
+        "items": { "type": "string" }
+      },
+      "summary": {
+        "type": "string",
+        "description": "Short inline label for project pages (e.g. 'Project launch')."
+      },
       "linkedin": {
         "$ref": "#/$defs/channel"
       },

@@ -1,0 +1,45 @@
+{% assign project_slug = page.slug | default: page.path | split: '/' | last | replace: '.md', '' %}
+
+{% comment %}Collect matching articles and promotions into one list{% endcomment %}
+{% assign related = "" | split: "" %}
+{% for article in site.data.articles %}
+  {% if article.projects %}
+    {% if article.projects contains project_slug %}
+      {% assign related = related | push: article %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% for promotion in site.data.promotions %}
+  {% if promotion.projects %}
+    {% if promotion.projects contains project_slug %}
+      {% assign related = related | push: promotion %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if related.size > 0 %}
+  {% assign related = related | sort: "date" | reverse %}
+  <div class="mt-5">
+    <h2 class="h4 mb-3">Featured in</h2>
+    <div class="articles-scroll">
+      {% for entry in related %}
+        {% if entry.title %}
+          {% comment %}Article entry — has a title, rendered via the existing article-item include{% endcomment %}
+          {% assign utm_campaign = "project-" | append: project_slug %}
+          {% include articles/article-item.html article=entry utm_campaign=utm_campaign show_type_pill=true %}
+        {% else %}
+          {% comment %}Promotion entry — no title, rendered inline as a single-line post badge{% endcomment %}
+          <article class="article-item px-3 py-2">
+            <p class="article-date mb-0">
+              {{ entry.date }}
+              <span class="badge rounded-pill type-pill type-pill-post">Post</span>
+              <span class="promotion-summary fst-italic text-muted">{{ entry.summary }}</span>
+            </p>
+            {% if entry.linkedin.url %} <a href="{{ entry.linkedin.url }}" target="_blank" rel="noopener noreferrer" title="View LinkedIn post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#linkedin"/></svg></a>{% endif %}
+            {% if entry.x.url %} <a href="{{ entry.x.url }}" target="_blank" rel="noopener noreferrer" title="View X post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#twitter-x"/></svg></a>{% endif %}
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
