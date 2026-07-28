@@ -27,6 +27,11 @@ if [[ -z "$API_KEY" ]]; then
   exit 1
 fi
 
+if [[ ! "$API_KEY" =~ ^[A-Za-z0-9-]{8,128}$ ]]; then
+  echo "Error: api_key must contain only alphanumeric characters and hyphens (8-128 characters)" >&2
+  exit 1
+fi
+
 if [[ -z "$SITEMAP_URL" ]]; then
   echo "Error: sitemap_url is required" >&2
   usage
@@ -39,7 +44,13 @@ if [[ "$SITEMAP_URL" != https://* ]]; then
   exit 1
 fi
 
-HOST="ouimet.info"
+# Extract host from sitemap URL (e.g., "ouimet.info" from "https://ouimet.info/sitemap.xml")
+HOST="${SITEMAP_URL#https://}"
+HOST="${HOST%%/*}"
+if [[ -z "$HOST" || "$HOST" != *.* ]]; then
+  echo "Error: could not extract a valid host from sitemap_url" >&2
+  exit 1
+fi
 KEY_LOCATION="https://${HOST}/${API_KEY}.txt"
 ENDPOINT="https://api.indexnow.org/indexnow"
 
@@ -63,7 +74,7 @@ if [[ -n "${INDEXNOW_DRY_RUN:-}" ]]; then
 fi
 
 # Submit to IndexNow; capture both body and HTTP status code
-HTTP_OUTPUT=$(curl -s -w "\n%{http_code}" -X POST \
+HTTP_OUTPUT=$(curl -s -S --connect-timeout 10 --max-time 30 -w "\n%{http_code}" -X POST \
   -H "Content-Type: application/json" \
   -d "${PAYLOAD}" \
   "${ENDPOINT}")
