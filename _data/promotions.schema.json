@@ -32,6 +32,10 @@
       }
     },
     "required": ["date", "context"],
+    "anyOf": [
+      { "required": ["linkedin"] },
+      { "required": ["x"] }
+    ],
     "minProperties": 3,
     "additionalProperties": false
   },
