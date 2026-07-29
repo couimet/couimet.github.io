@@ -8,6 +8,131 @@ layout: default
 {% include footer.html %}
 {% if page.url == '/' %}
 <script>
+  /* ---- Projects carousel ---- */
+  (function () {
+    var track = document.querySelector('.projects-carousel-track');
+    if (!track) return;
+
+    var carousel = track.closest('.projects-carousel');
+    var leftArrow = carousel && carousel.querySelector('.carousel-arrow-left');
+    var rightArrow = carousel && carousel.querySelector('.carousel-arrow-right');
+    var card = track.querySelector('.project-carousel-card');
+    var gap = 16; /* matches the 1rem gap in CSS, fallback if getComputedStyle unavailable */
+
+    function cardStep() {
+      if (!card) return track.clientWidth * 0.75;
+      var style = getComputedStyle(track);
+      var colGap = parseFloat(style.columnGap) || parseFloat(style.gap) || gap;
+      return card.offsetWidth + colGap;
+    }
+
+    function updateArrows() {
+      var tolerance = 2; /* fractional pixels from subpixel rendering */
+      var atStart = track.scrollLeft <= tolerance;
+      var atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - tolerance;
+
+      if (leftArrow) {
+        if (atStart) leftArrow.setAttribute('hidden', '');
+        else leftArrow.removeAttribute('hidden');
+      }
+      if (rightArrow) {
+        if (atEnd) rightArrow.setAttribute('hidden', '');
+        else rightArrow.removeAttribute('hidden');
+      }
+    }
+
+    function scrollBy(delta) {
+      track.scrollBy({ left: delta, behavior: 'smooth' });
+    }
+
+    /* Arrow click handlers */
+    if (leftArrow) {
+      leftArrow.addEventListener('click', function () {
+        scrollBy(-cardStep());
+      });
+    }
+    if (rightArrow) {
+      rightArrow.addEventListener('click', function () {
+        scrollBy(cardStep());
+      });
+    }
+
+    /* Drag-to-scroll */
+    var dragging = false;
+    var startX = 0;
+    var startScroll = 0;
+
+    track.addEventListener('mousedown', function (e) {
+      /* Don't capture clicks on links/buttons inside cards */
+      if (e.target.closest('a, button')) return;
+      dragging = true;
+      startX = e.pageX;
+      startScroll = track.scrollLeft;
+      track.style.cursor = 'grabbing';
+      track.style.scrollBehavior = 'auto';
+      /* Prevent text selection while dragging */
+      track.style.userSelect = 'none';
+    });
+
+    window.addEventListener('mousemove', function (e) {
+      if (!dragging) return;
+      e.preventDefault();
+      track.scrollLeft = startScroll - (e.pageX - startX);
+    });
+
+    window.addEventListener('mouseup', function () {
+      if (!dragging) return;
+      dragging = false;
+      track.style.cursor = '';
+      track.style.userSelect = '';
+      track.style.scrollBehavior = 'smooth';
+      /* Snap to nearest card */
+      var step = cardStep();
+      var target = Math.round(track.scrollLeft / step) * step;
+      track.scrollLeft = target;
+    });
+
+    /* Touch events: track drags but don't interfere with page scroll */
+    track.addEventListener('touchstart', function () {
+      track.style.scrollBehavior = 'auto';
+    }, { passive: true });
+
+    track.addEventListener('touchend', function () {
+      track.style.scrollBehavior = 'smooth';
+      var step = cardStep();
+      var target = Math.round(track.scrollLeft / step) * step;
+      track.scrollTo({ left: target, behavior: 'smooth' });
+    });
+
+    /* Keyboard navigation when the carousel track is focused */
+    track.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        scrollBy(-cardStep());
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        scrollBy(cardStep());
+      }
+    });
+
+    /* Initial state and resize recalculation */
+    updateArrows();
+    track.addEventListener('scroll', updateArrows, { passive: true });
+    window.addEventListener('resize', updateArrows, { passive: true });
+
+    /* Re-run after images load (they change scrollWidth) */
+    var imgs = track.querySelectorAll('img');
+    var loaded = 0;
+    imgs.forEach(function (img) {
+      if (img.complete) { loaded++; return; }
+      img.addEventListener('load', function () {
+        loaded++;
+        if (loaded === imgs.length) updateArrows();
+      }, { once: true });
+    });
+  })();
+
+  /* ---- Scroll-driven URL hash ---- */
   (function () {
     var sectionIds = ["about", "projects", "articles", "follow-alongs", "career-changelog"];
     var sections = sectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
