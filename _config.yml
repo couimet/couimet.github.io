@@ -21,18 +21,26 @@ kramdown:
 strict_front_matter: true
 mathjax: true
 exclude:
+  - articles/_sources
   - CLAUDE.md
   - Gemfile
   - Gemfile.lock
-  - LICENSE
-  - README.md
   - .history
-  - articles/_sources
+  - LICENSE
+  - Makefile
+  - micro-projects/network-nudge/eslint.config.js
   - micro-projects/network-nudge/node_modules
+  - micro-projects/network-nudge/package.json
+  - micro-projects/network-nudge/pnpm-lock.yaml
+  - micro-projects/network-nudge/vitest.config.js
+  - pyproject.toml
+  - README.md
+  - resume-docx-content-*.txt
+  - resume-linkedin-content-*.txt
   - scripts
-include:
-  - .nojekyll
-  - _data
+  - tests
+  - uv.lock
+include: []
 plugins:
   - jekyll-gist
   - jekyll-sitemap
