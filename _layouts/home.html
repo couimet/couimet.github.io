@@ -131,10 +131,12 @@ layout: default
     var loaded = 0;
     imgs.forEach(function (img) {
       if (img.complete) { loaded++; return; }
-      img.addEventListener('load', function () {
+      function onImageSettled() {
         loaded++;
         if (loaded === imgs.length) updateArrows();
-      }, { once: true });
+      }
+      img.addEventListener('load', onImageSettled, { once: true });
+      img.addEventListener('error', onImageSettled, { once: true });
     });
   })();
 
