@@ -1,0 +1,49 @@
+name: Sitemap snapshot auto-fix
+description: Regenerates the sitemap snapshot and creates a fix PR when drift is detected on a PR.
+
+inputs:
+  head-branch:
+    description: PR head branch name (from github.event.workflow_run.head_branch)
+    required: true
+  head-sha:
+    description: PR head commit SHA (from github.event.workflow_run.head_sha)
+    required: true
+  pr-json:
+    description: JSON array from workflow_run.pull_requests
+    required: true
+  github-token:
+    description: GitHub token for gh CLI and PR comment
+    required: true
+
+outputs:
+  fix-pr-url:
+    description: URL of the created fix PR (empty string if no fix was needed)
+    value: ${{ steps.fix.outputs.fix_pr_url }}
+  pr-number:
+    description: The original PR number
+    value: ${{ steps.fix.outputs.pr_number }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install uv
+      uses: astral-sh/setup-uv@e58605a9b6da7c637471fab8847a5e5a6b8df081  # v5
+
+    - name: Run sitemap fix
+      id: fix
+      shell: bash
+      env:
+        HEAD_BRANCH: ${{ inputs.head-branch }}
+        HEAD_SHA: ${{ inputs.head-sha }}
+        PR_JSON: ${{ inputs.pr-json }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: bash "${{ github.action_path }}/fix.sh"
+
+    - name: Post sticky comment on original PR
+      if: steps.fix.outputs.fix_pr_url != ''
+      uses: couimet/github-actions/publish-pr-comment@main
+      with:
+        comment-file: /tmp/sitemap-fix-comment.md
+        github-token: ${{ inputs.github-token }}
+        header: sitemap-fix
+        pr-number: ${{ steps.fix.outputs.pr_number }}

@@ -1,0 +1,20 @@
+name: Submit sitemap to IndexNow
+description: Submits a sitemap URL to the IndexNow API for search engine notification.
+
+inputs:
+  sitemap_url:
+    description: Full URL of the sitemap to submit
+    required: true
+  api_key:
+    description: IndexNow API key (stored as a repo secret)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Submit sitemap to IndexNow
+      shell: bash
+      env:
+        API_KEY: ${{ inputs.api_key }}
+        SITEMAP_URL: ${{ inputs.sitemap_url }}
+      run: bash "${{ github.action_path }}/submit.sh" "$API_KEY" "$SITEMAP_URL"

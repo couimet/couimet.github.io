@@ -1,0 +1,26 @@
+name: Submit sitemap to IndexNow
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - '.snapshots/sitemap.xml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+        with:
+          persist-credentials: false
+
+      - name: Submit sitemap to IndexNow
+        uses: ./.github/actions/submit-sitemap
+        with:
+          sitemap_url: 'https://ouimet.info/sitemap.xml'
+          api_key: ${{ secrets.INDEXNOW_API_KEY }}
