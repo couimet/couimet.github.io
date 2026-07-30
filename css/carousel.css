@@ -1,0 +1,134 @@
+/* ---- Projects Carousel ---- */
+
+.projects-carousel {
+  position: relative;
+  padding: 0 2.75rem;
+}
+
+/* Arrow buttons */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: none;
+  background: var(--bs-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+  color: var(--bs-gray-700);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.carousel-arrow-left  { left:  0; }
+.carousel-arrow-right { right: 0; }
+
+.carousel-arrow:hover {
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18), 0 1px 4px rgba(0, 0, 0, 0.10);
+  color: var(--bs-dark);
+}
+
+.carousel-arrow:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--bs-link-color);
+  outline-offset: 2px;
+}
+
+.carousel-arrow[hidden] {
+  /* Override Bootstrap hidden attribute rule; we toggle this with JS */
+  display: none !important;
+}
+
+/* Reveal arrows on hover of the carousel region */
+.projects-carousel:hover .carousel-arrow:not([hidden]),
+.projects-carousel:focus-within .carousel-arrow:not([hidden]) {
+  opacity: 1;
+}
+
+/* Scrollable track */
+.projects-carousel-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 0.5rem 0.25rem 0.75rem;
+
+  /* Hide native scrollbar */
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;      /* IE/Edge */
+}
+
+.projects-carousel-track::-webkit-scrollbar {
+  display: none;                  /* Chrome/Safari */
+}
+
+/* Individual cards */
+.project-carousel-card {
+  flex: 0 0 320px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-carousel-card .card-body {
+  flex: 1 0 auto;
+}
+
+.project-carousel-card .card-footer {
+  background-color: var(--bs-white);
+  border-top: none;
+}
+
+/* Card icon: centered above the title */
+.carousel-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1.25rem 0 1.25rem;
+}
+
+.carousel-card-icon img {
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Responsive: tablet */
+@media (max-width: 991.98px) {
+  .project-carousel-card {
+    flex-basis: 280px;
+  }
+}
+
+/* Responsive: mobile */
+@media (max-width: 767.98px) {
+  .projects-carousel {
+    padding: 0;                     /* arrows hidden, reclaim space */
+  }
+
+  .project-carousel-card {
+    flex-basis: min(75vw, 340px);
+  }
+
+  .carousel-arrow {
+    display: none;                 /* drag is primary on touch */
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .projects-carousel-track {
+    scroll-behavior: auto;
+  }
+
+  .carousel-arrow {
+    transition: none;
+  }
+}
