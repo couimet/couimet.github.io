@@ -23,10 +23,10 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - name: Setup Node.js & pnpm
+        uses: couimet/github-actions/setup-node-pnpm@main
         with:
-          node-version: '22'
+          working-directory: micro-projects/network-nudge
 
       - name: Install uv
         uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86
@@ -43,16 +43,13 @@ jobs:
           schema: _data/promotions.schema.json
           file: _data/promotions.yml
 
-      - name: Install pnpm
-        run: npm install -g pnpm@10
+      - name: Markdown lint
+        uses: couimet/github-actions/markdownlint@main
 
-      - name: Install markdownlint-cli2
-        run: npm install -g markdownlint-cli2@0.22.1
-
-      - name: Install network-nudge dependencies
-        shell: bash
-        working-directory: micro-projects/network-nudge
-        run: pnpm install
+      - name: Install dependencies
+        uses: couimet/github-actions/install-deps@main
+        with:
+          working-directory: micro-projects/network-nudge
 
       - name: Lint
         run: make lint
