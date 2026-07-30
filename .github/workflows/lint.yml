@@ -14,33 +14,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v5
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@89f90524b88a01fe6e0b732220432cc6142926af  # v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
         with:
           bundler-cache: true
 
-      - name: Setup Node
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
+      - name: Setup Node.js & pnpm
+        uses: couimet/github-actions/setup-node-pnpm@main
         with:
-          node-version: '22'
+          working-directory: micro-projects/network-nudge
 
       - name: Install uv
-        uses: astral-sh/setup-uv@e58605a9b6da7c637471fab8847a5e5a6b8df081  # v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86
 
-      - name: Install pnpm
-        run: npm install -g pnpm@10
+      - name: Validate articles.yml
+        uses: couimet/github-actions/validate-yaml@main
+        with:
+          schema: _data/articles.schema.json
+          file: _data/articles.yml
 
-      - name: Install markdownlint-cli2
-        run: npm install -g markdownlint-cli2@0.22.1
+      - name: Validate promotions.yml
+        uses: couimet/github-actions/validate-yaml@main
+        with:
+          schema: _data/promotions.schema.json
+          file: _data/promotions.yml
 
-      - name: Install network-nudge dependencies
-        shell: bash
-        working-directory: micro-projects/network-nudge
-        run: pnpm install
+      - name: Markdown lint
+        uses: couimet/github-actions/markdownlint@main
+
+      - name: Install dependencies
+        uses: couimet/github-actions/install-deps@main
+        with:
+          working-directory: micro-projects/network-nudge
 
       - name: Lint
         run: make lint

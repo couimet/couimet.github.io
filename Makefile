@@ -1,4 +1,4 @@
-.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions extract-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
+.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions extract-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
 
 install: install-prereqs install-deps install-hooks
 
@@ -25,15 +25,19 @@ test: validate-articles validate-promotions
 	uv run python -m unittest discover -s scripts/tests -v
 	bats tests/*.bats
 
-lint: build nudge-lint validate-articles validate-promotions
+lint: build nudge-lint
 	bundle exec htmlproofer _site --disable-external
-	markdownlint-cli2 "**/*.md"
 	uv run ruff check scripts/*.py scripts/tests/*.py
 
 lint-fix: nudge-fix
-	markdownlint-cli2 --fix "**/*.md"
 	uv run ruff check --fix scripts/*.py scripts/tests/*.py
 	uv run ruff format scripts/*.py scripts/tests/*.py
+
+markdownlint:
+	markdownlint-cli2 "**/*.md"
+
+markdownlint-fix:
+	markdownlint-cli2 --fix "**/*.md"
 
 snapshot-sitemap: build
 	@mkdir -p .snapshots

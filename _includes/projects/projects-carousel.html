@@ -1,0 +1,100 @@
+<div class="bg-gradient py-3" id="projects">
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <h1 class="display-4 text-start section-title">
+          {% if page.url == '/' %}
+            <a href="#projects" class="heading-anchor" aria-label="Copy link to this section">🔗</a>
+          {% endif %}
+          {% if page.url == '/projects/' %}
+            Projects
+          {% else %}
+            <a class="text-reset" href="{{ '/projects/' | prepend: site.baseurl }}">Projects</a>
+          {% endif %}
+        </h1>
+      </div>
+    </div>
+
+    {% assign all = site.pages | where: "type", "project" %}
+    {% assign pinned = "" | split: "" %}
+    {% assign unpinned = "" | split: "" %}
+    {% for p in all %}
+      {% if p.priority %}
+        {% assign pinned = pinned | push: p %}
+      {% else %}
+        {% assign unpinned = unpinned | push: p %}
+      {% endif %}
+    {% endfor %}
+    {% assign pinned = pinned | sort: "priority" %}
+    {% assign unpinned = unpinned | sort: "date" | reverse %}
+    {% assign project_pages = pinned | concat: unpinned %}
+
+    {% assign carousel_count = 0 %}
+    {% for p in project_pages %}
+      {% unless p.draft or p.carousel == false %}
+        {% assign carousel_count = carousel_count | plus: 1 %}
+      {% endunless %}
+    {% endfor %}
+
+    {% if carousel_count > 0 %}
+    <div class="projects-carousel">
+      <button class="carousel-arrow carousel-arrow-left" aria-label="Scroll projects left" hidden>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+
+      <div class="projects-carousel-track" tabindex="0" role="region" aria-label="Projects" aria-roledescription="carousel">
+        {% for page in project_pages %}
+          {% unless page.draft or page.carousel == false %}
+            <div class="project-carousel-card card" role="group" aria-roledescription="slide" aria-label="{{ page.title | xml_escape }}">
+              {% if page.iconurl %}
+                <div class="carousel-card-icon">
+                  <img src="{{ page.iconurl }}" alt="{{ page.title | xml_escape }} logo" loading="lazy" />
+                </div>
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title mb-1">
+                  <a href="{{ site.baseurl}}{{ page.url }}">{{ page.title }}</a>
+                </h5>
+                {% if page.labels %}
+                  <p class="mb-0">
+                    {% for label in page.labels %}
+                      <span style="background-color: var(--tf-pill-bg)" class="badge rounded-pill">{{ label }}</span>
+                    {% endfor %}
+                  </p>
+                {% endif %}
+                <p class="card-text mt-2">{{ page.summary }}</p>
+              </div>
+              <div class="card-footer">
+                <div class="text-center">
+                  {% if page.projecturl %}
+                    <a href="{{ page.projecturl }}" class="btn btn-outline-dark">Project Site</a>
+                  {% else %}
+                    <a href="{{ site.baseurl}}{{ page.url }}" class="btn btn-outline-dark">Read More</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endunless %}
+        {% endfor %}
+      </div>
+
+      <button class="carousel-arrow carousel-arrow-right" aria-label="Scroll projects right">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    {% endif %}
+
+    {% assign not_draft = 0 %}
+    {% for page in project_pages %}
+      {% unless page.draft %}
+        {% assign not_draft = not_draft | plus: 1 %}
+      {% endunless %}
+    {% endfor %}
+
+    {% if not_draft > 0 %}
+      <p class="text-center pt-4"><a href="{{ site.baseurl}}/projects/">See all {{ not_draft }} projects</a></p>
+    {% endif %}
+
+    {% include copy-link.html %}
+  </div>
+</div>
