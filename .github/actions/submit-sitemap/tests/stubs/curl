@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Stub curl for testing IndexNow submission.
+# Outputs a body line and a status-code line controlled by env vars.
+echo "${STUB_CURL_BODY:-}"
+echo "${STUB_CURL_STATUS:-200}"
