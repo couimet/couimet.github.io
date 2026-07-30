@@ -41,8 +41,14 @@ layout: default
       }
     }
 
+    function scrollBehavior() {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth';
+    }
+
     function scrollBy(delta) {
-      track.scrollBy({ left: delta, behavior: 'smooth' });
+      track.scrollBy({ left: delta, behavior: scrollBehavior() });
     }
 
     /* Arrow click handlers */
@@ -85,7 +91,7 @@ layout: default
       dragging = false;
       track.style.cursor = '';
       track.style.userSelect = '';
-      track.style.scrollBehavior = 'smooth';
+      track.style.scrollBehavior = '';
       /* Snap to nearest card */
       var step = cardStep();
       var target = Math.round(track.scrollLeft / step) * step;
@@ -98,10 +104,10 @@ layout: default
     }, { passive: true });
 
     track.addEventListener('touchend', function () {
-      track.style.scrollBehavior = 'smooth';
+      track.style.scrollBehavior = '';
       var step = cardStep();
       var target = Math.round(track.scrollLeft / step) * step;
-      track.scrollTo({ left: target, behavior: 'smooth' });
+      track.scrollTo({ left: target, behavior: scrollBehavior() });
     });
 
     /* Keyboard navigation when the carousel track is focused */
