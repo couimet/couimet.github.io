@@ -25,7 +25,7 @@ test: validate-articles validate-promotions
 	uv run python -m unittest discover -s scripts/tests -v
 	bats tests/*.bats
 
-lint: build nudge-lint validate-articles validate-promotions
+lint: build nudge-lint
 	bundle exec htmlproofer _site --disable-external
 	markdownlint-cli2 "**/*.md"
 	uv run ruff check scripts/*.py scripts/tests/*.py

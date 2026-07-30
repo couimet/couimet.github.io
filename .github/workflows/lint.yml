@@ -31,6 +31,18 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@e58605a9b6da7c637471fab8847a5e5a6b8df081  # v5
 
+      - name: Validate articles.yml
+        uses: couimet/github-actions/validate-yaml@main
+        with:
+          schema: _data/articles.schema.json
+          file: _data/articles.yml
+
+      - name: Validate promotions.yml
+        uses: couimet/github-actions/validate-yaml@main
+        with:
+          schema: _data/promotions.schema.json
+          file: _data/promotions.yml
+
       - name: Install pnpm
         run: npm install -g pnpm@10
 
