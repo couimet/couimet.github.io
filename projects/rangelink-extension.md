@@ -26,8 +26,8 @@ RangeLink gives you a single muscle memory for AI-assisted development: select c
 
 <h2 class="h5 mt-4 mb-2">Install</h2>
 
-- **Open VSX Registry**: [`couimet/rangelink-vscode-extension`](https://open-vsx.org/extension/couimet/rangelink-vscode-extension)
-- **VS Code Marketplace**: [`couimet.rangelink-vscode-extension`](https://marketplace.visualstudio.com/items?itemName=couimet.rangelink-vscode-extension)
+- **Open VSX Registry**: [`couimet/rangelink-vscode-extension`](https://open-vsx.org/extension/couimet/rangelink-vscode-extension) [![Version](https://img.shields.io/open-vsx/v/couimet/rangelink-vscode-extension?label=Open%20VSX%20%2F%20Cursor&color=blue)](https://open-vsx.org/extension/couimet/rangelink-vscode-extension) [![Downloads](https://img.shields.io/open-vsx/dt/couimet/rangelink-vscode-extension?label=Open%20VSX%20%2F%20Cursor%20Downloads&color=blue)](https://open-vsx.org/extension/couimet/rangelink-vscode-extension)
+- **VS Code Marketplace**: [`couimet.rangelink-vscode-extension`](https://marketplace.visualstudio.com/items?itemName=couimet.rangelink-vscode-extension) [![Version](https://vsmarketplacebadges.dev/version/couimet.rangelink-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=couimet.rangelink-vscode-extension) [![Installs](https://vsmarketplacebadges.dev/downloads-short/couimet.rangelink-vscode-extension.svg)](https://marketplace.visualstudio.com/items?itemName=couimet.rangelink-vscode-extension)
 
 <h2 class="h5 mt-4 mb-2">Core library</h2>
 
