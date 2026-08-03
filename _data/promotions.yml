@@ -5,6 +5,28 @@
 # context: free-form text — a link, description, or project reference.
 # Channels are keyed by name (linkedin, x, etc.), each with url and content.
 
+- date: "2026-07-30"
+  context: https://open-vsx.org/extension/couimet/rangelink-vscode-extension
+  projects:
+    - rangelink-extension
+  summary: "1.2K installs"
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:activity:7488679852728840192/
+    content: |
+      RangeLink crossed 1.2K installs on the OpenVSX registry (Cursor extensions marketplace).
+
+      A tool I built for myself scratches the same itch for a lot of other people. If you're one of the 1.2K — thank you. I had a feeling other people were hitting the same wall I was. Didn't expect 1.2K of them. 😅
+
+      👉 https://ouimet.info/projects/rangelink-extension
+  x:
+    url: https://x.com/charlesouimet/status/2082916440110178810
+    content: |
+      RangeLink crossed 1.2K installs on OpenVSX Registry/Cursor.
+
+      I built it for me. 1.2K other people had the same problem. If you're one of them — thank you. 😅
+
+      👉 https://ouimet.info/projects/rangelink-extension
+
 - date: "2026-07-07"
   context: https://ouimet.info/projects/network-nudge.html
   projects:
