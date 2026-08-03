@@ -282,6 +282,23 @@ a.article-project-pill:focus-visible {
 
 .article-item .tf-social {
   vertical-align: middle;
+  margin-left: 2px;
+}
+
+/* ---- Type pills (Article / Post badges on project pages) ---- */
+
+.type-pill {
+  background-color: var(--tf-pill-bg);
+  color: var(--bs-white);
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+}
+
+.promotion-summary {
+  font-size: 0.95rem;
 }
 
 @media (max-width: 767.98px) {

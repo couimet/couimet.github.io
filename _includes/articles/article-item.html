@@ -6,7 +6,7 @@
 {% endif %}
 {% capture article_href %}{{ link_base }}{{ utm_separator }}utm_source=ouimet.info&utm_medium=referral&utm_campaign={{ include.utm_campaign | url_encode }}{{ link_fragment }}{% endcapture %}
 <article class="article-item px-3 py-2"{% if include.anchor %} id="article-{{ include.anchor }}"{% endif %}>
-  <p class="article-date mb-1">{{ include.article.date }}{% if include.show_share %} <button type="button" class="article-share" aria-label="Copy link to this article" title="Copy link to this article" data-anchor="article-{{ include.anchor }}">🔗</button>{% endif %}</p>
+  <p class="article-date mb-1">{{ include.article.date }}{% if include.show_type_pill %} <span class="badge rounded-pill type-pill type-pill-article">Article</span>{% endif %}{% if include.show_share %} <button type="button" class="article-share" aria-label="Copy link to this article" title="Copy link to this article" data-anchor="article-{{ include.anchor }}">🔗</button>{% endif %}</p>
   <a
     class="article-link"
     href="{{ article_href }}"
