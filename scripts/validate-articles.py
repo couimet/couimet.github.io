@@ -26,7 +26,9 @@ def main():
         data = yaml.safe_load(f)
 
     try:
-        jsonschema.validate(data, schema, format_checker=Draft202012Validator.FORMAT_CHECKER)
+        jsonschema.validate(
+            data, schema, format_checker=Draft202012Validator.FORMAT_CHECKER
+        )
     except jsonschema.ValidationError as e:
         print(f"ERROR: {FILE.name} — {e.message}", file=sys.stderr)
         sys.exit(1)
