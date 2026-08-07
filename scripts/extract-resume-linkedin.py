@@ -173,8 +173,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--bio",
-        default="_data/bio.json",
-        help="Path to bio.json for the About section (default: _data/bio.json)",
+        default=str(Path(__file__).resolve().parent.parent / "_data" / "bio.json"),
+        help="Path to bio.json for the About section",
     )
     args = parser.parse_args()
 

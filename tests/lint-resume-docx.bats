@@ -55,7 +55,7 @@ doc.save('$BATS_TEST_TMPDIR/test-bad.docx')
   run_lint "$BATS_TEST_TMPDIR/test-bad.docx"
   [ "$status" -eq 1 ]
   # Should flag double space and double period
-  [[ "$output" == *"double space"* ]]
+  [[ "$output" == *"Double space"* ]]
   [[ "$output" == *"double period"* ]]
 }
 
