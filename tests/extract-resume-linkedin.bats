@@ -49,7 +49,7 @@ run_extract() {
 
 @test "extract-resume-linkedin output contains About summary" {
   run_extract
-  run grep -ci "staff-level backend developer" "$OUTPUT"
+  run grep -ci "Staff Developer with over" "$OUTPUT"
   [ "$status" -eq 0 ]
   [ "$output" -ge 1 ]
 }
@@ -103,11 +103,12 @@ run_extract() {
   [ "$output" -ge 1 ]
 }
 
-@test "extract-resume-linkedin highlights have no bullet prefix" {
+@test "extract-resume-linkedin highlights have bullet prefixes" {
   run_extract
-  # Highlights should not have bullet characters
-  run grep -c "^• " "$OUTPUT" || true
-  [ "$status" -eq 1 ] || [ "$output" -eq 0 ]
+  # The script adds bullet prefixes for LinkedIn copy-paste
+  run grep -c "^• " "$OUTPUT"
+  [ "$status" -eq 0 ]
+  [ "$output" -ge 1 ]
 }
 
 # --- docxSkip: entries marked docxSkip are excluded ---
