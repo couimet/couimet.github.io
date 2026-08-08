@@ -40,4 +40,4 @@ jobs:
       - name: Run lint
         shell: bash
         working-directory: micro-projects/network-nudge
-        run: pnpm lint
+        run: pnpm lint && pnpm format
