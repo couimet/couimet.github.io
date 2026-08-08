@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Validate _data/promotions.yml against _data/promotions.schema.json."""
 
 import json
@@ -6,8 +5,8 @@ import sys
 from pathlib import Path
 
 import jsonschema
-from jsonschema import Draft202012Validator
 import yaml
+from jsonschema import Draft202012Validator
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SCHEMA = REPO_ROOT / "_data" / "promotions.schema.json"

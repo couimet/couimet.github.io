@@ -434,7 +434,7 @@ class TestBuildOutput(unittest.TestCase):
         for line in output.split("\n"):
             stripped = line.lstrip()
             self.assertFalse(
-                stripped.startswith("- ") or stripped.startswith("* "),
+                stripped.startswith(("- ", "* ")),
                 f"Line has stray bullet prefix: {line!r}",
             )
 
