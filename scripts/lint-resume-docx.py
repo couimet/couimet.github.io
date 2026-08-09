@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Lint a formatted .docx resume against resume.json for discrepancies.
 
 Flags typos, date mismatches, missing content, double punctuation, extra
@@ -14,9 +13,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 import docx
-
 from resume_utils import fmt_date, get_cutoff
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -56,9 +53,10 @@ def best_match(needle: str, paragraphs: list[str]) -> tuple[float, str]:
         # "Senior Developer" would falsely match highlights that mention them.
         shorter = min(len(needle_lower), len(para_lower))
         longer = max(len(needle_lower), len(para_lower))
-        if shorter / longer >= 0.5:
-            if needle_lower in para_lower or para_lower in needle_lower:
-                return (1.0, para)
+        if shorter / longer >= 0.5 and (
+            needle_lower in para_lower or para_lower in needle_lower
+        ):
+            return (1.0, para)
         # Slow path: SequenceMatcher on the whole strings
         score = SequenceMatcher(None, needle_lower, para_lower).ratio()
         if score > best_score:
@@ -175,7 +173,7 @@ def check_sections(text: str) -> None:
         if any(pattern == ln or ln.startswith(pattern) for ln in lines_lower):
             seen.add(label)
     # At least one of "Work Experience" or "Experience" must be present
-    for label in {"Technical Skills", "Earlier Experience", "Education"}:
+    for label in ("Technical Skills", "Earlier Experience", "Education"):
         if label not in seen:
             warn(f"Required section '{label}' not found in docx")
     if "Work Experience" not in seen:
@@ -198,7 +196,7 @@ def check_whitespace(text: str, data: dict | None = None) -> None:
     email = basics.get("email", "")
     phone = basics.get("phone", "")
     for i, line in enumerate(text.splitlines(), 1):
-        if line.endswith(" ") or line.endswith("\t"):
+        if line.endswith((" ", "\t")):
             snippet = line.strip()[-60:] if len(line.strip()) > 60 else line.strip()
             warn(f'Trailing whitespace on line {i}: "...{snippet}"')
         # Skip the contact-info line (contains phone numbers, emails, URLs
