@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Extract plain text from resume.json for copy-paste into a formatted docx.
 
 Sections are delimited by ``# `` comment headers. Bullet content is raw
@@ -11,7 +10,7 @@ cutoff between full-bullet roles and the Earlier Experience summary block.
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from resume_utils import fmt_date, get_cutoff
@@ -43,8 +42,7 @@ def emit_job_header(out: list[str], w: dict) -> None:
 
 
 def emit_highlights(out: list[str], w: dict) -> None:
-    for h in w.get("highlights", []):
-        out.append(h)
+    out.extend(w.get("highlights", []))
     out.append("")
 
 
@@ -244,7 +242,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--output",
-        default=f"resume-docx-content-{datetime.now().strftime('%Y%m%d-%H%M%S')}.txt",
+        default=f"resume-docx-content-{datetime.now(tz=timezone.utc).strftime('%Y%m%d-%H%M%S')}.txt",
         help="Output path for the generated text file (default: resume-docx-content-YYYYMMDD-HHMMSS.txt)",
     )
     args = parser.parse_args()

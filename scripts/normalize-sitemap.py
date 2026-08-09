@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Normalize a sitemap.xml for deterministic git tracking and comparison.
 
 - Sorts <url> blocks by <loc> (Jekyll doesn't guarantee enumeration order).
