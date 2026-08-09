@@ -2,7 +2,7 @@ ruby "3.1.4"
 
 source "https://rubygems.org"
 
-gem "jekyll", "~> 4.3.3"
+gem "jekyll", "~> 4.4.1"
 
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem and associated library.
 platforms :mingw, :x64_mingw, :mswin, :jruby do
@@ -10,7 +10,7 @@ platforms :mingw, :x64_mingw, :mswin, :jruby do
   gem "tzinfo-data"
 end
 
-gem "webrick", "~> 1.7"
+gem "webrick", "~> 1.9"
 gem 'html-proofer'
 gem 'jekyll-gist'
 gem 'jekyll-sitemap'
