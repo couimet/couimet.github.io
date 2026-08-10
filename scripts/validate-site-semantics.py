@@ -45,8 +45,6 @@ EXPECTED_PAGES = [
 DEV_PATTERNS = ("localhost", "127.0.0.1", "http://")
 LIQUID_PATTERNS = ("{{", "{%")
 
-# Marker emitted by _layouts/default.html when site.ghpages_redirect is set.
-REDIRECT_STUB_MARKER = 'http-equiv="refresh"'
 
 ROBOTS_DISALLOW = "Disallow: /"
 
@@ -65,6 +63,7 @@ class _PageParser(HTMLParser):
         self.title: str | None = None
         self.canonical: str | None = None
         self.og_description: str | None = None
+        self.has_redirect_refresh: bool = False
         self._in_title = False
         self._title_parts: list[str] = []
 
@@ -80,6 +79,12 @@ class _PageParser(HTMLParser):
             and attr_map.get("property", "").lower() == "og:description"
         ):
             self.og_description = attr_map.get("content") or None
+        elif (
+            tag.lower() == "meta"
+            and attr_map.get("http-equiv", "").lower() == "refresh"
+            and attr_map.get("content", "").strip()
+        ):
+            self.has_redirect_refresh = True
 
     def handle_data(self, data: str) -> None:
         if self._in_title:
@@ -190,10 +195,10 @@ def check_target_specific(site_dir: Path, target: str, failures: list[str]) -> N
                 )
     else:
         for html_path in sorted(site_dir.rglob("*.html")):
-            if REDIRECT_STUB_MARKER not in read_text(html_path):
+            if not parse_page(html_path).has_redirect_refresh:
                 rel = html_path.relative_to(site_dir)
                 failures.append(
-                    f"{rel}: missing redirect stub ({REDIRECT_STUB_MARKER} not found)"
+                    f'{rel}: missing redirect stub (no <meta http-equiv="refresh"> element)'
                 )
 
 

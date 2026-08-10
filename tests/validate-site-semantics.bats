@@ -223,6 +223,17 @@ write_required_pages() {
   [[ "$output" == *"redirect stub"* ]]
 }
 
+@test "validate-site: marker text in body without refresh meta element is caught" {
+  # Body text contains the marker string but no actual <meta http-equiv="refresh">
+  # element. The parser must only accept a real refresh meta, not raw text matches.
+  redirect='http-equiv="refresh"'
+  write_required_pages "$redirect"
+  write_robots "Disallow: /"
+  run_validate "github.io"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"redirect stub"* ]]
+}
+
 @test "validate-site: sitemap.xml URLs not starting with canonical host are caught" {
   write_page "index.html" "Home" "https://ouimet.info/" ""
   write_robots "Allow: /"
