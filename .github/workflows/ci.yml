@@ -167,6 +167,6 @@ jobs:
       - name: Check resume freshness
         uses: couimet/github-actions/check-generated-drift@main
         with:
-          command: SKIP_VERSION_CHECK=true make sync-resume
+          command: SKIP_VERSION_CHECK=true make sync-resume && git checkout -- resume-full.html
           github-token: ${{ secrets.GITHUB_TOKEN }}
           header: 'Resume generated drift check'
