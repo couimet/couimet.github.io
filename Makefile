@@ -1,4 +1,4 @@
-.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions extract-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
+.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions extract-resume extract-resume-linkedin sync-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
 
 install: install-prereqs install-deps install-hooks
 
@@ -62,6 +62,9 @@ extract-resume:
 
 extract-resume-linkedin:
 	uv run python scripts/extract-resume-linkedin.py
+
+sync-resume:
+	./scripts/sync-resume.sh
 
 lint-resume:
 	@if [ -z "$(DOCX)" ]; then \
