@@ -20,6 +20,7 @@ import sys
 from collections import defaultdict
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlparse
 
 TARGET_OUIMET = "ouimet.info"
 TARGET_GH_PAGES = "github.io"
@@ -48,6 +49,12 @@ LIQUID_PATTERNS = ("{{", "{%")
 REDIRECT_STUB_MARKER = 'http-equiv="refresh"'
 
 ROBOTS_DISALLOW = "Disallow: /"
+
+
+def _has_canonical_origin(url: str) -> bool:
+    """Return True if *url* has scheme+netloc matching CANONICAL_HOST."""
+    parsed = urlparse(url.strip())
+    return f"{parsed.scheme}://{parsed.netloc}" == CANONICAL_HOST
 
 
 class _PageParser(HTMLParser):
@@ -169,17 +176,17 @@ def check_target_specific(site_dir: Path, target: str, failures: list[str]) -> N
         if sitemap.is_file():
             for loc in re.findall(r"<loc>(.*?)</loc>", read_text(sitemap)):
                 loc = loc.strip()
-                if not loc.startswith(CANONICAL_HOST):
+                if not _has_canonical_origin(loc):
                     failures.append(
-                        f"sitemap.xml URL {loc!r} does not start with {CANONICAL_HOST}"
+                        f"sitemap.xml URL {loc!r} does not have origin {CANONICAL_HOST}"
                     )
         for html_path in sorted(site_dir.rglob("*.html")):
             page = parse_page(html_path)
-            if page.canonical and not page.canonical.startswith(CANONICAL_HOST):
+            if page.canonical and not _has_canonical_origin(page.canonical):
                 rel = html_path.relative_to(site_dir)
                 failures.append(
-                    f"{rel}: canonical URL {page.canonical!r} does not start "
-                    f"with {CANONICAL_HOST}"
+                    f"{rel}: canonical URL {page.canonical!r} does not have origin "
+                    f"{CANONICAL_HOST}"
                 )
     else:
         for html_path in sorted(site_dir.rglob("*.html")):

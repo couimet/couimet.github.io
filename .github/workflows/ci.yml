@@ -128,6 +128,9 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86
 
+      - name: Sync uv deps
+        run: uv sync --frozen
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d
@@ -136,7 +139,7 @@ jobs:
         run: |
           bundle exec jekyll build --baseurl ""
           bundle exec htmlproofer _site --disable-external
-          uv run python scripts/validate-site-semantics.py --target ouimet.info
+          uv run --no-sync python scripts/validate-site-semantics.py --target ouimet.info
         env:
           JEKYLL_ENV: production
 
@@ -145,12 +148,15 @@ jobs:
           bundle exec jekyll build --config _config.yml,_config_ghpages.yml --baseurl "${{ steps.pages.outputs.base_path }}"
           rm -f _site/resume-full.html _site/sitemap.xml
           bundle exec htmlproofer _site --disable-external
-          uv run python scripts/validate-site-semantics.py --target github.io
-          uv run python scripts/ghpages-redirect/verify_redirects.py _site
+          uv run --no-sync python scripts/validate-site-semantics.py --target github.io
+          uv run --no-sync python scripts/ghpages-redirect/verify_redirects.py _site
         env:
           JEKYLL_ENV: production
 
   check-generated:
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -164,42 +170,3 @@ jobs:
           command: SKIP_VERSION_CHECK=true make sync-resume
           github-token: ${{ secrets.GITHUB_TOKEN }}
           header: 'Resume generated drift check'
-
-  ci:
-    needs: [test, test-python-subprojects, test-network-nudge, lint, build, check-generated]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check results
-        run: |
-          echo "test: ${{ needs.test.result }}"
-          echo "test-python-subprojects: ${{ needs.test-python-subprojects.result }}"
-          echo "test-network-nudge: ${{ needs.test-network-nudge.result }}"
-          echo "lint: ${{ needs.lint.result }}"
-          echo "build: ${{ needs.build.result }}"
-          echo "check-generated: ${{ needs.check-generated.result }}"
-          if [[ "${{ needs.test.result }}" != "success" ]]; then
-            echo "FAIL: test"
-            exit 1
-          fi
-          if [[ "${{ needs.test-python-subprojects.result }}" != "success" ]]; then
-            echo "FAIL: test-python-subprojects"
-            exit 1
-          fi
-          if [[ "${{ needs.test-network-nudge.result }}" != "success" ]]; then
-            echo "FAIL: test-network-nudge"
-            exit 1
-          fi
-          if [[ "${{ needs.lint.result }}" != "success" ]]; then
-            echo "FAIL: lint"
-            exit 1
-          fi
-          if [[ "${{ needs.build.result }}" != "success" ]]; then
-            echo "FAIL: build"
-            exit 1
-          fi
-          if [[ "${{ needs.check-generated.result }}" != "success" ]]; then
-            echo "FAIL: check-generated"
-            exit 1
-          fi
-          echo "All CI checks passed"

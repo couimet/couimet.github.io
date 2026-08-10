@@ -268,6 +268,26 @@ write_required_pages() {
   [[ "$output" != *"must contain"* ]]
 }
 
+@test "validate-site: sitemap URL with prefix-confusion host is caught" {
+  write_page "index.html" "Home" "https://ouimet.info/" ""
+  write_robots "Allow: /"
+  write_sitemap "<url><loc>https://ouimet.info.evil.example/page</loc></url>"
+
+  run_validate "ouimet.info"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"ouimet.info"* ]]
+}
+
+@test "validate-site: page canonical URL with prefix-confusion host is caught" {
+  write_page "index.html" "Home" "https://ouimet.info.evil.example/" ""
+  write_robots "Allow: /"
+  write_sitemap "<url><loc>https://ouimet.info/</loc></url>"
+
+  run_validate "ouimet.info"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"canonical URL"* ]]
+}
+
 @test "validate-site: non-existent site dir exits non-zero" {
   run uv run python "$SCRIPT" --target ouimet.info --site-dir /nonexistent
   [ "$status" -ne 0 ]
