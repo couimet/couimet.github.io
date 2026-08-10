@@ -62,11 +62,12 @@ run_script() {
 # --- Version check: abort paths ---
 
 @test "version check aborts when json2yamlresume is behind latest" {
-  mock_npm "0.15.0" "0.13.2"
+  mock_npm "0.15.0" "0.14.0"
   run_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"json2yamlresume is pinned at 0.14.0 but 0.15.0 is available"* ]]
   [[ "$output" == *"Update PINNED_J2Y_VERSION"* ]]
+  [[ "$output" != *"ERROR: yamlresume is pinned at"* ]]
 }
 
 @test "version check aborts when yamlresume is behind latest" {
@@ -83,6 +84,7 @@ run_script() {
   [ "$status" -eq 1 ]
   # Should fail on the first check (json2yamlresume) and never reach yamlresume
   [[ "$output" == *"json2yamlresume is pinned at 0.14.0 but 0.15.0 is available"* ]]
+  [[ "$output" != *"ERROR: yamlresume is pinned at"* ]]
 }
 
 # --- Version check: offline fallback ---
