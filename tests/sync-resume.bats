@@ -110,6 +110,13 @@ run_script() {
   [ "$status" -eq 0 ]
 }
 
+@test "SKIP_VERSION_CHECK=true bypasses version check even when newer versions exist" {
+  mock_npm "99.0.0" "99.0.0"  # npm reports much newer versions
+  mock_docker
+  run env SKIP_VERSION_CHECK=true PATH="$MOCK_DIR:$PATH" bash "$SYNC_SCRIPT"
+  [ "$status" -eq 0 ]
+}
+
 # --- Country code sed transformation (unit) ---
 
 @test "sed transforms country: CA to country: Canada" {

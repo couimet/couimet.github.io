@@ -10,23 +10,27 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 PINNED_J2Y_VERSION="0.14.0"
 PINNED_YR_VERSION="0.14.0"
 
-echo "==> Checking for newer tool versions..."
+if [ "${SKIP_VERSION_CHECK:-}" = "true" ]; then
+  echo "==> Skipping version check (SKIP_VERSION_CHECK=true)"
+else
+  echo "==> Checking for newer tool versions..."
 
-LATEST_J2Y=$(npm view json2yamlresume version 2>/dev/null || echo "unknown")
-LATEST_YR=$(npm view yamlresume version 2>/dev/null || echo "unknown")
+  LATEST_J2Y=$(npm view json2yamlresume version 2>/dev/null || echo "unknown")
+  LATEST_YR=$(npm view yamlresume version 2>/dev/null || echo "unknown")
 
-if [ "$LATEST_J2Y" != "unknown" ] && [ "$LATEST_J2Y" != "$PINNED_J2Y_VERSION" ]; then
-  echo "ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but $LATEST_J2Y is available."
-  echo "Update PINNED_J2Y_VERSION in scripts/sync-resume.sh after verifying compatibility:"
-  echo "  https://www.npmjs.com/package/json2yamlresume"
-  exit 1
-fi
+  if [ "$LATEST_J2Y" != "unknown" ] && [ "$LATEST_J2Y" != "$PINNED_J2Y_VERSION" ]; then
+    echo "ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but $LATEST_J2Y is available."
+    echo "Update PINNED_J2Y_VERSION in scripts/sync-resume.sh after verifying compatibility:"
+    echo "  https://www.npmjs.com/package/json2yamlresume"
+    exit 1
+  fi
 
-if [ "$LATEST_YR" != "unknown" ] && [ "$LATEST_YR" != "$PINNED_YR_VERSION" ]; then
-  echo "ERROR: yamlresume is pinned at $PINNED_YR_VERSION but $LATEST_YR is available."
-  echo "Update PINNED_YR_VERSION in scripts/sync-resume.sh after verifying compatibility:"
-  echo "  https://www.npmjs.com/package/yamlresume"
-  exit 1
+  if [ "$LATEST_YR" != "unknown" ] && [ "$LATEST_YR" != "$PINNED_YR_VERSION" ]; then
+    echo "ERROR: yamlresume is pinned at $PINNED_YR_VERSION but $LATEST_YR is available."
+    echo "Update PINNED_YR_VERSION in scripts/sync-resume.sh after verifying compatibility:"
+    echo "  https://www.npmjs.com/package/yamlresume"
+    exit 1
+  fi
 fi
 
 echo "==> Converting resume.json → resume.yml (json2yamlresume)"
