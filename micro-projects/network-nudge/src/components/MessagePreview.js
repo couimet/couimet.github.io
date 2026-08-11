@@ -1,3 +1,5 @@
+import { MessageCode } from '../i18n/messageCodes.js';
+import { format, supportedLocales, useLocale } from '../i18n/supportedLocales.js';
 import { renderPreview } from '../templates.js';
 
 import htm from 'htm';
@@ -14,21 +16,24 @@ function fieldsWithValues(template, fieldValues) {
   }));
 }
 
-function missingFieldLabels(fields) {
-  return fields.filter((f) => !f.value).map((f) => f.label);
+function missingFieldLabels(fields, msgs) {
+  return fields.filter((f) => !f.value).map((f) => msgs[f.labelCode] || f.labelCode);
 }
 
 export function MessagePreview({ template, fieldValues }) {
+  const { locale, t } = useLocale();
   const [copied, setCopied] = useState(false);
   const [editedMessage, setEditedMessage] = useState(null);
   const [hasEdited, setHasEdited] = useState(false);
   const timeoutRef = useRef(null);
 
-  const generatedMessage = useMemo(() => renderPreview(template, fieldValues), [template, fieldValues]);
+  const msgs = supportedLocales[locale];
+
+  const generatedMessage = useMemo(() => renderPreview(template, fieldValues, msgs), [template, fieldValues, msgs]);
 
   const message = hasEdited ? editedMessage : generatedMessage;
 
-  const missing = useMemo(() => missingFieldLabels(fieldsWithValues(template, fieldValues)), [template, fieldValues]);
+  const missing = useMemo(() => missingFieldLabels(fieldsWithValues(template, fieldValues), msgs), [template, fieldValues, msgs]);
 
   const charCount = message.length;
   const limitEnabled = template.linkedinLimit !== false;
@@ -71,12 +76,12 @@ export function MessagePreview({ template, fieldValues }) {
 
   return html`
     <${Fragment}>
-      <h5 className="mb-2">Preview</h5>
+      <h5 className="mb-2">${t(MessageCode.PREVIEW_HEADING)}</h5>
       ${
         hasMissing &&
         html`
           <div className="alert alert-warning py-2 mb-2">
-            <small> Missing: ${missing.join(', ')} </small>
+            <small> ${format(msgs[MessageCode.PREVIEW_MISSING], { missing: missing.join(', ') })} </small>
           </div>
         `
       }
@@ -95,21 +100,21 @@ export function MessagePreview({ template, fieldValues }) {
         hasEdited &&
         html`
           <div className="d-flex justify-content-center mb-2">
-            <button className="btn btn-sm btn-link text-decoration-none p-0" onClick=${handleReset}>Reset to template</button>
+            <button className="btn btn-sm btn-link text-decoration-none p-0" onClick=${handleReset}>${t(MessageCode.PREVIEW_RESET_TO_TEMPLATE)}</button>
           </div>
         `
       }
       <div className="d-flex justify-content-between align-items-center">
         <span className=${overLimit ? 'text-danger fw-bold' : 'text-muted'}>
-          ${charCount}${limitEnabled ? ` / ${LINKEDIN_CHAR_LIMIT}` : ''} character${charCount !== 1 ? 's' : ''}${overLimit ? ' — over LinkedIn limit!' : ''}
+          ${format(msgs[charCount === 1 ? MessageCode.PREVIEW_CHARACTER : MessageCode.PREVIEW_CHARACTERS], { count: charCount, limit: limitEnabled ? ` / ${LINKEDIN_CHAR_LIMIT}` : '' })}${overLimit ? t(MessageCode.PREVIEW_OVER_LIMIT) : ''}
         </span>
         <button
           className=${`btn btn-sm ${copied ? 'btn-success' : 'btn-outline-primary'}`}
           onClick=${handleCopy}
           disabled=${hasMissing}
-          title=${hasMissing ? `Fill in: ${missing.join(', ')}` : 'Copy to clipboard'}
+          title=${hasMissing ? format(msgs[MessageCode.PREVIEW_FILL_IN_TITLE], { missing: missing.join(', ') }) : t(MessageCode.PREVIEW_COPY_TO_CLIPBOARD)}
         >
-          ${copied ? 'Copied!' : 'Copy to clipboard'}
+          ${copied ? t(MessageCode.PREVIEW_COPIED) : t(MessageCode.PREVIEW_COPY_TO_CLIPBOARD)}
         </button>
       </div>
     <//>
