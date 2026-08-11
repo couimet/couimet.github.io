@@ -27,6 +27,55 @@ jobs:
       - name: Run tests
         run: make test
 
+  test-python-subprojects:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - scripts/social-banner
+          - scripts/ghpages-redirect
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86
+
+      - name: Install deps
+        run: uv sync --frozen --extra dev
+        working-directory: ${{ matrix.project }}
+
+      - name: Run tests
+        run: uv run --no-sync pytest tests/ -v
+        working-directory: ${{ matrix.project }}
+
+  test-network-nudge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js & pnpm
+        uses: couimet/github-actions/setup-node-pnpm@main
+        with:
+          node-version: '24'
+          working-directory: micro-projects/network-nudge
+
+      - name: Install dependencies
+        uses: couimet/github-actions/install-deps@main
+        with:
+          working-directory: micro-projects/network-nudge
+
+      - name: Run tests
+        shell: bash
+        working-directory: micro-projects/network-nudge
+        run: pnpm test
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -39,6 +88,8 @@ jobs:
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
         with:
           bundler-cache: true
+        env:
+          BUNDLE_FROZEN: 'true'
 
       - name: Setup Node.js & pnpm
         uses: couimet/github-actions/setup-node-pnpm@main
@@ -53,30 +104,69 @@ jobs:
         with:
           working-directory: micro-projects/network-nudge
 
-      - name: Install markdownlint-cli2
-        run: npm install -g markdownlint-cli2@0.22.1
-
       - name: Markdown lint
-        run: make markdownlint
+        uses: couimet/github-actions/markdownlint@main
 
       - name: Lint
         run: make lint
 
-  ci:
-    needs: [test, lint]
-    if: always()
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check results
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        with:
+          bundler-cache: true
+        env:
+          BUNDLE_FROZEN: 'true'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86
+
+      - name: Sync uv deps
+        run: uv sync --frozen
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d
+
+      - name: Build and validate (ouimet.info)
         run: |
-          echo "test: ${{ needs.test.result }}"
-          echo "lint: ${{ needs.lint.result }}"
-          if [[ "${{ needs.test.result }}" != "success" ]]; then
-            echo "FAIL: test"
-            exit 1
-          fi
-          if [[ "${{ needs.lint.result }}" != "success" ]]; then
-            echo "FAIL: lint"
-            exit 1
-          fi
-          echo "All CI checks passed"
+          bundle exec jekyll build --baseurl ""
+          bundle exec htmlproofer _site --disable-external
+          uv run --no-sync python scripts/validate-site-semantics.py --target ouimet.info
+        env:
+          JEKYLL_ENV: production
+
+      - name: Build and validate (github.io)
+        run: |
+          bundle exec jekyll build --config _config.yml,_config_ghpages.yml --baseurl "${{ steps.pages.outputs.base_path }}"
+          rm -f _site/resume-full.html _site/sitemap.xml
+          bundle exec htmlproofer _site --disable-external
+          uv run --no-sync python scripts/validate-site-semantics.py --target github.io
+          uv run --no-sync python scripts/ghpages-redirect/verify_redirects.py _site
+        env:
+          JEKYLL_ENV: production
+
+  check-generated:
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Check resume freshness
+        uses: couimet/github-actions/check-generated-drift@main
+        with:
+          command: SKIP_VERSION_CHECK=true make sync-resume && git checkout -- resume-full.html
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          header: 'Resume generated drift check'

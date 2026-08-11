@@ -49,6 +49,8 @@ jobs:
         with:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           cache-version: 0 # Increment this number if you need to re-download cached gems
+        env:
+          BUNDLE_FROZEN: 'true'
       - name: Install uv
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
       - name: Setup Pages
