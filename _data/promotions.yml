@@ -5,6 +5,32 @@
 # context: free-form text — a link, description, or project reference.
 # Channels are keyed by name (linkedin, x, etc.), each with url and content.
 
+- date: "2026-08-11"
+  context: https://ouimet.info/projects/network-nudge/
+  projects:
+    - network-nudge
+  summary: "Support for French / Ajout du français"
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:share:7493003528911708160/
+    content: |
+      Network Nudge parle maintenant français ⚜️
+
+      Je voulais que l'outil fonctionne aussi bien en français qu'en anglais. Basculer entre les langues nécessite uniquement un clic sur un bouton.
+
+      English version: Network Nudge now supports French.
+
+      👉 https://ouimet.info/projects/network-nudge/
+  x:
+    url: https://x.com/charlesouimet/status/2087238514781925615
+    content: |
+      Network Nudge parle français ⚜️
+
+      Basculer entre les langues nécessite uniquement un clic sur un bouton.
+
+      English version: Network Nudge now supports French.
+
+      👉 https://ouimet.info/projects/network-nudge/
+
 - date: "2026-07-30"
   context: https://open-vsx.org/extension/couimet/rangelink-vscode-extension
   projects:
