@@ -196,6 +196,7 @@ describe('MessagePreview', () => {
       await user.click(screen.getByText('Copy to clipboard'));
       // No crash, no "Copied!" feedback on failure.
       expect(screen.getByText('Copy to clipboard')).toBeTruthy();
+      expect(screen.queryByText('Copied!')).toBeNull();
     });
   });
 });

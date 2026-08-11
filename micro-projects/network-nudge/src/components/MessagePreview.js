@@ -106,8 +106,7 @@ export function MessagePreview({ template, fieldValues }) {
       }
       <div className="d-flex justify-content-between align-items-center">
         <span className=${overLimit ? 'text-danger fw-bold' : 'text-muted'}>
-          ${charCount}${limitEnabled ? ` / ${LINKEDIN_CHAR_LIMIT}` : ''}
-          ${charCount === 1 ? t(MessageCode.PREVIEW_CHARACTER) : t(MessageCode.PREVIEW_CHARACTERS)}${overLimit ? t(MessageCode.PREVIEW_OVER_LIMIT) : ''}
+          ${format(msgs[charCount === 1 ? MessageCode.PREVIEW_CHARACTER : MessageCode.PREVIEW_CHARACTERS], { count: charCount, limit: limitEnabled ? ` / ${LINKEDIN_CHAR_LIMIT}` : '' })}${overLimit ? t(MessageCode.PREVIEW_OVER_LIMIT) : ''}
         </span>
         <button
           className=${`btn btn-sm ${copied ? 'btn-success' : 'btn-outline-primary'}`}
