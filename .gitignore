@@ -20,6 +20,7 @@ __pycache__/
 
 # Micro-project dependencies
 micro-projects/network-nudge/node_modules/
+micro-projects/network-nudge/coverage/
 
 # Claude skill working directories
 .claude-work/

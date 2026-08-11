@@ -1,3 +1,5 @@
+import { MessageCode } from '../i18n/messageCodes.js';
+import { useLocale } from '../i18n/supportedLocales.js';
 import { SHARED_FIELD_NAMES, TEMPLATES } from '../templates.js';
 
 import htm from 'htm';
@@ -16,13 +18,22 @@ const fieldWidths = {
 };
 
 export function SharedFields({ fieldValues, onChange }) {
+  const { t } = useLocale();
   return html`
     <div className="row g-3 mb-4">
       ${sharedDefs.map(
         (field) => html`
           <div key=${field.name} className=${fieldWidths[field.name] || 'col-md-6 col-lg-3'}>
             <label htmlFor=${`shared-${field.name}`} className="form-label">
-              ${field.name === 'careerUrl' ? html`Career <code>ChangeLog</code> URL` : field.label}
+              ${
+                field.name === 'careerUrl'
+                  ? (() => {
+                      const label = t(MessageCode.FIELD_CAREER_URL);
+                      const [before, after] = label.split('ChangeLog');
+                      return html`${before}<code>ChangeLog</code>${after || ''}`;
+                    })()
+                  : t(field.labelCode)
+              }
             </label>
             <input
               type=${field.type}
@@ -30,7 +41,7 @@ export function SharedFields({ fieldValues, onChange }) {
               id=${`shared-${field.name}`}
               value=${fieldValues[field.name] || ''}
               onChange=${(e) => onChange(field.name, e.target.value)}
-              placeholder=${field.label}
+              placeholder=${t(field.labelCode)}
             />
           </div>
         `,

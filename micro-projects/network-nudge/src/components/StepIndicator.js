@@ -1,10 +1,14 @@
+import { MessageCode } from '../i18n/messageCodes.js';
+import { useLocale } from '../i18n/supportedLocales.js';
+
 import htm from 'htm';
 import { createElement } from 'react';
 
 const html = htm.bind(createElement);
 
 export function StepIndicator({ currentStep }) {
-  const steps = ['Choose template', 'Fill in & copy'];
+  const { t } = useLocale();
+  const steps = [t(MessageCode.STEP_CHOOSE_TEMPLATE), t(MessageCode.STEP_FILL_IN_COPY)];
   return html`
     <div className="d-flex justify-content-center mb-4">
       ${steps.map(

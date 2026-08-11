@@ -1,22 +1,40 @@
 // Fields shared across all templates — filled once, used everywhere.
 // Names must match field definitions in each template's fields array.
 // Default values come from the App component props (injected by the Jekyll page).
+
+import { MessageCode } from './i18n/messageCodes.js';
+import { format, getMessages } from './i18n/supportedLocales.js';
+
 export const SHARED_FIELD_NAMES = ['recipientName', 'roleUrl', 'careerUrl', 'resumeUrl'];
 
+// Internal pronoun values (language-neutral keys). Display labels come from
+// i18n (PRONOUN_HIM/HER/THEM). Template bodies use {pronoun} — the rendering
+// code resolves the internal value through the i18n messages before format().
+export const PRONOUN_OPTIONS = ['him', 'her', 'them'];
+
+const PRONOUN_CODE_MAP = {
+  him: MessageCode.PRONOUN_HIM,
+  her: MessageCode.PRONOUN_HER,
+  them: MessageCode.PRONOUN_THEM,
+};
+
 const sharedFields = [
-  { name: 'careerUrl', label: 'Career ChangeLog URL', type: 'url' },
-  { name: 'resumeUrl', label: 'Resume URL', type: 'url' },
+  { name: 'careerUrl', labelCode: MessageCode.FIELD_CAREER_URL, type: 'url' },
+  { name: 'resumeUrl', labelCode: MessageCode.FIELD_RESUME_URL, type: 'url' },
 ];
 
 // Shared preview rendering — used by both TemplateCard and MessagePreview.
 // Builds a values object from template fields, substituting [label] for missing values.
 export function renderPreview(template, fieldValues) {
+  const msgs = getMessages();
   const values = {};
   for (const f of template.fields) {
-    values[f.name] = fieldValues[f.name] || `[${f.label}]`;
+    values[f.name] = fieldValues[f.name] || `[${msgs[f.labelCode] || f.name}]`;
   }
   try {
-    return template.render(values);
+    const msg = msgs[template.messageCode];
+    const params = { ...values, pronoun: msgs[PRONOUN_CODE_MAP[values.pronoun]] || values.pronoun || '' };
+    return format(msg, params);
   } catch {
     return '';
   }
@@ -25,42 +43,43 @@ export function renderPreview(template, fieldValues) {
 export const TEMPLATES = [
   {
     id: 'direct-application',
-    title: 'Direct cold application',
-    description: 'You found a role and want to reach the hiring manager or talent team directly.',
+    titleCode: MessageCode.TEMPLATE_DIRECT_APPLICATION_TITLE,
+    descCode: MessageCode.TEMPLATE_DIRECT_APPLICATION_DESC,
     linkedinLimit: true,
-    fields: [{ name: 'recipientName', label: 'Recipient name', type: 'text' }, { name: 'roleUrl', label: 'Role URL', type: 'url' }, ...sharedFields],
-    render: ({ recipientName, roleUrl, careerUrl, resumeUrl }) =>
-      `Hi ${recipientName}!\n\nI came across ${roleUrl} and I believe I'd be a good fit for the role.\n\nMy background is at ${careerUrl} and my latest résumé is at ${resumeUrl}.\n\nAre you available to chat?`,
+    messageCode: MessageCode.TEMPLATE_DIRECT_APPLICATION_BODY,
+    fields: [
+      { name: 'recipientName', labelCode: MessageCode.FIELD_RECIPIENT_NAME, type: 'text' },
+      { name: 'roleUrl', labelCode: MessageCode.FIELD_ROLE_URL, type: 'url' },
+      ...sharedFields,
+    ],
   },
   {
     id: 'cold-reachout',
-    title: 'Cold reach-out with company',
-    description: 'You are connecting with people at a specific company about a role.',
+    titleCode: MessageCode.TEMPLATE_COLD_REACHOUT_TITLE,
+    descCode: MessageCode.TEMPLATE_COLD_REACHOUT_DESC,
     linkedinLimit: true,
+    messageCode: MessageCode.TEMPLATE_COLD_REACHOUT_BODY,
     fields: [
-      { name: 'recipientName', label: 'Recipient name', type: 'text' },
-      { name: 'companyName', label: 'Company name', type: 'text' },
-      { name: 'roleUrl', label: 'Role URL', type: 'url' },
+      { name: 'recipientName', labelCode: MessageCode.FIELD_RECIPIENT_NAME, type: 'text' },
+      { name: 'companyName', labelCode: MessageCode.FIELD_COMPANY_NAME, type: 'text' },
+      { name: 'roleUrl', labelCode: MessageCode.FIELD_ROLE_URL, type: 'url' },
       ...sharedFields,
     ],
-    render: ({ recipientName, companyName, roleUrl, careerUrl, resumeUrl }) =>
-      `Hi ${recipientName}!\n\nI'm connecting with people at ${companyName} for this role:\n${roleUrl}\n\nMy background is at ${careerUrl} and my latest résumé is at ${resumeUrl}.\n\nAre you available for a chat?`,
   },
   {
     id: 'mutual-intro',
-    title: 'Mutual intro request',
-    description: 'You found someone at a target company — ask a mutual connection to introduce you.',
+    titleCode: MessageCode.TEMPLATE_MUTUAL_INTRO_TITLE,
+    descCode: MessageCode.TEMPLATE_MUTUAL_INTRO_DESC,
     linkedinLimit: false,
+    messageCode: MessageCode.TEMPLATE_MUTUAL_INTRO_BODY,
     fields: [
-      { name: 'recipientName', label: 'Recipient name', type: 'text' },
-      { name: 'targetName', label: 'Target person name', type: 'text' },
-      { name: 'targetLinkedInUrl', label: 'Target person LinkedIn URL', type: 'url' },
-      { name: 'companyName', label: 'Company name', type: 'text' },
-      { name: 'roleUrl', label: 'Role URL', type: 'url' },
-      { name: 'pronoun', label: 'Their pronoun', type: 'radio', options: ['him', 'her', 'them'] },
+      { name: 'recipientName', labelCode: MessageCode.FIELD_RECIPIENT_NAME, type: 'text' },
+      { name: 'targetName', labelCode: MessageCode.FIELD_TARGET_NAME, type: 'text' },
+      { name: 'targetLinkedInUrl', labelCode: MessageCode.FIELD_TARGET_LINKEDIN_URL, type: 'url' },
+      { name: 'companyName', labelCode: MessageCode.FIELD_COMPANY_NAME, type: 'text' },
+      { name: 'roleUrl', labelCode: MessageCode.FIELD_ROLE_URL, type: 'url' },
+      { name: 'pronoun', labelCode: MessageCode.FIELD_PRONOUN, type: 'radio', options: PRONOUN_OPTIONS },
       ...sharedFields,
     ],
-    render: ({ recipientName, targetName, targetLinkedInUrl, companyName, roleUrl, pronoun, careerUrl, resumeUrl }) =>
-      `Hi ${recipientName}!\n\nI saw you're connected with ${targetName} (${targetLinkedInUrl}).\n\nI'm trying to create connections with people at ${companyName} for this role:\n${roleUrl}\n\nWould you be comfortable introducing me to ${pronoun} through either email or LinkedIn chat?\n\nMy background is at ${careerUrl} and my latest résumé is at ${resumeUrl}.\n\nThanks in advance!`,
   },
 ];
