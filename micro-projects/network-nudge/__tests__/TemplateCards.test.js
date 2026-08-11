@@ -1,20 +1,15 @@
 import { TemplateCards } from '../src/components/TemplateCards.js';
-import { LocaleContext } from '../src/i18n/supportedLocales.js';
 import { TEMPLATES } from '../src/templates.js';
+
+import { TestWrapper } from './helpers/localeWrapper.js';
 
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import htm from 'htm';
-import { createElement, useState } from 'react';
+import { createElement } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const html = htm.bind(createElement);
-
-// Provides the LocaleContext that the TemplateCards children consume via useLocale().
-const TestWrapper = ({ children, locale = 'en' }) => {
-  const [loc, setLoc] = useState(locale);
-  return html`<${LocaleContext.Provider} value=${{ locale: loc, setLocale: setLoc }}>${children}</${LocaleContext.Provider}>`;
-};
 
 describe('TemplateCards', () => {
   afterEach(() => {

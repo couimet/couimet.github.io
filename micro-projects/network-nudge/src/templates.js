@@ -3,7 +3,7 @@
 // Default values come from the App component props (injected by the Jekyll page).
 
 import { MessageCode } from './i18n/messageCodes.js';
-import { format, getMessages } from './i18n/supportedLocales.js';
+import { format } from './i18n/supportedLocales.js';
 
 export const SHARED_FIELD_NAMES = ['recipientName', 'roleUrl', 'careerUrl', 'resumeUrl'];
 
@@ -25,19 +25,15 @@ const sharedFields = [
 
 // Shared preview rendering — used by both TemplateCard and MessagePreview.
 // Builds a values object from template fields, substituting [label] for missing values.
-export function renderPreview(template, fieldValues) {
-  const msgs = getMessages();
+export function renderPreview(template, fieldValues, msgs) {
   const values = {};
   for (const f of template.fields) {
     values[f.name] = fieldValues[f.name] || `[${msgs[f.labelCode] || f.name}]`;
   }
-  try {
-    const msg = msgs[template.messageCode];
-    const params = { ...values, pronoun: msgs[PRONOUN_CODE_MAP[values.pronoun]] || values.pronoun || '' };
-    return format(msg, params);
-  } catch {
-    return '';
-  }
+  const msg = msgs[template.messageCode];
+  if (typeof msg !== 'string') return '';
+  const params = { ...values, pronoun: msgs[PRONOUN_CODE_MAP[values.pronoun]] || values.pronoun || '' };
+  return format(msg, params);
 }
 
 export const TEMPLATES = [

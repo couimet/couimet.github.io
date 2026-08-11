@@ -34,6 +34,7 @@ describe('App', () => {
     expect(screen.getByText('Choose template')).toBeTruthy();
 
     await user.click(screen.getByRole('button', { name: 'FR' }));
+    expect(window.location.hash).toBe('#fr');
     expect(screen.getByText('Choisir un modèle')).toBeTruthy();
     expect(screen.getByText('Remplir et copier')).toBeTruthy();
     expect(screen.getByLabelText('URL du CV')).toBeTruthy();
@@ -106,5 +107,12 @@ describe('App', () => {
     window.location.hash = '#en--';
     render(html`<${App} />`);
     expect(screen.getByText('Choose template')).toBeTruthy();
+  });
+
+  it('restores locale and template from a combined hash', () => {
+    window.location.hash = '#fr--direct-application';
+    render(html`<${App} />`);
+    expect(screen.getByText('Retour aux modèles')).toBeTruthy();
+    expect(screen.queryAllByRole('button', { name: 'Select' })).toHaveLength(0);
   });
 });

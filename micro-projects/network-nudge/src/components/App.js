@@ -95,6 +95,25 @@ export function App({ careerUrlDefault, resumeUrlDefault } = {}) {
     }
   }, []);
 
+  // Keep state aligned with browser navigation (Back/Forward). Every handler
+  // writes window.location.hash but only this listener reads it reactively.
+  useEffect(() => {
+    const onHashChange = () => {
+      const { locale: hashLocale, templateId } = parseHash(window.location.hash);
+      if (hashLocale) {
+        setLocale(hashLocale);
+        setLocaleState(hashLocale);
+      }
+      if (templateId && TEMPLATES.some((t) => t.id === templateId)) {
+        dispatch({ type: 'SELECT_TEMPLATE', templateId });
+      } else if (state.selectedTemplateId) {
+        dispatch({ type: 'GO_BACK' });
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, [state.selectedTemplateId]);
+
   // Updates the module-level locale (and localStorage) via supportedLocales,
   // then triggers a re-render through App's own state. Keeps the hash in sync.
   const handleSetLocale = useCallback(
@@ -115,7 +134,7 @@ export function App({ careerUrlDefault, resumeUrlDefault } = {}) {
   );
 
   const handleGoBack = useCallback(() => {
-    window.location.hash = locale;
+    window.location.hash = buildHash(locale, null);
     dispatch({ type: 'GO_BACK' });
   }, [locale]);
 

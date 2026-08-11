@@ -4,13 +4,6 @@ import { renderPreview, TEMPLATES } from '../src/templates.js';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-// Mirrors the internal pronoun → MessageCode mapping in src/templates.js.
-const PRONOUN_CODE_MAP = {
-  him: MessageCode.PRONOUN_HIM,
-  her: MessageCode.PRONOUN_HER,
-  them: MessageCode.PRONOUN_THEM,
-};
-
 describe('TEMPLATES', () => {
   it('has 3 templates', () => {
     expect(TEMPLATES).toHaveLength(3);
@@ -88,7 +81,7 @@ describe('TEMPLATES', () => {
 
     it('returns an empty string when the message body cannot be rendered', () => {
       const brokenTemplate = { ...TEMPLATES[0], messageCode: 'UNKNOWN_CODE' };
-      expect(renderPreview(brokenTemplate, {})).toBe('');
+      expect(renderPreview(brokenTemplate, {}, getMessages())).toBe('');
     });
 
     it('produces the correct pronoun in the output', () => {
@@ -103,7 +96,7 @@ describe('TEMPLATES', () => {
         resumeUrl: 'https://my-resume.example.com',
       };
 
-      const renderWithPronoun = (pronoun) => format(getMessages()[t.messageCode], { ...base, pronoun });
+      const renderWithPronoun = (pronoun) => renderPreview(t, { ...base, pronoun }, getMessages());
 
       expect(renderWithPronoun('him')).toContain('introducing me to him');
       expect(renderWithPronoun('her')).toContain('introducing me to her');
@@ -123,7 +116,7 @@ describe('TEMPLATES', () => {
         careerUrl: 'https://my-career.example.com',
         resumeUrl: 'https://my-resume.example.com',
       });
-      expect(result).toContain("J'ai trouvé https://example.com/job et je pense que je serais un bon candidat");
+      expect(result).toContain("J'ai trouvé https://example.com/job et je pense que ce poste correspondrait bien à mon profil");
       expect(result).toContain('Disponible pour en discuter ?');
     });
 
@@ -171,7 +164,7 @@ describe('TEMPLATES', () => {
         resumeUrl: 'https://my-resume.example.com',
       };
 
-      const renderWithPronoun = (pronoun) => format(msgs[t.messageCode], { ...base, pronoun: msgs[PRONOUN_CODE_MAP[pronoun]] });
+      const renderWithPronoun = (pronoun) => renderPreview(t, { ...base, pronoun }, msgs);
 
       expect(msgs[MessageCode.PRONOUN_HIM]).toBe('lui');
       expect(msgs[MessageCode.PRONOUN_HER]).toBe('elle');

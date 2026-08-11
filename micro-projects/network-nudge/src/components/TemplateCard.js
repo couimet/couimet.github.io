@@ -1,5 +1,5 @@
 import { MessageCode } from '../i18n/messageCodes.js';
-import { useLocale } from '../i18n/supportedLocales.js';
+import { supportedLocales, useLocale } from '../i18n/supportedLocales.js';
 import { renderPreview } from '../templates.js';
 
 import htm from 'htm';
@@ -12,7 +12,7 @@ export function TemplateCard({ template, sharedFieldValues, onSelect }) {
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef(null);
 
-  const preview = useMemo(() => renderPreview(template, sharedFieldValues), [template, sharedFieldValues, locale]);
+  const preview = useMemo(() => renderPreview(template, sharedFieldValues, supportedLocales[locale]), [template, sharedFieldValues, locale]);
 
   const isComplete = !preview.includes('[');
 

@@ -1,5 +1,5 @@
 import { MessageCode } from '../i18n/messageCodes.js';
-import { format, getMessages, useLocale } from '../i18n/supportedLocales.js';
+import { format, supportedLocales, useLocale } from '../i18n/supportedLocales.js';
 import { renderPreview } from '../templates.js';
 
 import htm from 'htm';
@@ -27,9 +27,10 @@ export function MessagePreview({ template, fieldValues }) {
   const [hasEdited, setHasEdited] = useState(false);
   const timeoutRef = useRef(null);
 
-  const generatedMessage = useMemo(() => renderPreview(template, fieldValues), [template, fieldValues, locale]);
+  const msgs = supportedLocales[locale];
 
-  const msgs = getMessages();
+  const generatedMessage = useMemo(() => renderPreview(template, fieldValues, msgs), [template, fieldValues, msgs]);
+
   const message = hasEdited ? editedMessage : generatedMessage;
 
   const missing = useMemo(() => missingFieldLabels(fieldsWithValues(template, fieldValues), msgs), [template, fieldValues, msgs]);
@@ -80,7 +81,7 @@ export function MessagePreview({ template, fieldValues }) {
         hasMissing &&
         html`
           <div className="alert alert-warning py-2 mb-2">
-            <small> ${t(MessageCode.PREVIEW_MISSING)} ${missing.join(', ')} </small>
+            <small> ${format(msgs[MessageCode.PREVIEW_MISSING], { missing: missing.join(', ') })} </small>
           </div>
         `
       }
@@ -112,9 +113,7 @@ export function MessagePreview({ template, fieldValues }) {
           className=${`btn btn-sm ${copied ? 'btn-success' : 'btn-outline-primary'}`}
           onClick=${handleCopy}
           disabled=${hasMissing}
-          title=${
-            hasMissing ? format(getMessages()[MessageCode.PREVIEW_FILL_IN_TITLE], { missing: missing.join(', ') }) : t(MessageCode.PREVIEW_COPY_TO_CLIPBOARD)
-          }
+          title=${hasMissing ? format(msgs[MessageCode.PREVIEW_FILL_IN_TITLE], { missing: missing.join(', ') }) : t(MessageCode.PREVIEW_COPY_TO_CLIPBOARD)}
         >
           ${copied ? t(MessageCode.PREVIEW_COPIED) : t(MessageCode.PREVIEW_COPY_TO_CLIPBOARD)}
         </button>

@@ -26,12 +26,13 @@ const html = htm.bind(createElement);
  * 2. No extra keys beyond MessageCode enum (no orphaned translations)
  * 3. Exactly the same number of keys as MessageCode enum
  * 4. No message value that is empty or undefined
- *
- * Future enhancements (when needed):
- * - Placeholder consistency: {foo} in English must be in all locales
- * - Message length warnings: Flag translations significantly longer than English
- * - Missing placeholder warnings: Flag different placeholders across locales
+ * 5. Same {placeholder} set as English for every translatable message
  */
+function extractPlaceholders(message) {
+  if (typeof message !== 'string') return [];
+  const matches = message.match(/\{([^}]+)\}/g) || [];
+  return [...new Set(matches)].sort();
+}
 describe('Locale Completeness', () => {
   const allMessageCodes = Object.values(MessageCode);
 
@@ -56,6 +57,18 @@ describe('Locale Completeness', () => {
         const messageKeys = Object.keys(messages);
         expect(messageKeys).toHaveLength(allMessageCodes.length);
       });
+
+      // Compare placeholder sets against English for every message code.
+      if (locale !== DEFAULT_LOCALE) {
+        it('should have the same {placeholder} set as English for every message', () => {
+          const enMessages = supportedLocales[DEFAULT_LOCALE];
+          allMessageCodes.forEach((code) => {
+            const enPlaceholders = extractPlaceholders(enMessages[code]);
+            const localePlaceholders = extractPlaceholders(messages[code]);
+            expect(localePlaceholders, `${code} placeholder mismatch`).toEqual(enPlaceholders);
+          });
+        });
+      }
     });
   });
 });

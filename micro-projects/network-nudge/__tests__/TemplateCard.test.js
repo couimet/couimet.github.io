@@ -1,21 +1,15 @@
 import { TemplateCard } from '../src/components/TemplateCard.js';
-import { LocaleContext } from '../src/i18n/supportedLocales.js';
 import { TEMPLATES } from '../src/templates.js';
+
+import { TestWrapper } from './helpers/localeWrapper.js';
 
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import htm from 'htm';
-import { createElement, useState } from 'react';
+import { createElement } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const html = htm.bind(createElement);
-
-// Provides the LocaleContext that TemplateCard consumes via useLocale(),
-// so tests can exercise non-default locales.
-const TestWrapper = ({ children, locale = 'en' }) => {
-  const [loc, setLoc] = useState(locale);
-  return html`<${LocaleContext.Provider} value=${{ locale: loc, setLocale: setLoc }}>${children}</${LocaleContext.Provider}>`;
-};
 
 describe('TemplateCard', () => {
   const template = TEMPLATES[0]; // direct-application
@@ -94,13 +88,18 @@ describe('TemplateCard', () => {
     expect(screen.queryByText('Copied!')).toBeNull();
   });
 
-  it('renders French title and description when locale is fr', () => {
-    render(html`<${TestWrapper} locale="fr"><${TemplateCard} template=${template} sharedFieldValues=${{}} onSelect=${vi.fn()} /></${TestWrapper}>`);
+  it('renders French title, description, and preview body when locale is fr', () => {
+    const { container } = render(
+      html`<${TestWrapper} locale="fr"><${TemplateCard} template=${template} sharedFieldValues=${{}} onSelect=${vi.fn()} /></${TestWrapper}>`,
+    );
     expect(screen.getByText('Candidature directe')).toBeTruthy();
     expect(screen.getByText(/Vous avez trouvé un poste et souhaitez contacter directement/)).toBeTruthy();
+    // Preview body uses the context catalog through renderPreview, so placeholder
+    // labels are in French.
+    expect(container.querySelector('pre').textContent).toContain('Nom du destinataire');
   });
 
-  it('clears the previous copy timeout on rapid double-click', async () => {
+  it('copies the preview to clipboard twice on rapid double-click', async () => {
     const user = userEvent.setup();
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal('navigator', { clipboard: { writeText } });

@@ -33,7 +33,7 @@ export const messagesFr = {
 
   // Template message bodies (use {param} interpolation)
   [MessageCode.TEMPLATE_DIRECT_APPLICATION_BODY]:
-    "Bonjour {recipientName} !\n\nJ'ai trouvé {roleUrl} et je pense que je serais un bon candidat pour ce poste.\n\nParcours : {careerUrl}\nCV : {resumeUrl}\n\nDisponible pour en discuter ?",
+    "Bonjour {recipientName} !\n\nJ'ai trouvé {roleUrl} et je pense que ce poste correspondrait bien à mon profil.\n\nParcours : {careerUrl}\nCV : {resumeUrl}\n\nDisponible pour en discuter ?",
   [MessageCode.TEMPLATE_COLD_REACHOUT_BODY]:
     'Bonjour {recipientName} !\n\nJe contacte des personnes chez {companyName} pour ce poste :\n{roleUrl}\n\nParcours : {careerUrl}\nCV : {resumeUrl}\n\nDisponible pour en discuter ?',
   [MessageCode.TEMPLATE_MUTUAL_INTRO_BODY]:
@@ -41,14 +41,14 @@ export const messagesFr = {
 
   // Preview
   [MessageCode.PREVIEW_HEADING]: 'Aperçu',
-  [MessageCode.PREVIEW_MISSING]: 'Champs manquants : ',
+  [MessageCode.PREVIEW_MISSING]: 'Champs manquants : {missing}',
   [MessageCode.PREVIEW_RESET_TO_TEMPLATE]: 'Revenir au modèle',
-  [MessageCode.PREVIEW_CHARACTER]: 'caractère',
-  [MessageCode.PREVIEW_CHARACTERS]: 'caractères',
+  [MessageCode.PREVIEW_CHARACTER]: '{count} caractère',
+  [MessageCode.PREVIEW_CHARACTERS]: '{count} caractères',
   [MessageCode.PREVIEW_OVER_LIMIT]: ' — limite LinkedIn dépassée !',
   [MessageCode.PREVIEW_COPY_TO_CLIPBOARD]: 'Copier dans le presse-papiers',
   [MessageCode.PREVIEW_COPIED]: 'Copié !',
-  [MessageCode.PREVIEW_FILL_IN_TITLE]: 'À remplir : ',
+  [MessageCode.PREVIEW_FILL_IN_TITLE]: 'À remplir : {missing}',
 
   // Buttons
   [MessageCode.BUTTON_SELECT]: 'Sélectionner',

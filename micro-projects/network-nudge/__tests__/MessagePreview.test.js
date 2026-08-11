@@ -1,21 +1,15 @@
 import { MessagePreview } from '../src/components/MessagePreview.js';
-import { LocaleContext } from '../src/i18n/supportedLocales.js';
 import { TEMPLATES } from '../src/templates.js';
+
+import { TestWrapper } from './helpers/localeWrapper.js';
 
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import htm from 'htm';
-import { createElement, useState } from 'react';
+import { createElement } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const html = htm.bind(createElement);
-
-// Provides the LocaleContext that MessagePreview consumes via useLocale(),
-// so tests can exercise non-default locales.
-const TestWrapper = ({ children, locale = 'en' }) => {
-  const [loc, setLoc] = useState(locale);
-  return html`<${LocaleContext.Provider} value=${{ locale: loc, setLocale: setLoc }}>${children}</${LocaleContext.Provider}>`;
-};
 
 describe('MessagePreview', () => {
   const template = TEMPLATES[0]; // direct-application
@@ -96,6 +90,9 @@ describe('MessagePreview', () => {
     render(html`<${TestWrapper} locale="fr"><${MessagePreview} template=${template} fieldValues=${fieldValues} /><//>`);
     expect(screen.getByText(/caractères/)).toBeTruthy();
     expect(screen.queryByText(/characters/)).toBeNull();
+    const textarea = screen.getByRole('textbox');
+    expect(textarea.value).toContain('Bonjour Alice');
+    expect(textarea.value).toContain('Disponible pour en discuter');
   });
 
   it('copies message to clipboard when button is clicked', async () => {
