@@ -1,6 +1,8 @@
-import { TEMPLATES } from '../src/templates.js';
+import { MessageCode } from '../src/i18n/messageCodes.js';
+import { format, getMessages, setLocale } from '../src/i18n/supportedLocales.js';
+import { renderPreview, TEMPLATES } from '../src/templates.js';
 
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 describe('TEMPLATES', () => {
   it('has 3 templates', () => {
@@ -18,7 +20,7 @@ describe('TEMPLATES', () => {
   describe('direct-application', () => {
     it('renders with recipient name and role URL', () => {
       const t = TEMPLATES.find((t) => t.id === 'direct-application');
-      const result = t.render({
+      const result = format(getMessages()[t.messageCode], {
         recipientName: 'Alice',
         roleUrl: 'https://example.com/job',
         careerUrl: 'https://my-career.example.com',
@@ -27,7 +29,7 @@ describe('TEMPLATES', () => {
       expect(result).toEqual(
         'Hi Alice!\n\n' +
           "I came across https://example.com/job and I believe I'd be a good fit for the role.\n\n" +
-          'My background is at https://my-career.example.com and my latest résumé is at https://my-resume.example.com.\n\n' +
+          'Background: https://my-career.example.com\nRésumé: https://my-resume.example.com\n\n' +
           'Are you available to chat?',
       );
     });
@@ -36,7 +38,7 @@ describe('TEMPLATES', () => {
   describe('cold-reachout', () => {
     it('renders with recipient name, company, and role URL', () => {
       const t = TEMPLATES.find((t) => t.id === 'cold-reachout');
-      const result = t.render({
+      const result = format(getMessages()[t.messageCode], {
         recipientName: 'Bob',
         companyName: 'Acme Corp',
         roleUrl: 'https://example.com/job2',
@@ -47,8 +49,8 @@ describe('TEMPLATES', () => {
         'Hi Bob!\n\n' +
           "I'm connecting with people at Acme Corp for this role:\n" +
           'https://example.com/job2\n\n' +
-          'My background is at https://my-career.example.com and my latest résumé is at https://my-resume.example.com.\n\n' +
-          'Are you available for a chat?',
+          'Background: https://my-career.example.com\nRésumé: https://my-resume.example.com\n\n' +
+          'Are you available to chat?',
       );
     });
   });
@@ -56,7 +58,7 @@ describe('TEMPLATES', () => {
   describe('mutual-intro', () => {
     it('renders with all fields including pronoun', () => {
       const t = TEMPLATES.find((t) => t.id === 'mutual-intro');
-      const result = t.render({
+      const result = format(getMessages()[t.messageCode], {
         recipientName: 'Carol',
         targetName: 'Dave',
         targetLinkedInUrl: 'https://linkedin.com/in/dave',
@@ -72,9 +74,14 @@ describe('TEMPLATES', () => {
           "I'm trying to create connections with people at Beta Inc for this role:\n" +
           'https://example.com/job3\n\n' +
           'Would you be comfortable introducing me to him through either email or LinkedIn chat?\n\n' +
-          'My background is at https://my-career.example.com and my latest résumé is at https://my-resume.example.com.\n\n' +
+          'Background: https://my-career.example.com\nRésumé: https://my-resume.example.com\n\n' +
           'Thanks in advance!',
       );
+    });
+
+    it('returns an empty string when the message body cannot be rendered', () => {
+      const brokenTemplate = { ...TEMPLATES[0], messageCode: 'UNKNOWN_CODE' };
+      expect(renderPreview(brokenTemplate, {}, getMessages())).toBe('');
     });
 
     it('produces the correct pronoun in the output', () => {
@@ -89,9 +96,83 @@ describe('TEMPLATES', () => {
         resumeUrl: 'https://my-resume.example.com',
       };
 
-      expect(t.render({ ...base, pronoun: 'him' })).toContain('introducing me to him');
-      expect(t.render({ ...base, pronoun: 'her' })).toContain('introducing me to her');
-      expect(t.render({ ...base, pronoun: 'them' })).toContain('introducing me to them');
+      const renderWithPronoun = (pronoun) => renderPreview(t, { ...base, pronoun }, getMessages());
+
+      expect(renderWithPronoun('him')).toContain('introducing me to him');
+      expect(renderWithPronoun('her')).toContain('introducing me to her');
+      expect(renderWithPronoun('them')).toContain('introducing me to them');
+    });
+  });
+
+  describe('French messages', () => {
+    beforeEach(() => setLocale('fr'));
+    afterEach(() => setLocale('en'));
+
+    it('renders the direct-application message in French', () => {
+      const t = TEMPLATES.find((t) => t.id === 'direct-application');
+      const result = format(getMessages()[t.messageCode], {
+        recipientName: 'Alice',
+        roleUrl: 'https://example.com/job',
+        careerUrl: 'https://my-career.example.com',
+        resumeUrl: 'https://my-resume.example.com',
+      });
+      expect(result).toContain("J'ai trouvé https://example.com/job et je pense que ce poste correspondrait bien à mon profil");
+      expect(result).toContain('Disponible pour en discuter ?');
+    });
+
+    it('renders the cold-reachout message in French', () => {
+      const t = TEMPLATES.find((t) => t.id === 'cold-reachout');
+      const result = format(getMessages()[t.messageCode], {
+        recipientName: 'Bob',
+        companyName: 'Acme Corp',
+        roleUrl: 'https://example.com/job2',
+        careerUrl: 'https://my-career.example.com',
+        resumeUrl: 'https://my-resume.example.com',
+      });
+      expect(result).toContain('Je contacte des personnes chez Acme Corp');
+      expect(result).toContain('Disponible pour en discuter ?');
+    });
+
+    it('renders the mutual-intro message in French', () => {
+      const t = TEMPLATES.find((t) => t.id === 'mutual-intro');
+      const msgs = getMessages();
+      const result = format(msgs[t.messageCode], {
+        recipientName: 'Carol',
+        targetName: 'Dave',
+        targetLinkedInUrl: 'https://linkedin.com/in/dave',
+        companyName: 'Beta Inc',
+        roleUrl: 'https://example.com/job3',
+        pronoun: msgs[MessageCode.PRONOUN_HIM],
+        careerUrl: 'https://my-career.example.com',
+        resumeUrl: 'https://my-resume.example.com',
+      });
+      expect(result).toContain('Je vois que vous êtes en contact avec Dave (https://linkedin.com/in/dave)');
+      expect(result).toContain("Seriez-vous à l'aise de me présenter à lui");
+      expect(result).toContain('Parcours : https://my-career.example.com');
+    });
+
+    it('maps pronoun values to French', () => {
+      const t = TEMPLATES.find((t) => t.id === 'mutual-intro');
+      const msgs = getMessages();
+      const base = {
+        recipientName: 'Grace',
+        targetName: 'Heidi',
+        targetLinkedInUrl: 'https://linkedin.com/in/heidi',
+        companyName: 'Delta Inc',
+        roleUrl: 'https://example.com/job5',
+        careerUrl: 'https://my-career.example.com',
+        resumeUrl: 'https://my-resume.example.com',
+      };
+
+      const renderWithPronoun = (pronoun) => renderPreview(t, { ...base, pronoun }, msgs);
+
+      expect(msgs[MessageCode.PRONOUN_HIM]).toBe('lui');
+      expect(msgs[MessageCode.PRONOUN_HER]).toBe('elle');
+      expect(msgs[MessageCode.PRONOUN_THEM]).toBe('eux');
+
+      expect(renderWithPronoun('him')).toContain('me présenter à lui');
+      expect(renderWithPronoun('her')).toContain('me présenter à elle');
+      expect(renderWithPronoun('them')).toContain('me présenter à eux');
     });
   });
 });
