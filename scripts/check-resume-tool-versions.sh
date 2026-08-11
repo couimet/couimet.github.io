@@ -15,8 +15,7 @@ PINNED_YR_VERSION=$(sed -n 's/^PINNED_YR_VERSION="\([^"]*\)".*/\1/p' "$SYNC_SCRI
 
 echo "==> Checking for newer tool versions..."
 
-LATEST_J2Y=$(npm view json2yamlresume version 2>/dev/null || echo "unknown")
-LATEST_YR=$(npm view yamlresume version 2>/dev/null || echo "unknown")
+LATEST_J2Y=$(npm --fetch-retries=0 --fetch-timeout=10000 view json2yamlresume version 2>/dev/null || echo "unknown")
 
 if [ "$LATEST_J2Y" != "unknown" ] && [ "$LATEST_J2Y" != "$PINNED_J2Y_VERSION" ]; then
   echo "ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but $LATEST_J2Y is available."
@@ -24,6 +23,8 @@ if [ "$LATEST_J2Y" != "unknown" ] && [ "$LATEST_J2Y" != "$PINNED_J2Y_VERSION" ];
   echo "  https://www.npmjs.com/package/json2yamlresume"
   exit 1
 fi
+
+LATEST_YR=$(npm --fetch-retries=0 --fetch-timeout=10000 view yamlresume version 2>/dev/null || echo "unknown")
 
 if [ "$LATEST_YR" != "unknown" ] && [ "$LATEST_YR" != "$PINNED_YR_VERSION" ]; then
   echo "ERROR: yamlresume is pinned at $PINNED_YR_VERSION but $LATEST_YR is available."
