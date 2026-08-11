@@ -7,8 +7,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PINNED_J2Y_VERSION="0.14.0"
-PINNED_YR_VERSION="0.14.0"
+PINNED_J2Y_VERSION="0.14.2"
+PINNED_YR_VERSION="0.14.2"
 
 if [ "${SKIP_VERSION_CHECK:-}" = "true" ]; then
   echo "==> Skipping version check (SKIP_VERSION_CHECK=true)"
