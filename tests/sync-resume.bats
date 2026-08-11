@@ -43,7 +43,7 @@ EOF
 
 # Full mocks: both npm and docker stubbed.
 mock_all() {
-  mock_npm "${1:-0.13.2}" "${2:-0.13.2}"
+  mock_npm "${1:-0.14.0}" "${2:-0.14.0}"
   mock_docker
 }
 
@@ -54,7 +54,7 @@ run_script() {
 # --- Version check: happy path ---
 
 @test "version check passes when both packages match pinned versions" {
-  mock_all "0.13.2" "0.13.2"
+  mock_all "0.14.0" "0.14.0"
   run_script
   [ "$status" -eq 0 ]
 }
@@ -62,40 +62,42 @@ run_script() {
 # --- Version check: abort paths ---
 
 @test "version check aborts when json2yamlresume is behind latest" {
-  mock_npm "0.14.0" "0.13.2"
+  mock_npm "0.15.0" "0.14.0"
   run_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"json2yamlresume is pinned at 0.13.2 but 0.14.0 is available"* ]]
+  [[ "$output" == *"json2yamlresume is pinned at 0.14.0 but 0.15.0 is available"* ]]
   [[ "$output" == *"Update PINNED_J2Y_VERSION"* ]]
+  [[ "$output" != *"ERROR: yamlresume is pinned at"* ]]
 }
 
 @test "version check aborts when yamlresume is behind latest" {
-  mock_npm "0.13.2" "0.14.0"
+  mock_npm "0.14.0" "0.15.0"
   run_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"yamlresume is pinned at 0.13.2 but 0.14.0 is available"* ]]
+  [[ "$output" == *"yamlresume is pinned at 0.14.0 but 0.15.0 is available"* ]]
   [[ "$output" == *"Update PINNED_YR_VERSION"* ]]
 }
 
 @test "version check aborts when both packages are behind latest" {
-  mock_npm "0.14.0" "0.14.0"
+  mock_npm "0.15.0" "0.15.0"
   run_script
   [ "$status" -eq 1 ]
   # Should fail on the first check (json2yamlresume) and never reach yamlresume
-  [[ "$output" == *"json2yamlresume is pinned at 0.13.2 but 0.14.0 is available"* ]]
+  [[ "$output" == *"json2yamlresume is pinned at 0.14.0 but 0.15.0 is available"* ]]
+  [[ "$output" != *"ERROR: yamlresume is pinned at"* ]]
 }
 
 # --- Version check: offline fallback ---
 
 @test "version check continues when json2yamlresume npm query fails" {
-  mock_npm "fail" "0.13.2"
+  mock_npm "fail" "0.14.0"
   mock_docker
   run_script
   [ "$status" -eq 0 ]
 }
 
 @test "version check continues when yamlresume npm query fails" {
-  mock_npm "0.13.2" "fail"
+  mock_npm "0.14.0" "fail"
   mock_docker
   run_script
   [ "$status" -eq 0 ]
@@ -105,6 +107,13 @@ run_script() {
   mock_npm "fail" "fail"
   mock_docker
   run_script
+  [ "$status" -eq 0 ]
+}
+
+@test "SKIP_VERSION_CHECK=true bypasses version check even when newer versions exist" {
+  mock_npm "99.0.0" "99.0.0"  # npm reports much newer versions
+  mock_docker
+  run env SKIP_VERSION_CHECK=true PATH="$MOCK_DIR:$PATH" bash "$SYNC_SCRIPT"
   [ "$status" -eq 0 ]
 }
 
