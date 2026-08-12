@@ -164,6 +164,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Check resume tool versions
+        run: ./scripts/check-resume-tool-versions.sh
+
       - name: Check resume freshness
         uses: couimet/github-actions/check-generated-drift@main
         with:
