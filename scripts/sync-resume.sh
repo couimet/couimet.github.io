@@ -7,8 +7,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PINNED_J2Y_VERSION="0.14.2"
-PINNED_YR_VERSION="0.14.2"
+# Pinned tool versions live in resume-tools.versions (repo root) so version
+# bumps don't churn this file.
+source "$REPO_ROOT/resume-tools.versions"
 
 if [ "${SKIP_VERSION_CHECK:-}" = "true" ]; then
   echo "==> Skipping version check (SKIP_VERSION_CHECK=true)"
