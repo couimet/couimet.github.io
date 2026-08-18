@@ -7,6 +7,8 @@ setup() {
   SYNC_SCRIPT="$REPO_ROOT/scripts/sync-resume.sh"
   MOCK_DIR="$BATS_TEST_TMPDIR/mocks"
   mkdir -p "$MOCK_DIR"
+  # Pinned versions come from the same file the script under test sources.
+  source "$REPO_ROOT/resume-tools.versions"
 }
 
 # --- Helpers ---
@@ -43,7 +45,7 @@ EOF
 
 # Full mocks: both npm and docker stubbed.
 mock_all() {
-  mock_npm "${1:-0.14.2}" "${2:-0.14.2}"
+  mock_npm "${1:-$PINNED_J2Y_VERSION}" "${2:-$PINNED_YR_VERSION}"
   mock_docker
 }
 
@@ -54,7 +56,7 @@ run_script() {
 # --- Version check: happy path ---
 
 @test "version check passes when both packages match pinned versions" {
-  mock_all "0.14.2" "0.14.2"
+  mock_all
   run_script
   [ "$status" -eq 0 ]
 }
@@ -62,19 +64,19 @@ run_script() {
 # --- Version check: abort paths ---
 
 @test "version check aborts when json2yamlresume is behind latest" {
-  mock_npm "0.15.0" "0.14.2"
+  mock_npm "0.15.0" "$PINNED_YR_VERSION"
   run_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"json2yamlresume is pinned at 0.14.2 but 0.15.0 is available"* ]]
+  [[ "$output" == *"json2yamlresume is pinned at $PINNED_J2Y_VERSION but 0.15.0 is available"* ]]
   [[ "$output" == *"Update PINNED_J2Y_VERSION"* ]]
   [[ "$output" != *"ERROR: yamlresume is pinned at"* ]]
 }
 
 @test "version check aborts when yamlresume is behind latest" {
-  mock_npm "0.14.2" "0.15.0"
+  mock_npm "$PINNED_J2Y_VERSION" "0.15.0"
   run_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"yamlresume is pinned at 0.14.2 but 0.15.0 is available"* ]]
+  [[ "$output" == *"yamlresume is pinned at $PINNED_YR_VERSION but 0.15.0 is available"* ]]
   [[ "$output" == *"Update PINNED_YR_VERSION"* ]]
 }
 
@@ -83,21 +85,21 @@ run_script() {
   run_script
   [ "$status" -eq 1 ]
   # Should fail on the first check (json2yamlresume) and never reach yamlresume
-  [[ "$output" == *"json2yamlresume is pinned at 0.14.2 but 0.15.0 is available"* ]]
+  [[ "$output" == *"json2yamlresume is pinned at $PINNED_J2Y_VERSION but 0.15.0 is available"* ]]
   [[ "$output" != *"ERROR: yamlresume is pinned at"* ]]
 }
 
 # --- Version check: offline fallback ---
 
 @test "version check continues when json2yamlresume npm query fails" {
-  mock_npm "fail" "0.14.2"
+  mock_npm "fail" "$PINNED_YR_VERSION"
   mock_docker
   run_script
   [ "$status" -eq 0 ]
 }
 
 @test "version check continues when yamlresume npm query fails" {
-  mock_npm "0.14.2" "fail"
+  mock_npm "$PINNED_J2Y_VERSION" "fail"
   mock_docker
   run_script
   [ "$status" -eq 0 ]

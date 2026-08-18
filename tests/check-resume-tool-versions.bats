@@ -7,6 +7,8 @@ setup() {
   CHECK_SCRIPT="$REPO_ROOT/scripts/check-resume-tool-versions.sh"
   MOCK_DIR="$BATS_TEST_TMPDIR/mocks"
   mkdir -p "$MOCK_DIR"
+  # Pinned versions come from the same file the script under test sources.
+  source "$REPO_ROOT/resume-tools.versions"
 }
 
 # --- Helpers ---
@@ -42,27 +44,27 @@ run_check_script() {
 # --- Happy path ---
 
 @test "succeeds when both versions match" {
-  mock_npm "0.14.2" "0.14.2"
+  mock_npm "$PINNED_J2Y_VERSION" "$PINNED_YR_VERSION"
   run_check_script
   [ "$status" -eq 0 ]
-  [[ "$output" == *"pinned at 0.14.2, latest is 0.14.2"* ]]
+  [[ "$output" == *"pinned at $PINNED_J2Y_VERSION, latest is $PINNED_J2Y_VERSION"* ]]
 }
 
 # --- Abort paths ---
 
 @test "fails when json2yamlresume is behind" {
-  mock_npm "0.15.0" "0.14.2"
+  mock_npm "0.15.0" "$PINNED_YR_VERSION"
   run_check_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"ERROR: json2yamlresume is pinned at 0.14.2 but 0.15.0 is available"* ]]
+  [[ "$output" == *"ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but 0.15.0 is available"* ]]
   [[ "$output" == *"Update PINNED_J2Y_VERSION"* ]]
 }
 
 @test "fails when yamlresume is behind" {
-  mock_npm "0.14.2" "0.15.0"
+  mock_npm "$PINNED_J2Y_VERSION" "0.15.0"
   run_check_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"ERROR: yamlresume is pinned at 0.14.2 but 0.15.0 is available"* ]]
+  [[ "$output" == *"ERROR: yamlresume is pinned at $PINNED_YR_VERSION but 0.15.0 is available"* ]]
   [[ "$output" == *"Update PINNED_YR_VERSION"* ]]
 }
 
@@ -83,13 +85,13 @@ run_check_script() {
 # --- Offline fallback ---
 
 @test "succeeds when json2yamlresume npm query fails" {
-  mock_npm "fail" "0.14.2"
+  mock_npm "fail" "$PINNED_YR_VERSION"
   run_check_script
   [ "$status" -eq 0 ]
 }
 
 @test "succeeds when yamlresume npm query fails" {
-  mock_npm "0.14.2" "fail"
+  mock_npm "$PINNED_J2Y_VERSION" "fail"
   run_check_script
   [ "$status" -eq 0 ]
 }
