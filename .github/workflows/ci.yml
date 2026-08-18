@@ -19,7 +19,7 @@ jobs:
           persist-credentials: false
 
       - name: Install uv
-        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
 
       - name: Install BATS
         run: sudo apt-get update -qq && sudo apt-get install -y -qq bats
@@ -42,7 +42,7 @@ jobs:
           persist-credentials: false
 
       - name: Install uv
-        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
 
       - name: Install deps
         run: uv sync --frozen --extra dev
@@ -97,7 +97,7 @@ jobs:
           working-directory: micro-projects/network-nudge
 
       - name: Install uv
-        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
 
       - name: Install dependencies
         uses: couimet/github-actions/install-deps@main
@@ -126,7 +126,7 @@ jobs:
           BUNDLE_FROZEN: 'true'
 
       - name: Install uv
-        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
 
       - name: Sync uv deps
         run: uv sync --frozen
@@ -168,7 +168,7 @@ jobs:
         run: ./scripts/check-resume-tool-versions.sh
 
       - name: Install uv
-        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
 
       - name: Check resume freshness
         uses: couimet/github-actions/check-generated-drift@main
