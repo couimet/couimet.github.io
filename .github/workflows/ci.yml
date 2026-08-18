@@ -173,7 +173,8 @@ jobs:
       - name: Check resume freshness
         uses: couimet/github-actions/check-generated-drift@main
         with:
-          command: SKIP_VERSION_CHECK=true make sync-resume && git checkout -- resume-full.html
+          command: SKIP_VERSION_CHECK=true make sync-resume
+          post-generate: git checkout -- resume-full.html
           github-token: ${{ secrets.GITHUB_TOKEN }}
           header: 'Resume generated drift check'
 
@@ -181,5 +182,6 @@ jobs:
         uses: couimet/github-actions/check-generated-drift@main
         with:
           command: (cd scripts/social-banner && uv sync --frozen) && UV_FROZEN=1 make banner
+          post-generate: cd scripts/social-banner && UV_FROZEN=1 uv run python check_banner_drift.py
           github-token: ${{ secrets.GITHUB_TOKEN }}
           header: 'Social banner generated drift check'

@@ -2,8 +2,8 @@ from pathlib import Path
 
 """Shared settings for social banner generation scripts.
 
-Both generate.py and generate_rangelink.py import this module so colours,
-fonts, layout, and watermark stay in sync.
+Generation scripts and drift comparisons import this module so colours,
+fonts, layout, watermark, and tolerances stay in sync.
 """
 
 # ── Dimensions ──────────────────────────────────────────────────────────────
@@ -61,3 +61,11 @@ WATERMARK_MARGIN = 30            # px from bottom-right corner
 # ── Output ──────────────────────────────────────────────────────────────────
 
 JPG_QUALITY = 92
+
+# ── Drift comparison ────────────────────────────────────────────────────────
+
+# RMS-per-channel tolerance between generated and committed banner pixels.
+# Shared by the golden-image tests (tests/conftest.py) and the CI drift
+# normalization (check_banner_drift.py). Encoder choices shift decoded
+# pixels slightly; real content changes are orders of magnitude larger.
+GOLDEN_RMS_THRESHOLD = 10.0

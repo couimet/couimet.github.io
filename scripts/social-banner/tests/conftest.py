@@ -3,12 +3,13 @@ import shutil
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageStat
+from settings import GOLDEN_RMS_THRESHOLD
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 GOLDEN_DIR = Path(__file__).parent / "golden"
 
 
-def assert_matches_golden(actual_path, golden_path, threshold=10.0):
+def assert_matches_golden(actual_path, golden_path, threshold=GOLDEN_RMS_THRESHOLD):
     # UPDATE_GOLDEN=1 promotes the actual output to the new golden. Used when
     # the banner design intentionally changes; never set in CI.
     if os.environ.get("UPDATE_GOLDEN"):
