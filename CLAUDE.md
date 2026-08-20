@@ -33,8 +33,16 @@ CI runs `make lint` on every PR and push to main via `.github/workflows/lint.yml
 
 ### CI workflow conventions
 
+<!-- rule-id: couimet-actions-main -->
+<rule id="couimet-actions-main" priority="critical">
+  <title>couimet/* GitHub Actions always use @main</title>
+  <never>Pin a `couimet/*` GitHub Action to a commit SHA in CI workflows</never>
+  <do>Always reference `couimet/*` actions with `@main` to get the latest version</do>
+  <rationale>The author wants these actions to auto-update across all repos</rationale>
+</rule>
+
 - **Third-party actions** (e.g. `actions/checkout`): always pinned to a full commit SHA. Never use floating refs like `@v4` or `@main`. Version comments are omitted — Dependabot updates the SHA but not the comment, producing stale drift.
-- **First-party actions** (`couimet/github-actions/*`): always use `@main`. We control the repo, so breaking changes are intentional and versioned. SHAs add pin-update churn with no benefit for actions we own.
+- **First-party actions** (`couimet/github-actions/*`): see the `couimet-actions-main` rule above. We control the repo, so breaking changes are intentional and versioned; SHAs add pin-update churn with no benefit for actions we own.
 
 ### Sitemap
 
