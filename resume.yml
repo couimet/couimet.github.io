@@ -258,11 +258,17 @@ content:
       summary: Chaired CIP4's preflight sub-committee, contributing to industry
         standards for print workflow automation and quality control.
   work:
+    - name: Procurify
+      position: Staff Backend Software Developer
+      url: https://www.procurify.com/
+      startDate: 2026-08-24
+      summary: Member of the Platform team at Procurify, a procure-to-pay and spend
+        management platform.
     - name: Shopify
       position: Staff Developer
       url: https://shopify.com
-      startDate: 2025-08-01
-      endDate: 2026-05-01
+      startDate: 2025-08-25
+      endDate: 2026-04-24
       summary: >-
         Member of the shop.app Buyer Acquisition (growth) team, focused on the
         Shop Cash domain. Designed an affiliate payout program in the
