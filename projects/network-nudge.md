@@ -3,6 +3,7 @@ layout: project
 type: project
 title: "Network Nudge"
 date: 2026-07-07
+priority: 5
 iconurl: /micro-projects/network-nudge/assets/icon.png
 logourl: /micro-projects/network-nudge/assets/icon_256.png
 sourceiconurl: /micro-projects/network-nudge/assets/icon_large.png
