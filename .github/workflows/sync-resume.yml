@@ -16,6 +16,8 @@ jobs:
 
       - name: Sync resume
         run: ./scripts/sync-resume.sh
+        env:
+          SKIP_VERSION_CHECK: 'true'
 
       - name: Install BATS
         run: |

@@ -565,20 +565,6 @@ layouts:
         right: 1.5cm
       showPageNumbers: false
       paperSize: a4
-    sections:
-      order:
-        - basics
-        - education
-        - work
-        - languages
-        - skills
-        - awards
-        - certificates
-        - publications
-        - references
-        - projects
-        - interests
-        - volunteer
     typography:
       fontSize: 10pt
       lineSpacing: normal

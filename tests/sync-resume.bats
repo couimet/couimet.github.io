@@ -49,6 +49,15 @@ mock_all() {
   mock_docker
 }
 
+# Version one patch ahead of the pinned one. The "behind latest" fixtures use
+# this so they stay valid when resume-tools.versions bumps without editing this
+# file: the version check compares strings, and patch+1 keeps the messages
+# readable ("pinned at 0.15.0 but 0.15.1 is available").
+behind_version() {
+  local v="$1"
+  echo "${v%.*}.$(( ${v##*.} + 1 ))"
+}
+
 run_script() {
   run env PATH="$MOCK_DIR:$PATH" bash "$SYNC_SCRIPT"
 }
@@ -64,28 +73,32 @@ run_script() {
 # --- Version check: abort paths ---
 
 @test "version check aborts when json2yamlresume is behind latest" {
-  mock_npm "0.15.0" "$PINNED_YR_VERSION"
+  local newer
+  newer="$(behind_version "$PINNED_J2Y_VERSION")"
+  mock_npm "$newer" "$PINNED_YR_VERSION"
   run_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"json2yamlresume is pinned at $PINNED_J2Y_VERSION but 0.15.0 is available"* ]]
+  [[ "$output" == *"json2yamlresume is pinned at $PINNED_J2Y_VERSION but $newer is available"* ]]
   [[ "$output" == *"Update PINNED_J2Y_VERSION"* ]]
   [[ "$output" != *"ERROR: yamlresume is pinned at"* ]]
 }
 
 @test "version check aborts when yamlresume is behind latest" {
-  mock_npm "$PINNED_J2Y_VERSION" "0.15.0"
+  local newer
+  newer="$(behind_version "$PINNED_YR_VERSION")"
+  mock_npm "$PINNED_J2Y_VERSION" "$newer"
   run_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"yamlresume is pinned at $PINNED_YR_VERSION but 0.15.0 is available"* ]]
+  [[ "$output" == *"yamlresume is pinned at $PINNED_YR_VERSION but $newer is available"* ]]
   [[ "$output" == *"Update PINNED_YR_VERSION"* ]]
 }
 
 @test "version check aborts when both packages are behind latest" {
-  mock_npm "0.15.0" "0.15.0"
+  mock_npm "$(behind_version "$PINNED_J2Y_VERSION")" "$(behind_version "$PINNED_YR_VERSION")"
   run_script
   [ "$status" -eq 1 ]
   # Should fail on the first check (json2yamlresume) and never reach yamlresume
-  [[ "$output" == *"json2yamlresume is pinned at $PINNED_J2Y_VERSION but 0.15.0 is available"* ]]
+  [[ "$output" == *"json2yamlresume is pinned at $PINNED_J2Y_VERSION but $(behind_version "$PINNED_J2Y_VERSION") is available"* ]]
   [[ "$output" != *"ERROR: yamlresume is pinned at"* ]]
 }
 
