@@ -1,4 +1,4 @@
-.PHONY: install install-prereqs install-deps install-hooks serve build test lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-site extract-resume extract-resume-linkedin sync-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
+.PHONY: install install-prereqs install-deps install-hooks serve build test test-python lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-site extract-resume extract-resume-linkedin sync-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
 
 install: install-prereqs install-deps install-hooks
 
@@ -21,9 +21,11 @@ serve:
 build:
 	bundle exec jekyll build
 
-test: validate-articles validate-featured-in validate-promotions
+test: test-python
+	bats bats-tests/*.bats
+
+test-python: validate-articles validate-featured-in validate-promotions
 	uv run python -m unittest discover -s scripts/tests -v
-	bats tests/*.bats
 
 lint: build nudge-lint
 	bundle exec htmlproofer _site --disable-external

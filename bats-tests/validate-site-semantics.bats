@@ -44,9 +44,10 @@ HTML
 HTML
 }
 
-# Helper: write robots.txt
+# Helper: write robots.txt. Use printf %b so call-site \n escapes become real
+# newlines (two directives on separate lines) instead of a literal backslash-n.
 write_robots() {
-  echo "$1" > "$SITE_DIR/robots.txt"
+  printf '%b\n' "$1" > "$SITE_DIR/robots.txt"
 }
 
 # Helper: write sitemap.xml

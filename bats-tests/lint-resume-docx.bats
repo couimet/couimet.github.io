@@ -59,7 +59,7 @@ doc.save('$BATS_TEST_TMPDIR/test-bad.docx')
   [[ "$output" == *"double period"* ]]
 }
 
-@test "lint-resume-docx passes on a clean docx" {
+@test "lint-resume-docx runs on a well-formed docx without crashing" {
   uv run python -c "
 import docx
 doc = docx.Document()
@@ -84,8 +84,10 @@ doc.add_paragraph('This highlight text is a close enough match for fuzzy detecti
 doc.save('$BATS_TEST_TMPDIR/test-clean.docx')
 "
   run_lint "$BATS_TEST_TMPDIR/test-clean.docx"
-  # May or may not exit 0 depending on fuzzy highlight matching.
-  # The key assertion: no crash, no python exception.
+  # Smoke test: the fixture is a well-formed docx, not a full clean resume, so
+  # exit 0 is not asserted (every highlight/cert/award/project would need to be
+  # embedded at >=99.5% fuzzy similarity, which is brittle against resume.json
+  # edits). The key assertions: no crash, no python exception.
   [[ "$output" != *"Traceback"* ]]
   [[ "$output" != *"Error"* ]]
 }
