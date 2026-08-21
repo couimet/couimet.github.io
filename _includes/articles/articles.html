@@ -31,7 +31,8 @@
 
     <div class="articles-scroll{% if full_height %} articles-scroll-full{% endif %}">
       {% for article in articles limit: item_limit %}
-        {% include articles/article-item.html article=article utm_campaign=utm_campaign anchor=article.anchor show_share=true show_projects=true %}
+        {% assign item_anchor = "article-" | append: article.anchor %}
+        {% include articles/article-item.html article=article utm_campaign=utm_campaign anchor=item_anchor show_share=true show_projects=true %}
       {% endfor %}
     </div>
 

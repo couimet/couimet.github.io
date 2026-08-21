@@ -26,18 +26,19 @@
         {% if entry.title %}
           {% comment %}Article entry — has a title, rendered via the existing article-item include{% endcomment %}
           {% assign utm_campaign = "project-" | append: project_slug %}
-          {% include articles/article-item.html article=entry utm_campaign=utm_campaign anchor=entry.anchor show_share=true show_type_pill=true %}
+          {% assign item_anchor = "featured-in-" | append: entry.anchor %}
+          {% include articles/article-item.html article=entry utm_campaign=utm_campaign anchor=item_anchor show_share=true show_type_pill=true %}
         {% else %}
           {% comment %}Promotion entry — no title, rendered inline as a single-line post badge{% endcomment %}
-          <article class="article-item px-3 py-2"{% if entry.anchor %} id="promo-{{ entry.anchor }}"{% endif %}>
+          <article class="article-item px-3 py-2"{% if entry.anchor %} id="featured-in-{{ entry.anchor }}"{% endif %}>
             <p class="article-date mb-0">
               {{ entry.date }}
+              {% if entry.anchor %} <button type="button" class="article-share" aria-label="Copy link to this post" title="Copy link to this post" data-anchor="featured-in-{{ entry.anchor }}">🔗</button>{% endif %}
               <span class="badge rounded-pill type-pill type-pill-post">Post</span>
               <span class="promotion-summary fst-italic text-muted">{{ entry.summary }}</span>
             </p>
             {% if entry.linkedin.url %} <a href="{{ entry.linkedin.url }}" target="_blank" rel="noopener noreferrer" title="View LinkedIn post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#linkedin"/></svg></a>{% endif %}
             {% if entry.x.url %} <a href="{{ entry.x.url }}" target="_blank" rel="noopener noreferrer" title="View X post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#twitter-x"/></svg></a>{% endif %}
-            {% if entry.anchor %} <button type="button" class="article-share" aria-label="Copy link to this post" title="Copy link to this post" data-anchor="promo-{{ entry.anchor }}">🔗</button>{% endif %}
           </article>
         {% endif %}
       {% endfor %}

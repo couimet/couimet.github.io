@@ -20,7 +20,7 @@
         "description": "Related project page slugs. Uses the same convention as articles.yml.",
         "items": { "type": "string" }
       },
-      "anchor": { "type": "string", "description": "Anchor slug for deep-linking a promotion line from a project page (rendered as promo-<anchor>)." },
+      "anchor": { "type": "string", "description": "Anchor slug for deep-linking a promotion line from a project page." },
       "summary": {
         "type": "string",
         "description": "Short inline label for project pages (e.g. 'Project launch')."
