@@ -41,6 +41,14 @@ CI runs `make lint` on every PR and push to main via `.github/workflows/lint.yml
   <rationale>The author wants these actions to auto-update across all repos</rationale>
 </rule>
 
+<!-- rule-id: tests-pin-github-actions-env -->
+<rule id="tests-pin-github-actions-env" priority="critical">
+  <title>Tests running scripts that read GitHub Actions ambient env vars must pin them</title>
+  <never>Let a test run a script that consumes `GITHUB_REF_NAME` (or any other Actions ambient variable) without controlling that variable in the harness</never>
+  <do>Unset or explicitly set the variable in the test helper (e.g. `env -u GITHUB_REF_NAME`) so the test behaves identically on every branch</do>
+  <rationale>GitHub Actions exports `GITHUB_REF_NAME`: the head branch on PRs, `main` on push-to-main. A script that branches on it passes a strict test on the PR and silently flips to the lenient path on main, turning a green PR into a broken main (PR #194, fixed in PR #195).</rationale>
+</rule>
+
 - **Third-party actions** (e.g. `actions/checkout`): always pinned to a full commit SHA. Never use floating refs like `@v4` or `@main`. Version comments are omitted — Dependabot updates the SHA but not the comment, producing stale drift.
 - **First-party actions** (`couimet/github-actions/*`): see the `couimet-actions-main` rule above. We control the repo, so breaking changes are intentional and versioned; SHAs add pin-update churn with no benefit for actions we own.
 

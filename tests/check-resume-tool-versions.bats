@@ -47,12 +47,14 @@ behind_version() {
 }
 
 run_check_script() {
-  # $1 (optional): GITHUB_REF_NAME to export for the run.
+  # $1 (optional): GITHUB_REF_NAME to export for the run. When omitted, unset it
+  # so the strict-default tests are hermetic: CI on main exports
+  # GITHUB_REF_NAME=main, which would flip them to non-blocking warnings.
   local ref="${1:-}"
   if [ -n "$ref" ]; then
     run env GITHUB_REF_NAME="$ref" PATH="$MOCK_DIR:$PATH" bash "$CHECK_SCRIPT"
   else
-    run env PATH="$MOCK_DIR:$PATH" bash "$CHECK_SCRIPT"
+    run env -u GITHUB_REF_NAME PATH="$MOCK_DIR:$PATH" bash "$CHECK_SCRIPT"
   fi
 }
 
