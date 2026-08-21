@@ -3,6 +3,7 @@ layout: project
 type: project
 title: "github-actions"
 date: 2026-06-16
+priority: 6
 published: true
 repourl: https://github.com/couimet/github-actions
 labels:
