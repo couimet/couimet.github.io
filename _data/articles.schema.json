@@ -22,7 +22,8 @@
       },
       "anchor": {
         "type": "string",
-        "description": "Career-changelog anchor slug (e.g. rangelink-v2)."
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "description": "Lowercase hyphenated anchor slug (e.g. rangelink-v2)."
       },
       "sources": {
         "type": "array",
