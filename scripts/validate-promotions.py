@@ -13,6 +13,21 @@ SCHEMA = REPO_ROOT / "_data" / "promotions.schema.json"
 FILE = REPO_ROOT / "_data" / "promotions.yml"
 
 
+def find_duplicate_anchors(items):
+    """Return anchors that appear more than once, sorted.
+
+    JSON Schema has no keyword for cross-item uniqueness, so this is checked
+    here: duplicate anchors would produce duplicate page ids, silently breaking
+    the deep-link pulse for the second line.
+    """
+    seen = {}
+    for item in items:
+        anchor = item.get("anchor") if isinstance(item, dict) else None
+        if anchor:
+            seen[anchor] = seen.get(anchor, 0) + 1
+    return sorted(anchor for anchor, count in seen.items() if count > 1)
+
+
 def main():
     for path, label in ((SCHEMA, "Schema"), (FILE, "YAML file")):
         if not path.exists():
@@ -30,6 +45,14 @@ def main():
         )
     except jsonschema.ValidationError as e:
         print(f"ERROR: {FILE.name} — {e.message}", file=sys.stderr)
+        sys.exit(1)
+
+    duplicates = find_duplicate_anchors(data)
+    if duplicates:
+        print(
+            f"ERROR: duplicate anchor(s) in {FILE.name}: {', '.join(duplicates)}",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     print(f"OK: {FILE.relative_to(REPO_ROOT)} is valid")

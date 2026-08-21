@@ -20,18 +20,20 @@
 {% if related.size > 0 %}
   {% assign related = related | sort: "date" | reverse %}
   <div class="mt-5">
-    <h2 class="h4 mb-3">Featured in</h2>
+    <h2 class="h4 mb-3" id="featured-in"><a href="#featured-in" class="heading-anchor" aria-label="Copy link to this section">🔗</a>Featured in</h2>
     <div class="articles-scroll">
       {% for entry in related %}
         {% if entry.title %}
           {% comment %}Article entry — has a title, rendered via the existing article-item include{% endcomment %}
           {% assign utm_campaign = "project-" | append: project_slug %}
-          {% include articles/article-item.html article=entry utm_campaign=utm_campaign show_type_pill=true %}
+          {% assign item_anchor = "featured-in-" | append: entry.anchor %}
+          {% include articles/article-item.html article=entry utm_campaign=utm_campaign anchor=item_anchor show_share=true show_type_pill=true %}
         {% else %}
           {% comment %}Promotion entry — no title, rendered inline as a single-line post badge{% endcomment %}
-          <article class="article-item px-3 py-2">
+          <article class="article-item px-3 py-2"{% if entry.anchor %} id="featured-in-{{ entry.anchor }}"{% endif %}>
             <p class="article-date mb-0">
               {{ entry.date }}
+              {% if entry.anchor %} <button type="button" class="article-share" aria-label="Copy link to this post" title="Copy link to this post" data-anchor="featured-in-{{ entry.anchor }}">🔗</button>{% endif %}
               <span class="badge rounded-pill type-pill type-pill-post">Post</span>
               <span class="promotion-summary fst-italic text-muted">{{ entry.summary }}</span>
             </p>
@@ -42,4 +44,6 @@
       {% endfor %}
     </div>
   </div>
+  {% include copy-link.html %}
+  {% include anchor-pulse.html %}
 {% endif %}

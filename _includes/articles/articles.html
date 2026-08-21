@@ -31,7 +31,8 @@
 
     <div class="articles-scroll{% if full_height %} articles-scroll-full{% endif %}">
       {% for article in articles limit: item_limit %}
-        {% include articles/article-item.html article=article utm_campaign=utm_campaign anchor=article.anchor show_share=true show_projects=true %}
+        {% assign item_anchor = "article-" | append: article.anchor %}
+        {% include articles/article-item.html article=article utm_campaign=utm_campaign anchor=item_anchor show_share=true show_projects=true %}
       {% endfor %}
     </div>
 
@@ -42,35 +43,9 @@
 </div>
 
 {% include copy-link.html %}
+{% include anchor-pulse.html %}
 <script>
   (function () {
-    function revealAnchoredArticle() {
-      if (!window.location.hash) return;
-      var id = window.location.hash.slice(1);
-      if (!id || !id.startsWith("article-")) return;
-
-      var el = document.getElementById(id);
-      if (!el) return;
-
-      var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      el.classList.remove("anchor-pulse");
-      void el.offsetWidth;
-      el.classList.add("anchor-pulse");
-      setTimeout(function () { el.classList.remove("anchor-pulse"); }, prefersReduced ? 2000 : 6000);
-
-      el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "nearest" });
-    }
-
-    function handleShareClick(e) {
-      var btn = e.target.closest(".article-share");
-      if (!btn) return;
-      e.stopPropagation();
-      var anchor = btn.getAttribute("data-anchor");
-      if (!anchor) return;
-      var url = window.location.origin + window.location.pathname + "#" + anchor;
-      copyLink(btn, url);
-    }
-
     var articleUserScrolled = false;
     function markUserScrolled() { articleUserScrolled = true; }
     ["pointerdown", "wheel", "keydown", "touchstart"].forEach(function (type) {
@@ -107,10 +82,7 @@
     }
 
     window.addEventListener("DOMContentLoaded", function () {
-      revealAnchoredArticle();
-      document.addEventListener("click", handleShareClick);
       initArticleScrollSpy();
     });
-    window.addEventListener("hashchange", revealAnchoredArticle);
   })();
 </script>

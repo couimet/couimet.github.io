@@ -3,12 +3,14 @@
 #
 # date:    ISO 8601 date of the post.
 # context: free-form text — a link, description, or project reference.
+# anchor:  slug for deep-linking a promotion line from a project page (rendered as promo-<anchor>).
 # Channels are keyed by name (linkedin, x, etc.), each with url and content.
 
 - date: "2026-08-11"
   context: https://ouimet.info/projects/network-nudge/
   projects:
     - network-nudge
+  anchor: network-nudge-french
   summary: "Support for French / Ajout du français"
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:share:7493003528911708160/
@@ -35,6 +37,7 @@
   context: https://open-vsx.org/extension/couimet/rangelink-vscode-extension
   projects:
     - rangelink-extension
+  anchor: rangelink-1200-installs
   summary: "1.2K installs"
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7488679852728840192/
@@ -57,6 +60,7 @@
   context: https://ouimet.info/projects/network-nudge.html
   projects:
     - network-nudge
+  anchor: network-nudge-launch
   summary: "Project launch"
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7480441101800218625/
@@ -80,6 +84,7 @@
 
 - date: "2026-06-12"
   context: https://dev.to/couimet/rangelink-200-bind-first-every-r-follows-11nd
+  anchor: rangelink-v2
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7471367701467336704/
     content: |
@@ -103,6 +108,7 @@
 
 - date: "2026-06-09"
   context: https://dev.to/couimet/correlation-id-vs-request-id-a-practical-guide-2l6o
+  anchor: correlation-id-vs-request-id
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7470449901873594368/
     content: |
@@ -112,6 +118,7 @@
 
 - date: "2026-06-04"
   context: https://dev.to/couimet/fix-theres-an-issue-with-the-selected-model-deepseek-v4-pro-in-claude-cli-44jg
+  anchor: deepseek-model-not-found
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7468514830199586816/
     content: |
@@ -131,6 +138,7 @@
 
 - date: "2026-05-21"
   context: https://dev.to/couimet/i-sold-you-on-scratchpad-then-i-migrated-to-note-4n1o
+  anchor: scratchpad-to-note
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7463240605780074496/
     content: |
@@ -148,6 +156,7 @@
 
 - date: "2026-05-12"
   context: https://dev.to/couimet/eight-env-vars-and-claude-code-stops-eating-my-paycheck-2659
+  anchor: deepseek-claude-code
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7459974737033646080/
     content: |
@@ -163,6 +172,7 @@
 
 - date: "2026-03-16"
   context: https://dev.to/couimet/from-vide-coding-to-supercharged-vibe-guiding-6nm
+  anchor: vibe-guiding
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7440803258048241664/
     content: |
@@ -176,6 +186,7 @@
 
 - date: "2025-12-16"
   context: https://dev.to/couimet/rangelink-v100-perfected-ai-workflows-the-r-keybinding-family-104b
+  anchor: rangelink-v1
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7406515735004401664/
     content: |
@@ -189,6 +200,7 @@
 
 - date: "2025-11-12"
   context: https://dev.to/couimet/rangelink-v030-one-keybinding-to-rule-them-all-2h01
+  anchor: rangelink-v03
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7394227667971055616/
     content: |
@@ -204,6 +216,7 @@
 
 - date: "2025-11-08"
   context: https://dev.to/couimet/i-built-a-vs-code-extension-to-stop-the-copy-paste-madness-3d7l
+  anchor: copy-paste-madness
   linkedin:
     url: https://www.linkedin.com/feed/update/urn:li:activity:7393070596378558464/
     content: |

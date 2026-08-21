@@ -171,7 +171,8 @@ a {
 .changelog h2[id],
 .changelog h3[id],
 .changelog li[id],
-.section-title {
+.section-title,
+h2#featured-in {
   position: relative;
 }
 
@@ -295,6 +296,8 @@ a.article-project-pill:focus-visible {
   text-transform: uppercase;
   letter-spacing: 0.03em;
   vertical-align: middle;
+  /* Equal widths so content after Article/Post pills starts at the same x */
+  min-width: 7em;
 }
 
 .promotion-summary {

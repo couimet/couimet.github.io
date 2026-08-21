@@ -21,7 +21,7 @@ serve:
 build:
 	bundle exec jekyll build
 
-test: validate-articles validate-promotions
+test: validate-articles validate-featured-in validate-promotions
 	uv run python -m unittest discover -s scripts/tests -v
 	bats tests/*.bats
 
@@ -53,6 +53,9 @@ verify-sitemap: build
 
 validate-articles:
 	uv run python scripts/validate-articles.py
+
+validate-featured-in:
+	uv run python scripts/validate-featured-in.py
 
 validate-promotions:
 	uv run python scripts/validate-promotions.py
