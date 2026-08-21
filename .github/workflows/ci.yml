@@ -12,6 +12,9 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -21,11 +24,14 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
 
-      - name: Install BATS
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq bats
+      - name: Run Python validation and unit tests
+        run: make test-python
 
-      - name: Run tests
-        run: make test
+      - name: Run BATS tests
+        uses: couimet/github-actions/bats-test@main
+        with:
+          test-directory: bats-tests
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   test-python-subprojects:
     runs-on: ubuntu-latest
