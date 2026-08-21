@@ -37,8 +37,23 @@ EOF
   chmod +x "$MOCK_DIR/npm"
 }
 
+# Version one patch ahead of the pinned one. The "behind" fixtures use this so
+# they stay valid when resume-tools.versions bumps without editing this file:
+# the version check compares strings, and patch+1 keeps the messages readable
+# ("pinned at 0.15.0 but 0.15.1 is available").
+behind_version() {
+  local v="$1"
+  echo "${v%.*}.$(( ${v##*.} + 1 ))"
+}
+
 run_check_script() {
-  run env PATH="$MOCK_DIR:$PATH" bash "$CHECK_SCRIPT"
+  # $1 (optional): GITHUB_REF_NAME to export for the run.
+  local ref="${1:-}"
+  if [ -n "$ref" ]; then
+    run env GITHUB_REF_NAME="$ref" PATH="$MOCK_DIR:$PATH" bash "$CHECK_SCRIPT"
+  else
+    run env PATH="$MOCK_DIR:$PATH" bash "$CHECK_SCRIPT"
+  fi
 }
 
 # --- Happy path ---
@@ -53,23 +68,23 @@ run_check_script() {
 # --- Abort paths ---
 
 @test "fails when json2yamlresume is behind" {
-  mock_npm "0.15.0" "$PINNED_YR_VERSION"
+  mock_npm "$(behind_version "$PINNED_J2Y_VERSION")" "$PINNED_YR_VERSION"
   run_check_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but 0.15.0 is available"* ]]
+  [[ "$output" == *"ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but $(behind_version "$PINNED_J2Y_VERSION") is available"* ]]
   [[ "$output" == *"Update PINNED_J2Y_VERSION"* ]]
 }
 
 @test "fails when yamlresume is behind" {
-  mock_npm "$PINNED_J2Y_VERSION" "0.15.0"
+  mock_npm "$PINNED_J2Y_VERSION" "$(behind_version "$PINNED_YR_VERSION")"
   run_check_script
   [ "$status" -eq 1 ]
-  [[ "$output" == *"ERROR: yamlresume is pinned at $PINNED_YR_VERSION but 0.15.0 is available"* ]]
+  [[ "$output" == *"ERROR: yamlresume is pinned at $PINNED_YR_VERSION but $(behind_version "$PINNED_YR_VERSION") is available"* ]]
   [[ "$output" == *"Update PINNED_YR_VERSION"* ]]
 }
 
 @test "fails on first mismatch when both are behind (short-circuit)" {
-  mock_npm "0.15.0" "0.15.0"
+  mock_npm "$(behind_version "$PINNED_J2Y_VERSION")" "$(behind_version "$PINNED_YR_VERSION")"
   run_check_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"ERROR: json2yamlresume"* ]]
@@ -80,6 +95,30 @@ run_check_script() {
   run cat "$MOCK_DIR/npm-calls.log"
   [[ "$output" == *" json2yamlresume"* ]]
   [[ "$output" != *" yamlresume "* ]]
+}
+
+# --- Main branch: warn, don't fail ---
+
+@test "warns but succeeds on main when json2yamlresume is behind" {
+  mock_npm "$(behind_version "$PINNED_J2Y_VERSION")" "$PINNED_YR_VERSION"
+  run_check_script main
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"WARNING"* ]]
+  [[ "$output" != *"ERROR"* ]]
+}
+
+@test "warns but succeeds on main when yamlresume is behind" {
+  mock_npm "$PINNED_J2Y_VERSION" "$(behind_version "$PINNED_YR_VERSION")"
+  run_check_script main
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"WARNING"* ]]
+}
+
+@test "still fails on a feature branch when json2yamlresume is behind" {
+  mock_npm "$(behind_version "$PINNED_J2Y_VERSION")" "$PINNED_YR_VERSION"
+  run_check_script issues/193
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"ERROR"* ]]
 }
 
 # --- Offline fallback ---
