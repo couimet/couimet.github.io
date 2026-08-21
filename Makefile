@@ -54,13 +54,13 @@ verify-sitemap: build
 	diff /tmp/snap-sitemap.xml /tmp/built-sitemap.xml
 
 validate-articles:
-	uv run python scripts/validate-articles.py
+	uv run python scripts/validate-anchors.py _data/articles.yml
 
 validate-featured-in:
 	uv run python scripts/validate-featured-in.py
 
 validate-promotions:
-	uv run python scripts/validate-promotions.py
+	uv run python scripts/validate-anchors.py _data/promotions.yml
 
 TARGET ?= ouimet.info
 
