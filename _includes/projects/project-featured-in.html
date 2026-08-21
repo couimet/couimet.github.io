@@ -20,16 +20,16 @@
 {% if related.size > 0 %}
   {% assign related = related | sort: "date" | reverse %}
   <div class="mt-5">
-    <h2 class="h4 mb-3">Featured in</h2>
+    <h2 class="h4 mb-3" id="featured-in"><a href="#featured-in" class="heading-anchor" aria-label="Copy link to this section">🔗</a>Featured in</h2>
     <div class="articles-scroll">
       {% for entry in related %}
         {% if entry.title %}
           {% comment %}Article entry — has a title, rendered via the existing article-item include{% endcomment %}
           {% assign utm_campaign = "project-" | append: project_slug %}
-          {% include articles/article-item.html article=entry utm_campaign=utm_campaign show_type_pill=true %}
+          {% include articles/article-item.html article=entry utm_campaign=utm_campaign anchor=entry.anchor show_share=true show_type_pill=true %}
         {% else %}
           {% comment %}Promotion entry — no title, rendered inline as a single-line post badge{% endcomment %}
-          <article class="article-item px-3 py-2">
+          <article class="article-item px-3 py-2"{% if entry.anchor %} id="promo-{{ entry.anchor }}"{% endif %}>
             <p class="article-date mb-0">
               {{ entry.date }}
               <span class="badge rounded-pill type-pill type-pill-post">Post</span>
@@ -37,9 +37,12 @@
             </p>
             {% if entry.linkedin.url %} <a href="{{ entry.linkedin.url }}" target="_blank" rel="noopener noreferrer" title="View LinkedIn post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#linkedin"/></svg></a>{% endif %}
             {% if entry.x.url %} <a href="{{ entry.x.url }}" target="_blank" rel="noopener noreferrer" title="View X post"><svg class="tf-social"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#twitter-x"/></svg></a>{% endif %}
+            {% if entry.anchor %} <button type="button" class="article-share" aria-label="Copy link to this post" title="Copy link to this post" data-anchor="promo-{{ entry.anchor }}">🔗</button>{% endif %}
           </article>
         {% endif %}
       {% endfor %}
     </div>
   </div>
+  {% include copy-link.html %}
+  {% include anchor-pulse.html %}
 {% endif %}

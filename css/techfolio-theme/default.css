@@ -171,7 +171,8 @@ a {
 .changelog h2[id],
 .changelog h3[id],
 .changelog li[id],
-.section-title {
+.section-title,
+h2#featured-in {
   position: relative;
 }
 
