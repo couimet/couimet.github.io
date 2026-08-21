@@ -59,7 +59,10 @@ behind_version() {
 }
 
 run_script() {
-  run env PATH="$MOCK_DIR:$PATH" bash "$SYNC_SCRIPT"
+  # Unset GITHUB_REF_NAME so the strict-default tests are hermetic: CI on main
+  # exports GITHUB_REF_NAME=main, which flips the script's version-mismatch path
+  # to a non-blocking warning and would break the abort-path tests here.
+  run env -u GITHUB_REF_NAME PATH="$MOCK_DIR:$PATH" bash "$SYNC_SCRIPT"
 }
 
 # --- Version check: happy path ---
