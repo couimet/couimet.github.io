@@ -6,6 +6,7 @@ RUBY_VERSION := $(shell cat .ruby-version)
 
 install-ruby:
 	@which rbenv >/dev/null 2>&1 || { echo "Missing: rbenv — install it: brew install rbenv"; exit 1; }
+	@which ruby-build >/dev/null 2>&1 || { echo "Missing: ruby-build — install it: brew install ruby-build"; exit 1; }
 	@rbenv install -s $(RUBY_VERSION)
 	@rbenv local $(RUBY_VERSION)
 
