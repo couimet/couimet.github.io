@@ -1,6 +1,14 @@
-.PHONY: install install-prereqs install-deps install-hooks serve build test test-python lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-site extract-resume extract-resume-linkedin sync-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
+.PHONY: install install-ruby install-prereqs install-deps install-hooks serve build test test-python lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-site extract-resume extract-resume-linkedin sync-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
 
 install: install-prereqs install-deps install-hooks
+
+RUBY_VERSION := $(shell cat .ruby-version)
+
+install-ruby:
+	@which rbenv >/dev/null 2>&1 || { echo "Missing: rbenv — install it: brew install rbenv"; exit 1; }
+	@which ruby-build >/dev/null 2>&1 || { echo "Missing: ruby-build — install it: brew install ruby-build"; exit 1; }
+	@rbenv install -s $(RUBY_VERSION)
+	@rbenv local $(RUBY_VERSION)
 
 install-prereqs:
 	@ok=true; \
