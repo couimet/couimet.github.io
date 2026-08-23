@@ -16,13 +16,15 @@ jobs:
 
       - name: Sync resume
         run: ./scripts/sync-resume.sh
-
-      - name: Install BATS
-        run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq bats
+        env:
+          SKIP_VERSION_CHECK: 'true'
 
       - name: Validate resume.yml output
-        run: bats tests/sync-resume.bats
+        uses: couimet/github-actions/bats-test@main
+        with:
+          test-directory: bats-tests/sync-resume.bats
+          recursive: 'false'
+          publish-comment: 'false'
 
       - name: Commit generated YAML and HTML
         run: |
