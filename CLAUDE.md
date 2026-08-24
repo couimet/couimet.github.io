@@ -23,7 +23,7 @@
   <title>Tests running scripts that read GitHub Actions ambient env vars must pin them</title>
   <never>Let a test run a script that consumes `GITHUB_REF_NAME` (or any other Actions ambient variable) without controlling that variable in the harness</never>
   <do>Unset or explicitly set the variable in the test helper (e.g. `env -u GITHUB_REF_NAME`) so the test behaves identically on every branch</do>
-  <rationale>GitHub Actions exports `GITHUB_REF_NAME`: `<pr_number>/merge` on `pull_request` runs (the source branch lives in `GITHUB_HEAD_REF`), and `main` on push-to-main. A script that branches on it passes a strict test on the PR and silently flips to the lenient path on main, turning a green PR into a broken main (PR #194, fixed in PR #195).</rationale>
+  <rationale>GitHub Actions exports `GITHUB_REF_NAME`: `&lt;pr_number&gt;/merge` on `pull_request` runs (the source branch lives in `GITHUB_HEAD_REF`), and `main` on push-to-main. A script that branches on it passes a strict test on the PR and silently flips to the lenient path on main, turning a green PR into a broken main (PR #194, fixed in PR #195).</rationale>
 </rule>
 
 <!-- rule-id: third-party-actions-pinned-to-sha -->
@@ -56,13 +56,13 @@ The site links out to the canonical published URL either way, so mirroring an ex
 <tooling>
 
 <subsection name="python">
-Python packages are managed with `uv`, not `pip`. The repo-root `pyproject.toml` declares dev dependencies (currently `ruff`). `uv run <tool>` creates a project-local venv and runs the tool from there — each project gets its own isolated environment, and the version is pinned in `pyproject.toml`. `uv` itself must be installed and on `PATH`; `make install` validates this before proceeding.
+Python packages are managed with `uv`, not `pip`. The repo-root `pyproject.toml` declares dev dependencies (currently `ruff`). `uv run &lt;tool&gt;` creates a project-local venv and runs the tool from there — each project gets its own isolated environment, and the version is pinned in `pyproject.toml`. `uv` itself must be installed and on `PATH`; `make install` validates this before proceeding.
 
 Python linting and formatting uses `ruff` via `uv run`:
 
-- `uv run ruff check <paths>` — lint (replaces py_compile, flake8, isort)
-- `uv run ruff check --fix <paths>` — auto-fix lint violations
-- `uv run ruff format <paths>` — format (replaces black)
+- `uv run ruff check &lt;paths&gt;` — lint (replaces py_compile, flake8, isort)
+- `uv run ruff check --fix &lt;paths&gt;` — auto-fix lint violations
+- `uv run ruff format &lt;paths&gt;` — format (replaces black)
 </subsection>
 
 <subsection name="linting">
