@@ -53,11 +53,18 @@
   },
   "work": [
     {
+      "name": "Procurify",
+      "position": "Staff Backend Software Developer",
+      "url": "https://www.procurify.com/",
+      "startDate": "2026-08-24",
+      "summary": "Member of the Platform team at Procurify, an agentic procurement platform."
+    },
+    {
       "name": "Shopify",
       "position": "Staff Developer",
       "url": "https://shopify.com",
-      "startDate": "2025-08-01",
-      "endDate": "2026-05-01",
+      "startDate": "2025-08-25",
+      "endDate": "2026-04-24",
       "summary": "Member of the shop.app Buyer Acquisition (growth) team, focused on the Shop Cash domain. Designed an affiliate payout program in the AdTech/growth space and contributed to the shop.app ecosystem migration to distributed SQL.",
       "highlights": [
         "Owned the migration of one of the highest-QPS tables (top 20) to YugabyteDB as part of the shop.app ecosystem transition to distributed SQL.",
