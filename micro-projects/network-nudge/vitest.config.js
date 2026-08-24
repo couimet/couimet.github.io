@@ -6,6 +6,7 @@ export default defineConfig({
     setupFiles: [],
     coverage: {
       provider: 'v8',
+      reporter: ['text', 'lcov'],
       include: ['src/**/*.js'],
       // Barrel re-exports (index.js) and the frozen enum (messageCodes.js)
       // contain no logic of their own, so they are excluded from coverage.

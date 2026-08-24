@@ -1,0 +1,30 @@
+# Codecov configuration for couimet/couimet.github.io.
+# See: https://docs.codecov.com/docs/codecov-yaml
+
+coverage:
+  status:
+    project:
+      default:
+        # Coverage must not drop relative to the base commit. On main, a
+        # recent parent commit is used as the reference. Threshold is 0% --
+        # any coverage drop blocks the PR.
+        target: auto
+        threshold: 0%
+
+    patch:
+      default:
+        # Patch coverage check is informational only -- don't block PRs on it.
+        informational: true
+
+comment:
+  # Show coverage summary on every PR.
+  layout: 'reach, diff, flags, files, footer'
+  behavior: default
+  require_changes: false
+
+flag_management:
+  default_rules:
+    # Carryforward lets PRs that touch only a subset of the stacks pass
+    # without every flag reporting (python, social-banner, ghpages-redirect,
+    # network-nudge).
+    carryforward: true

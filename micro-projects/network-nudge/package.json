@@ -14,7 +14,8 @@
     "format:fix": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "prettier": "@couimet/eslint-config/prettier",
   "devDependencies": {
