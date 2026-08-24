@@ -20,6 +20,8 @@ __pycache__/
 
 **/**/node_modules/
 **/**/coverage/
+coverage.lcov
+.coverage
 
 # Claude skill working directories
 .claude-work/

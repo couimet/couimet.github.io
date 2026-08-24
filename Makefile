@@ -1,4 +1,4 @@
-.PHONY: install install-ruby install-prereqs install-deps install-hooks serve build test test-python lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-site extract-resume extract-resume-linkedin sync-resume lint-resume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
+.PHONY: install install-ruby install-prereqs install-deps install-hooks serve build test test-python lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-site extract-resume extract-resume-linkedin sync-resume lint-resume check-resume-tool-versions nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
 
 install: install-prereqs install-deps install-hooks
 
@@ -33,7 +33,8 @@ test: test-python
 	bats bats-tests/*.bats
 
 test-python: validate-articles validate-featured-in validate-promotions
-	uv run python -m unittest discover -s scripts/tests -v
+	uv run coverage run -m unittest discover -s scripts/tests -v
+	uv run coverage lcov
 
 lint: build nudge-lint
 	bundle exec htmlproofer _site --disable-external
@@ -90,6 +91,9 @@ lint-resume:
 		exit 1; \
 	fi
 	uv run python scripts/lint-resume-docx.py "$(DOCX)"
+
+check-resume-tool-versions:
+	./scripts/check-resume-tool-versions.sh
 
 nudge-test:
 	cd micro-projects/network-nudge && pnpm test
