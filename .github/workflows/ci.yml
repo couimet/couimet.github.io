@@ -43,6 +43,13 @@ jobs:
       - name: Run Python validation and unit tests
         run: make test-python
 
+      - name: Upload coverage to Codecov
+        uses: couimet/github-actions/codecov-upload@main
+        with:
+          files: coverage.lcov
+          flags: python
+          token: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Run BATS tests
         uses: couimet/github-actions/bats-test@main
         with:
@@ -54,9 +61,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project:
-          - scripts/social-banner
-          - scripts/ghpages-redirect
+        include:
+          - project: scripts/social-banner
+            flag: social-banner
+            cov-args: --cov=settings --cov=utils --cov=generate
+          - project: scripts/ghpages-redirect
+            flag: ghpages-redirect
+            cov-args: --cov=verify_redirects
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -71,8 +82,16 @@ jobs:
         working-directory: ${{ matrix.project }}
 
       - name: Run tests
-        run: uv run --no-sync pytest tests/ -v
+        run: uv run --no-sync pytest tests/ -v ${{ matrix.cov-args }} --cov-report=lcov:coverage.lcov
         working-directory: ${{ matrix.project }}
+
+      - name: Upload coverage to Codecov
+        uses: couimet/github-actions/codecov-upload@main
+        with:
+          files: coverage.lcov
+          working-directory: ${{ matrix.project }}
+          flags: ${{ matrix.flag }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   test-network-nudge:
     runs-on: ubuntu-latest
@@ -96,7 +115,15 @@ jobs:
       - name: Run tests
         shell: bash
         working-directory: micro-projects/network-nudge
-        run: pnpm test
+        run: pnpm test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: couimet/github-actions/codecov-upload@main
+        with:
+          files: coverage/lcov.info
+          working-directory: micro-projects/network-nudge
+          flags: network-nudge
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   lint:
     runs-on: ubuntu-latest

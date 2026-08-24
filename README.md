@@ -2,6 +2,8 @@
 
 For details on this professional portfolio, please see https://ouimet.info.
 
+[![codecov](https://codecov.io/gh/couimet/couimet.github.io/branch/main/graph/badge.svg)](https://codecov.io/gh/couimet/couimet.github.io)
+
 ## Local Development
 
 See more details at https://techfolios.github.io/docs/user-guide/local-development.
@@ -97,3 +99,14 @@ Pushes to `main` are automatically deployed to ouimet.info via `.github/workflow
 The `scripts/sync-ouimet-info.sh` script is kept as a manual recovery tool for rollbacks and direct-from-release syncs.
 
 The site is built twice from the same source: once for ouimet.info (the canonical host) and once for couimet.github.io, which only emits redirect stubs. The github.io build is triggered by `.github/workflows/main.yml` and uses the `_config_ghpages.yml` overlay to enable the `ghpages_redirect` flag, which causes `_layouts/default.html` to emit a meta-refresh + canonical-link stub instead of the full page. The ouimet.info build does not pass the overlay, so it emits the real site.
+
+## Coverage
+
+CI generates a coverage report for each test stack and uploads it to Codecov under a per-stack flag:
+
+- `python` — root Python unit tests (`make test-python` → `coverage.lcov`)
+- `social-banner` — pytest tests in `scripts/social-banner` (→ `coverage.lcov`)
+- `ghpages-redirect` — pytest tests in `scripts/ghpages-redirect` (→ `coverage.lcov`)
+- `network-nudge` — vitest tests in `micro-projects/network-nudge` (→ `coverage/lcov.info`)
+
+Uploads run through `couimet/github-actions/codecov-upload@main` in `.github/workflows/ci.yml`. `CODECOV_TOKEN` is already configured as a repository secret; the Codecov integration must be enabled on the repo for PR status checks and comments to render.

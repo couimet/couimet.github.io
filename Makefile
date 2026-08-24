@@ -33,7 +33,8 @@ test: test-python
 	bats bats-tests/*.bats
 
 test-python: validate-articles validate-featured-in validate-promotions
-	uv run python -m unittest discover -s scripts/tests -v
+	uv run coverage run -m unittest discover -s scripts/tests -v
+	uv run coverage lcov
 
 lint: build nudge-lint
 	bundle exec htmlproofer _site --disable-external
