@@ -3,7 +3,7 @@
 <meta>
   <purpose>Project-specific instructions for Claude Code</purpose>
   <project>couimet.github.io - Professional portfolio</project>
-  <version>2.0 - XML-structured format</version>
+  <version>2.1 - XML-structured format</version>
 </meta>
 
 ---
@@ -45,6 +45,12 @@
 
 ---
 
+<project-overview>
+This repo is a Jekyll site on the Techfolio theme: the professional portfolio of Charles Ouimet. Two deployment targets share one source tree: the canonical site at https://ouimet.info (served by the couimet/ouimet.info Apache host) and https://couimet.github.io (GitHub Pages), which serves redirect stubs that forward every page to the matching ouimet.info path. Content types: articles, follow-alongs, project pages, the career changelog, and the resume. See README.md for the local-development walkthrough; the sections below carry the build, test, and deployment mechanics.
+</project-overview>
+
+---
+
 <article-sources>
 `articles/_sources/` is only for articles that were drafted **in this repo**. If an article was authored in a different repo (where it has its richer context, diagrams, history, and review), do **not** copy or mirror the markdown source here. Just add the published URL to `_data/articles.yml`.
 
@@ -67,18 +73,68 @@ Python linting and formatting uses `ruff` via `uv run`:
 
 <subsection name="linting">
 ```text
-make lint      # htmlproofer + markdownlint-cli2 + ruff check
-make lint-fix  # markdownlint-cli2 --fix + ruff check --fix + ruff format
+make lint              # build + nudge-lint + htmlproofer + ruff check
+make lint-fix          # nudge-fix + ruff check --fix + ruff format
+make markdownlint      # markdownlint-cli2 across all *.md
+make markdownlint-fix  # markdownlint-cli2 --fix
 ```
 
-- HTML: `htmlproofer` (Gemfile) validates built `_site/` for broken links, missing images, missing alt attributes.
-- Markdown: `markdownlint-cli2` (npm global) with `.markdownlint-cli2.jsonc` config. MD013/MD033/MD034 are disabled (line length, inline HTML, and bare URLs match prose-style conventions).
-- Python: `ruff` via `uv run` (repo-local venv, version pinned in `pyproject.toml`).
+- `make lint` builds `_site`, runs the `micro-projects/network-nudge` pnpm lint/format checks (`nudge-lint`), then validates the built site with `htmlproofer` (Gemfile) for broken links, missing images, missing alt attributes, and lints the Python with `uv run ruff check`.
+- `make lint-fix` applies the auto-fixers: `nudge-fix`, `uv run ruff check --fix`, and `uv run ruff format`.
+- Markdown is a separate target: `make markdownlint` / `make markdownlint-fix` (markdownlint-cli2, npm global, `.markdownlint-cli2.jsonc` config; MD013/MD033/MD034 are disabled — line length, inline HTML, and bare URLs match prose-style conventions).
 
-CI runs `make lint` on every PR and push to main via `.github/workflows/lint.yml`.
+CI runs the lint job in `.github/workflows/ci.yml` on every PR and push to main: the `couimet/github-actions/markdownlint@main` step plus `make lint`.
 </subsection>
 
 </tooling>
+
+---
+
+<build-and-test>
+All commands run from the repo root. `make install` bootstraps a fresh checkout: verifies rbenv, uv, pre-commit, and markdownlint-cli2 are installed, runs `bundle install` (Ruby 3.4.4 per `.ruby-version`), and installs the pre-commit hooks. Day-to-day commands:
+
+- `make serve` / `make build` — Jekyll serve/build (set `JEKYLL_ENV=production` for the production build; default is development)
+- `make test` — `test-python` (validators, Python unittest, coverage lcov) followed by the bats suite over `bats-tests/*.bats`
+- `make test-python` — `uv run coverage run -m unittest discover -s scripts/tests` plus coverage lcov
+- `make validate-articles` / `make validate-featured-in` / `make validate-promotions` — Python validators over `_data/articles.yml`, featured-in fields, and `_data/promotions.yml`
+- `make validate-site TARGET=ouimet.info` / `make validate-site TARGET=github.io` — semantic validation of a built `_site/`
+- `make markdownlint` / `make markdownlint-fix` — see the tooling section
+- Subprojects: `scripts/social-banner/` and `scripts/ghpages-redirect/` run pytest under `uv sync`; `micro-projects/network-nudge` runs pnpm tests via `make nudge-test`
+
+CI (`ci.yml`) runs schema validation, `make test-python`, bats, the subproject pytest suites, network-nudge `pnpm test:coverage`, the markdownlint action plus `make lint`, and dual-config build validation — so the local pre-finish gate is `make lint` + `make test` + `make markdownlint`.
+</build-and-test>
+
+---
+
+<config-and-deploy>
+Two Jekyll configs share one source tree. `_config.yml` is canonical (url https://ouimet.info, baseurl ""). `_config_ghpages.yml` is an overlay setting `ghpages_redirect: true`, layered only in the GitHub Pages build via `bundle exec jekyll build --config _config.yml,_config_ghpages.yml --baseurl <pages-base-path>`; with that flag set, `_layouts/default.html` emits a tiny redirect stub per page instead of the full markup, preserving the path on ouimet.info. The github.io build also removes `_site/resume-full.html` and `_site/sitemap.xml` — resume-full.html has no Jekyll frontmatter, so it cannot flow through the redirect-stub layout.
+
+Workflow roles: `ci.yml` (test/lint/build/validation gates), `main.yml` (Pages deploy, chained after `sync-resume.yml` via workflow_run so the freshest resume-full.html ships), `deploy-ouimet-info.yml` (canonical ouimet.info host), `sync-resume.yml` (regenerates `resume.yml` and `resume-full.html` from `resume.json`), `verify-sitemap.yml` (snapshot gate), `submit-sitemap.yml` (IndexNow submission), `sitemap-fix.yml` (snapshot auto-fix).
+</config-and-deploy>
+
+---
+
+<directory-layout>
+Hand-curated unless noted:
+
+- articles/ — markdown sources; `_sources/` holds in-repo drafts only (see the article-sources rule)
+- follow-alongs/ — markdown walkthrough posts
+- projects/ — markdown rendered to `.html` pages (see the project-pages rule for the .htaccess 301 redirects)
+- career/ — career page; `_includes/career/changelog.html` is the hand-curated per-role narrative in Keep-a-Changelog format (no generator script; `resume.json:work[]` carries the compact recruiter-facing distillation)
+- _data/ — articles.yml, promotions.yml, bio.json, each with a JSON schema used by CI validation
+- _layouts/ — default.html (emits redirect stubs when `ghpages_redirect` is set), home.html, project.html, follow-along.html, missingpage.html
+- scripts/ — Python validators and shell scripts (sync-resume.sh, sync-ouimet-info.sh); scripts/tests/ is the Python unittest suite; scripts/social-banner/ and scripts/ghpages-redirect/ are pytest subprojects with their own uv venvs
+- bats-tests/ — bats suite run by `make test`
+- micro-projects/network-nudge — pnpm project with its own lint/test (`make nudge-test`)
+- .snapshots/ — golden sitemap.xml refreshed by `make snapshot-sitemap` (see the sitemap rule)
+- img/, css/techfolio-theme/ — site assets and theme
+</directory-layout>
+
+---
+
+<workflow>
+Work happens on `issues/<N>` branches cut from main; ephemeral working files live under `.claude-work/issues/<N>/` (gitignored — never commit or reference them in commit messages or PR descriptions). The chain: `/start-issue <url>` fetches the issue and writes an implementation plan; the user reviews the plan before any implementation; `/finish-issue` runs verification and generates the PR description. Never auto-commit — stage changes and let the user review and commit. Design questions go to a questions file via `/question`, not inline in chat.
+</workflow>
 
 ---
 
