@@ -94,10 +94,10 @@ CI runs the lint job in `.github/workflows/ci.yml` on every PR and push to main:
 All commands run from the repo root. `make install` bootstraps a fresh checkout: verifies rbenv, uv, pre-commit, and markdownlint-cli2 are installed, runs `bundle install` (Ruby 3.4.4 per `.ruby-version`), and installs the pre-commit hooks. Day-to-day commands:
 
 - `make serve` / `make build` — Jekyll serve/build (set `JEKYLL_ENV=production` for the production build; default is development)
-- `make test` — bats suite over `bats-tests/*.bats`
+- `make test` — `test-python` (validators, Python unittest, coverage lcov) followed by the bats suite over `bats-tests/*.bats`
 - `make test-python` — `uv run coverage run -m unittest discover -s scripts/tests` plus coverage lcov
 - `make validate-articles` / `make validate-featured-in` / `make validate-promotions` — Python validators over `_data/articles.yml`, featured-in fields, and `_data/promotions.yml`
-- `make validate-site TARGET=ouimet.info|github.io` — semantic validation of a built `_site/`
+- `make validate-site TARGET=ouimet.info` / `make validate-site TARGET=github.io` — semantic validation of a built `_site/`
 - `make markdownlint` / `make markdownlint-fix` — see the tooling section
 - Subprojects: `scripts/social-banner/` and `scripts/ghpages-redirect/` run pytest under `uv sync`; `micro-projects/network-nudge` runs pnpm tests via `make nudge-test`
 
