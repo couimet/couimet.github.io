@@ -7,8 +7,9 @@ setup() {
   SYNC_SCRIPT="$REPO_ROOT/scripts/sync-resume.sh"
   MOCK_DIR="$BATS_TEST_TMPDIR/mocks"
   mkdir -p "$MOCK_DIR"
-  # Pinned versions come from the same file the script under test sources.
-  source "$REPO_ROOT/resume-tools.versions"
+  # Pinned versions come from the same Makefile targets the script under test uses.
+  PINNED_J2Y_VERSION="$(make -s -C "$REPO_ROOT" resume-tool-version-json2yamlresume)"
+  PINNED_YR_VERSION="$(make -s -C "$REPO_ROOT" resume-tool-version-yamlresume)"
 }
 
 # --- Helpers ---
@@ -50,9 +51,9 @@ mock_all() {
 }
 
 # Version one patch ahead of the pinned one. The "behind latest" fixtures use
-# this so they stay valid when resume-tools.versions bumps without editing this
-# file: the version check compares strings, and patch+1 keeps the messages
-# readable ("pinned at 0.15.0 but 0.15.1 is available").
+# this so they stay valid when package.json bumps without editing this file:
+# the version check compares strings, and patch+1 keeps the messages readable
+# ("pinned at 0.15.0 but 0.15.1 is available").
 behind_version() {
   local v="$1"
   echo "${v%.*}.$(( ${v##*.} + 1 ))"

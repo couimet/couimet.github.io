@@ -33,3 +33,14 @@ updates:
       actions:
         patterns:
           - '*'
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+      time: '09:00'
+      timezone: 'America/Toronto'
+    groups:
+      resume-tools:
+        patterns:
+          - 'json2yamlresume'
+          - 'yamlresume'

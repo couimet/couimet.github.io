@@ -1,8 +1,12 @@
-.PHONY: install install-ruby install-prereqs install-deps install-hooks serve build test test-python lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-site extract-resume extract-resume-linkedin sync-resume lint-resume check-resume-tool-versions nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
+.PHONY: install install-ruby install-prereqs install-deps install-hooks serve build test test-python lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-site extract-resume extract-resume-linkedin sync-resume lint-resume check-resume-tool-versions resume-tool-version-json2yamlresume resume-tool-version-yamlresume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
 
 install: install-prereqs install-deps install-hooks
 
 RUBY_VERSION := $(shell cat .ruby-version)
+
+# Repo root resolved from the Makefile's own location, so the resume-tool-version-*
+# targets work regardless of the directory make is invoked from.
+REPO_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 install-ruby:
 	@which rbenv >/dev/null 2>&1 || { echo "Missing: rbenv — install it: brew install rbenv"; exit 1; }
@@ -15,7 +19,13 @@ install-prereqs:
 	which uv >/dev/null 2>&1 || { echo "Missing: uv — install it: brew install uv   (or: curl -LsSf https://astral.sh/uv/install.sh | sh)"; ok=false; }; \
 	which pre-commit >/dev/null 2>&1 || { echo "Missing: pre-commit — install it: brew install pre-commit   (or: pipx install pre-commit)"; ok=false; }; \
 	which markdownlint-cli2 >/dev/null 2>&1 || { echo "Missing: markdownlint-cli2 — install it: npm install -g markdownlint-cli2@0.22.1"; ok=false; }; \
-	$$ok || { echo; echo "Install the missing prerequisites above, then re-run make install."; exit 1; }
+	if [ -s "$${NVM_DIR:-$$HOME/.nvm}/nvm.sh" ]; then \
+		. "$${NVM_DIR:-$$HOME/.nvm}/nvm.sh"; \
+	else \
+		echo "Missing: nvm — install it: brew install nvm (the .nvmrc file dictates the Node version)"; ok=false; \
+	fi; \
+	$$ok || { echo; echo "Install the missing prerequisites above, then re-run make install."; exit 1; }; \
+	nvm use
 
 install-deps:
 	bundle install
@@ -81,6 +91,15 @@ extract-resume:
 
 extract-resume-linkedin:
 	uv run python scripts/extract-resume-linkedin.py
+
+# Print a pinned resume tool version from package.json (exact-pinned
+# devDependencies). Single source for scripts/sync-resume.sh,
+# scripts/check-resume-tool-versions.sh, and the bats fixtures.
+resume-tool-version-json2yamlresume:
+	@node -p "require('$(REPO_ROOT)/package.json').devDependencies['json2yamlresume']"
+
+resume-tool-version-yamlresume:
+	@node -p "require('$(REPO_ROOT)/package.json').devDependencies['yamlresume']"
 
 sync-resume:
 	./scripts/sync-resume.sh

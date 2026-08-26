@@ -1,7 +1,0 @@
-# Pinned npm tool versions for the resume pipeline. Single source of truth for
-# scripts/sync-resume.sh and scripts/check-resume-tool-versions.sh; tests build
-# their fixtures from this file too. Bump here when npm publishes newer versions:
-# scripts/check-resume-tool-versions.sh fails on PR branches and warns (exit 0)
-# on main while the pins are stale.
-PINNED_J2Y_VERSION="0.15.1"
-PINNED_YR_VERSION="0.15.1"
