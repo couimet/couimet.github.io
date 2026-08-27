@@ -19,7 +19,9 @@ install-prereqs:
 	which uv >/dev/null 2>&1 || { echo "Missing: uv — install it: brew install uv   (or: curl -LsSf https://astral.sh/uv/install.sh | sh)"; ok=false; }; \
 	which pre-commit >/dev/null 2>&1 || { echo "Missing: pre-commit — install it: brew install pre-commit   (or: pipx install pre-commit)"; ok=false; }; \
 	which markdownlint-cli2 >/dev/null 2>&1 || { echo "Missing: markdownlint-cli2 — install it: npm install -g markdownlint-cli2@0.22.1"; ok=false; }; \
-	if [ -s "$${NVM_DIR:-$$HOME/.nvm}/nvm.sh" ]; then \
+	if command -v nvm >/dev/null 2>&1; then \
+		:; \
+	elif [ -s "$${NVM_DIR:-$$HOME/.nvm}/nvm.sh" ]; then \
 		. "$${NVM_DIR:-$$HOME/.nvm}/nvm.sh"; \
 	else \
 		echo "Missing: nvm — install it: brew install nvm (the .nvmrc file dictates the Node version)"; ok=false; \

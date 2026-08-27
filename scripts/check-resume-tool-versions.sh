@@ -26,7 +26,7 @@ if [ "$LATEST_J2Y" != "unknown" ] && [ "$LATEST_J2Y" != "$PINNED_J2Y_VERSION" ];
     echo "WARNING: This is not blocking the deploy. Bump the pin in package.json via a Dependabot PR."
   else
     echo "ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but $LATEST_J2Y is available."
-    echo "Update PINNED_J2Y_VERSION in package.json after verifying compatibility:"
+    echo "Update json2yamlresume in package.json after verifying compatibility:"
     echo "  https://www.npmjs.com/package/json2yamlresume"
     exit 1
   fi
@@ -40,7 +40,7 @@ if [ "$LATEST_YR" != "unknown" ] && [ "$LATEST_YR" != "$PINNED_YR_VERSION" ]; th
     echo "WARNING: This is not blocking the deploy. Bump the pin in package.json via a Dependabot PR."
   else
     echo "ERROR: yamlresume is pinned at $PINNED_YR_VERSION but $LATEST_YR is available."
-    echo "Update PINNED_YR_VERSION in package.json after verifying compatibility:"
+    echo "Update yamlresume in package.json after verifying compatibility:"
     echo "  https://www.npmjs.com/package/yamlresume"
     exit 1
   fi

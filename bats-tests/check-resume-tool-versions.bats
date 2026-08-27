@@ -62,8 +62,8 @@ run_check_script() {
 # --- Happy path ---
 
 @test "resume tool pins in package.json are exact (no caret or tilde)" {
-  [[ "$PINNED_J2Y_VERSION" != *"^"* && "$PINNED_J2Y_VERSION" != *"~"* ]]
-  [[ "$PINNED_YR_VERSION" != *"^"* && "$PINNED_YR_VERSION" != *"~"* ]]
+  [[ "$PINNED_J2Y_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$ ]]
+  [[ "$PINNED_YR_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$ ]]
 }
 
 @test "succeeds when both versions match" {
@@ -80,7 +80,7 @@ run_check_script() {
   run_check_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but $(behind_version "$PINNED_J2Y_VERSION") is available"* ]]
-  [[ "$output" == *"Update PINNED_J2Y_VERSION"* ]]
+  [[ "$output" == *"Update json2yamlresume"* ]]
 }
 
 @test "fails when yamlresume is behind" {
@@ -88,7 +88,7 @@ run_check_script() {
   run_check_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"ERROR: yamlresume is pinned at $PINNED_YR_VERSION but $(behind_version "$PINNED_YR_VERSION") is available"* ]]
-  [[ "$output" == *"Update PINNED_YR_VERSION"* ]]
+  [[ "$output" == *"Update yamlresume"* ]]
 }
 
 @test "fails on first mismatch when both are behind (short-circuit)" {
