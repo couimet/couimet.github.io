@@ -7,8 +7,9 @@ setup() {
   CHECK_SCRIPT="$REPO_ROOT/scripts/check-resume-tool-versions.sh"
   MOCK_DIR="$BATS_TEST_TMPDIR/mocks"
   mkdir -p "$MOCK_DIR"
-  # Pinned versions come from the same file the script under test sources.
-  source "$REPO_ROOT/resume-tools.versions"
+  # Pinned versions come from the same Makefile targets the script under test uses.
+  PINNED_J2Y_VERSION="$(make -s -C "$REPO_ROOT" resume-tool-version-json2yamlresume)"
+  PINNED_YR_VERSION="$(make -s -C "$REPO_ROOT" resume-tool-version-yamlresume)"
 }
 
 # --- Helpers ---
@@ -38,7 +39,7 @@ EOF
 }
 
 # Version one patch ahead of the pinned one. The "behind" fixtures use this so
-# they stay valid when resume-tools.versions bumps without editing this file:
+# they stay valid when package.json bumps without editing this file:
 # the version check compares strings, and patch+1 keeps the messages readable
 # ("pinned at 0.15.0 but 0.15.1 is available").
 behind_version() {
@@ -60,6 +61,11 @@ run_check_script() {
 
 # --- Happy path ---
 
+@test "resume tool pins in package.json are exact (no caret or tilde)" {
+  [[ "$PINNED_J2Y_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$ ]]
+  [[ "$PINNED_YR_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$ ]]
+}
+
 @test "succeeds when both versions match" {
   mock_npm "$PINNED_J2Y_VERSION" "$PINNED_YR_VERSION"
   run_check_script
@@ -74,7 +80,7 @@ run_check_script() {
   run_check_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but $(behind_version "$PINNED_J2Y_VERSION") is available"* ]]
-  [[ "$output" == *"Update PINNED_J2Y_VERSION"* ]]
+  [[ "$output" == *"Update json2yamlresume"* ]]
 }
 
 @test "fails when yamlresume is behind" {
@@ -82,7 +88,7 @@ run_check_script() {
   run_check_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"ERROR: yamlresume is pinned at $PINNED_YR_VERSION but $(behind_version "$PINNED_YR_VERSION") is available"* ]]
-  [[ "$output" == *"Update PINNED_YR_VERSION"* ]]
+  [[ "$output" == *"Update yamlresume"* ]]
 }
 
 @test "fails on first mismatch when both are behind (short-circuit)" {

@@ -65,7 +65,7 @@ Skill files (project-local):
 Converts `resume.json` → `resume.yml` (YAMLResume) → `resume-full.html` (styled HTML). Runs automatically on push to `main` via `.github/workflows/sync-resume.yml`. The script validates that pinned tool versions match the latest npm releases and transforms `countryCode: "CA"` to `country: Canada` on the fly for yamlresume compatibility.
 
 ```bash
-./scripts/sync-resume.sh          # requires Docker
+./scripts/sync-resume.sh          # requires Docker and Node
 ```
 
 ### Docx text extraction

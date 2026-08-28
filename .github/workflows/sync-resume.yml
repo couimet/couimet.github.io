@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
+      - name: Setup Node.js & pnpm
+        uses: couimet/github-actions/setup-node-pnpm@main
+
       - name: Sync resume
         run: ./scripts/sync-resume.sh
         env:

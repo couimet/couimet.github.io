@@ -1,0 +1,9 @@
+{
+  "name": "couimet.github.io",
+  "private": true,
+  "description": "Resume tooling pins for the couimet.github.io portfolio",
+  "devDependencies": {
+    "json2yamlresume": "0.15.2",
+    "yamlresume": "0.15.2"
+  }
+}
