@@ -6,6 +6,37 @@
 # anchor:  slug for deep-linking a promotion line from a project page (rendered as promo-<anchor>).
 # Channels are keyed by name (linkedin, x, etc.), each with url and content.
 
+- date: "2026-08-27"
+  context: https://github.com/danyuchn/asd-ste100-skill/pull/8
+  anchor: asd-ste100-pr
+  summary: "Open-source contribution"
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:share:7498946698161893376/
+    content: |
+      My first PR to a 1.5K-star repo 🎉
+
+      asd-ste100 is blowing up lately. I added an `npx skills` quick install path to its README so it's easier to install.
+
+      Fingers crossed it merges 🤞
+
+      Thanks to Yuchen Teng for building the skill in the first place.
+
+      https://github.com/danyuchn/asd-ste100-skill/pull/8
+
+      #ClaudeCode #ClaudeSkills #AIAgents #SimplifiedTechnicalEnglish #OpenSource #TechWriting #DevTools #AI
+  x:
+    url: https://x.com/charlesouimet/status/2093179545851416906
+    content: |
+      My first PR to a 1.5K-star repo 🎉
+
+      asd-ste100 is blowing up lately. I added an `npx skills` quick install path to its README so it's easier to install.
+
+      Fingers crossed it merges 🤞
+
+      https://github.com/danyuchn/asd-ste100-skill/pull/8
+
+      #ClaudeCode #AIAgents
+
 - date: "2026-08-11"
   context: https://ouimet.info/projects/network-nudge/
   projects:
