@@ -13,7 +13,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-py-modules = ["settings", "utils", "generate", "generate_rangelink"]
+py-modules = ["settings", "utils", "generate", "generate_rangelink", "generate_share"]
 
 [tool.pytest.ini_options]
 pythonpath = [".", "tests"]

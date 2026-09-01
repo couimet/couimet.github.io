@@ -56,7 +56,9 @@ def pixels_match(working: bytes, committed: bytes) -> bool:
 
 def main() -> int:
     repo = repo_root()
-    for path in sorted((repo / "img").glob("social-banner*.jpg")):
+    banner_paths = sorted((repo / "img").glob("social-banner*.jpg"))
+    share_paths = sorted((repo / "img" / "social").glob("*.jpg"))
+    for path in banner_paths + share_paths:
         relpath = path.relative_to(repo).as_posix()
         committed = head_bytes(repo, relpath)
         if committed is None:

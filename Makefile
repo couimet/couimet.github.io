@@ -1,4 +1,4 @@
-.PHONY: install install-ruby install-prereqs install-deps install-hooks serve build test test-python lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-site extract-resume extract-resume-linkedin sync-resume lint-resume check-resume-tool-versions resume-tool-version-json2yamlresume resume-tool-version-yamlresume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
+.PHONY: install install-ruby install-prereqs install-deps install-hooks serve build test test-python lint lint-fix markdownlint markdownlint-fix snapshot-sitemap verify-sitemap validate-articles validate-promotions validate-short-urls sync-short-urls new-short-url validate-site extract-resume extract-resume-linkedin sync-resume lint-resume check-resume-tool-versions resume-tool-version-json2yamlresume resume-tool-version-yamlresume nudge-test nudge-lint nudge-fix banner banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer banner-share
 
 install: install-prereqs install-deps install-hooks
 
@@ -44,7 +44,7 @@ build:
 test: test-python
 	bats bats-tests/*.bats
 
-test-python: validate-articles validate-featured-in validate-promotions
+test-python: validate-articles validate-featured-in validate-promotions validate-short-urls
 	uv run coverage run -m unittest discover -s scripts/tests -v
 	uv run coverage lcov
 
@@ -82,6 +82,16 @@ validate-featured-in:
 
 validate-promotions:
 	uv run python scripts/validate-anchors.py _data/promotions.yml
+
+validate-short-urls:
+	uv run python scripts/validate-short-urls.py
+
+sync-short-urls:
+	uv run python scripts/validate-short-urls.py --write
+
+new-short-url:
+	uv run python scripts/new-short-url.py $(ID)
+	make sync-short-urls
 
 TARGET ?= ouimet.info
 
@@ -125,7 +135,7 @@ nudge-lint:
 nudge-fix:
 	cd micro-projects/network-nudge && pnpm fix
 
-banner: banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer
+banner: banner-default banner-rangelink banner-network-nudge banner-rabbit-maximizer banner-share
 
 banner-default:
 	cd scripts/social-banner && uv run python generate.py
@@ -138,3 +148,6 @@ banner-network-nudge:
 
 banner-rabbit-maximizer:
 	cd scripts/social-banner && uv run python generate_rabbit_maximizer.py
+
+banner-share:
+	cd scripts/social-banner && uv run python generate_share.py

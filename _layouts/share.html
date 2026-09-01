@@ -1,0 +1,10 @@
+---
+layout: default
+---
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url={{ page.redirect_to }}">
+<script>location.replace({{ page.redirect_to | jsonify }})</script>
+<p>Redirecting to <a href="{{ page.redirect_to }}">{{ page.redirect_to }}</a>...</p>
+<noscript>
+  <p>JavaScript is disabled. Continue to <a href="{{ page.redirect_to }}">{{ page.redirect_to }}</a>.</p>
+</noscript>

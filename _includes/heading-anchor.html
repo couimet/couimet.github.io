@@ -1,0 +1,22 @@
+{%- comment -%}
+Renders the section heading anchor. When shareId is passed, renders the
+share icon carrying that short ID so _includes/copy-link.html builds the
+/s/<ID> URL; otherwise renders the plain copy-link anchor. The short ID
+must exist in _data/short-urls.yml (the registry is its source of truth).
+
+homeShareId is an optional override for the home page: when both it and
+shareId are set, the home page (page.url == '/') carries the home ID (a
+registry entry whose redirect_to is /#<anchor>) while every other page
+carries the regular shareId (whose redirect_to points at the canonical
+page). Use it only when a section renders on the home page and its full
+page.
+
+Usage:
+  {% include heading-anchor.html id="changelog-9-0-0" shareId="kn" %}
+  {% include heading-anchor.html id="changelog-9-0-0" shareId="kn" homeShareId="lk" %}
+  {% include heading-anchor.html id="changelog-8-0-0" %}
+{%- endcomment -%}
+{%- if include.shareId -%}
+{%- if include.homeShareId and page.url == '/' -%}{%- assign shareId = include.homeShareId -%}{%- else -%}{%- assign shareId = include.shareId -%}{%- endif -%}
+<a href="#{{ include.id }}" shareId="{{ shareId }}" class="heading-anchor" aria-label="Copy share link to this section" title="Copy share link to this section"><svg aria-hidden="true"><use xlink:href="{{ '/img/bootstrap-icons.svg' | prepend: site.baseurl }}#share"/></svg></a>{%- else -%}
+<a href="#{{ include.id }}" class="heading-anchor" aria-label="Copy link to this section">🔗</a>{%- endif -%}
