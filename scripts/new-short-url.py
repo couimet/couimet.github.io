@@ -32,10 +32,26 @@ KEY_RE = re.compile(r"^([A-Za-z0-9]{2,3}):\s*$")
 
 PLACEHOLDER = "TODO"
 
+# YAML 1.1 boolean scalars that PyYAML loads as bool keys. These are the only
+# 2-3 char values affected (y/n are 1 char, true/false too long), so they are
+# the complete set of IDs that cannot round-trip through _data/short-urls.yml.
+RESERVED_IDS = {"on", "no", "yes", "off"}
+
 
 def is_base62_id(share_id):
     """True for a 2-3 char base62 ID (2 chars now; 3 is the superset)."""
     return 2 <= len(share_id) <= 3 and all(c in BASE62 for c in share_id)
+
+
+def is_reserved_id(share_id):
+    """True for a YAML-reserved boolean word (any case).
+
+    PyYAML 6 converts unquoted on/no/yes/off keys to boolean mapping keys, so
+    generating or inserting one of these IDs would either collide with an
+    entry the registry load turned into a bool, or insert a line that reloads
+    as a bool key.
+    """
+    return share_id.lower() in RESERVED_IDS
 
 
 def generate_share_id(registry, rng=None):
@@ -52,7 +68,7 @@ def generate_share_id(registry, rng=None):
             continue
         for _ in range(64):
             candidate = "".join(rng.choice(BASE62_CHARS) for _ in range(length))
-            if candidate not in taken:
+            if candidate not in taken and not is_reserved_id(candidate):
                 return candidate
     raise ValueError("no free short IDs left")
 
@@ -104,6 +120,13 @@ def main():
         print(f"Generated share ID: {share_id!r}")
     elif not is_base62_id(share_id):
         print(f"ERROR: {share_id!r} is not a 2-3 char base62 ID", file=sys.stderr)
+        sys.exit(1)
+    elif is_reserved_id(share_id):
+        print(
+            f"ERROR: {share_id!r} is a YAML-reserved boolean word "
+            "(PyYAML would load it as a boolean key)",
+            file=sys.stderr,
+        )
         sys.exit(1)
     elif share_id in registry:
         print(

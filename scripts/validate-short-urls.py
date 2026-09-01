@@ -151,9 +151,57 @@ def find_stale_pages(registry, share_dir):
     return stale
 
 
-def registry_errors(registry):
-    """Return errors that invalidate the registry (sorted, base62, aliases)."""
+def find_orphan_pages(registry, share_dir):
+    """Return [(share_id, path)] for generated pages with no registry entry.
+
+    Only files carrying the generated header are candidates, so a hand-authored
+    s/*.md page is never reported or removed.
+    """
+    orphans = []
+    for path in sorted(share_dir.glob("*.md")):
+        share_id = path.stem
+        if share_id in registry:
+            continue
+        if GENERATED_HEADER in path.read_text():
+            orphans.append((share_id, path))
+    return orphans
+
+
+def find_shape_errors(registry):
+    """Return errors for entries with a malformed shape or missing fields.
+
+    Mirrors the _data/short-urls.schema.json contract: every entry is a
+    mapping, all entries require a redirect_to, and regular entries (no
+    same_as) additionally require non-empty title and description. Validating
+    here keeps check mode and --write from crashing with KeyError later in
+    resolve_registry/render_page.
+    """
     errors = []
+    for share_id, entry in registry.items():
+        if not isinstance(entry, dict):
+            errors.append(
+                f"entry {share_id!r} is not a mapping (got {type(entry).__name__})"
+            )
+            continue
+        redirect_to = entry.get("redirect_to")
+        if not isinstance(redirect_to, str) or not redirect_to.strip():
+            errors.append(f"entry {share_id!r}: redirect_to must be a non-empty string")
+        if "same_as" in entry:
+            continue
+        for field in ("title", "description"):
+            value = entry.get(field)
+            if not isinstance(value, str) or not value.strip():
+                errors.append(
+                    f"entry {share_id!r}: {field} must be a non-empty string "
+                    "on regular entries"
+                )
+    return errors
+
+
+def registry_errors(registry):
+    """Return errors that invalidate the registry (shape, sorted, base62, aliases)."""
+    errors = []
+    errors.extend(find_shape_errors(registry))
     for id_ in find_unsorted_ids(registry):
         errors.append(f"registry is not sorted alphabetically at ID {id_!r}")
     for id_ in find_invalid_ids(registry):
@@ -163,12 +211,17 @@ def registry_errors(registry):
 
 
 def check_registry(registry, share_dir):
-    """Return registry-invariant errors plus stale share-page errors."""
+    """Return registry-invariant errors plus stale and orphan share-page errors."""
     stale = [
         f"s/{share_id}.md is out of date (run `make sync-short-urls`)"
         for share_id, _ in find_stale_pages(registry, share_dir)
     ]
-    return registry_errors(registry) + stale
+    orphans = [
+        f"s/{share_id}.md is orphaned (no registry entry; "
+        "run `make sync-short-urls` to remove it)"
+        for share_id, _ in find_orphan_pages(registry, share_dir)
+    ]
+    return registry_errors(registry) + stale + orphans
 
 
 def find_unknown_shortened_ids(registry, root):
@@ -231,7 +284,11 @@ def main():
         written = write_pages(registry, SHARE_DIR)
         for path in written:
             print(f"Generated: {path}")
-        if not written:
+        orphans = find_orphan_pages(registry, SHARE_DIR)
+        for _, path in orphans:
+            path.unlink()
+            print(f"Removed orphan: {path}")
+        if not written and not orphans:
             print("All share pages are current")
         return
 

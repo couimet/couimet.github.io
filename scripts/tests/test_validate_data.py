@@ -21,6 +21,17 @@ featured = _load("validate-featured-in")
 short_urls = _load("validate-short-urls")
 new_short_url = _load("new-short-url")
 
+
+class _SequenceRng:
+    """Injected rng whose choice() returns the next value from *values*."""
+
+    def __init__(self, values):
+        self._values = list(values)
+
+    def choice(self, seq):
+        return self._values.pop(0)
+
+
 UNIQUE = [{"anchor": "a"}, {"anchor": "b"}, {"anchor": "c"}]
 DUPES = [{"anchor": "a"}, {"anchor": "b"}, {"anchor": "a"}, {"anchor": "c"}]
 
@@ -224,6 +235,51 @@ class TestValidateShortUrls(unittest.TestCase):
                 {"b": SHARE_ENTRY, "a": SHARE_ENTRY}, Path(tmp)
             )
             self.assertTrue(any("sorted alphabetically" in e for e in errors))
+
+    def test_find_orphan_pages_detects_generated_page_without_entry(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            share_dir = Path(tmp)
+            header = short_urls.GENERATED_HEADER
+            (share_dir / "kn.md").write_text(header + "\nlayout: share\n")
+            (share_dir / "zz.md").write_text(header + "\nlayout: share\n")
+            orphans = short_urls.find_orphan_pages({"kn": SHARE_ENTRY}, share_dir)
+            self.assertEqual([share_id for share_id, _ in orphans], ["zz"])
+
+    def test_find_orphan_pages_ignores_hand_authored_page(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            share_dir = Path(tmp)
+            (share_dir / "zz.md").write_text("layout: share\n")
+            self.assertEqual(short_urls.find_orphan_pages({}, share_dir), [])
+
+    def test_check_registry_reports_orphan_pages(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            share_dir = Path(tmp)
+            (share_dir / "zz.md").write_text(
+                short_urls.GENERATED_HEADER + "\nlayout: share\n"
+            )
+            errors = short_urls.check_registry({"kn": SHARE_ENTRY}, share_dir)
+            self.assertTrue(any("zz.md is orphaned" in e for e in errors))
+
+    def test_registry_errors_flags_missing_title(self):
+        errors = short_urls.registry_errors({"kn": {"redirect_to": "/k"}})
+        self.assertTrue(any("title must be a non-empty string" in e for e in errors))
+
+    def test_registry_errors_flags_non_dict_entry(self):
+        errors = short_urls.registry_errors({"kn": "foo"})
+        self.assertTrue(any("not a mapping" in e for e in errors))
+
+    def test_registry_errors_flags_missing_redirect_to_on_alias(self):
+        errors = short_urls.registry_errors(
+            {"kn": SHARE_ENTRY, "lk": {"same_as": "kn"}}
+        )
+        self.assertTrue(any("redirect_to" in e for e in errors))
+
+    def test_registry_errors_accepts_valid_regular_and_alias(self):
+        registry = {
+            "kn": SHARE_ENTRY,
+            "lk": {"same_as": "kn", "redirect_to": "/l"},
+        }
+        self.assertEqual(short_urls.registry_errors(registry), [])
 
     def test_registry_errors_does_not_report_stale_pages(self):
         self.assertEqual(short_urls.registry_errors({"kn": SHARE_ENTRY}), [])
@@ -437,6 +493,28 @@ class TestNewShortUrl(unittest.TestCase):
             share_id = new_short_url.generate_share_id(registry)
             self.assertTrue(new_short_url.is_base62_id(share_id))
             self.assertNotIn(share_id, registry)
+
+    def test_is_reserved_id_rejects_yaml_boolean_words(self):
+        for share_id in ("on", "no", "yes", "off", "ON", "No", "YeS", "OFF"):
+            self.assertTrue(new_short_url.is_reserved_id(share_id))
+
+    def test_is_reserved_id_accepts_ordinary_ids(self):
+        for share_id in ("ab", "on1", "zz", "kn"):
+            self.assertFalse(new_short_url.is_reserved_id(share_id))
+
+    def test_generate_share_id_rejects_reserved_candidate(self):
+        # An injected rng that first yields "on" (a YAML-reserved word) must be
+        # skipped so generation returns the next non-reserved candidate.
+        registry = {"kn": {}, "lk": {}}
+        rng = _SequenceRng("onab")
+        share_id = new_short_url.generate_share_id(registry, rng=rng)
+        self.assertEqual(share_id, "ab")
+
+    def test_generate_share_id_avoids_reserved_ids(self):
+        registry = {"kn": {}, "lk": {}}
+        for _ in range(200):
+            share_id = new_short_url.generate_share_id(registry)
+            self.assertFalse(new_short_url.is_reserved_id(share_id))
 
     def test_generate_share_id_prefers_two_chars(self):
         registry = {"kn": {}, "lk": {}}

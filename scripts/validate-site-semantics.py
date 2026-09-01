@@ -64,6 +64,7 @@ class _PageParser(HTMLParser):
         self.canonical: str | None = None
         self.og_description: str | None = None
         self.has_redirect_refresh: bool = False
+        self.has_noindex: bool = False
         self._in_title = False
         self._title_parts: list[str] = []
 
@@ -85,6 +86,12 @@ class _PageParser(HTMLParser):
             and attr_map.get("content", "").strip()
         ):
             self.has_redirect_refresh = True
+        elif (
+            tag.lower() == "meta"
+            and attr_map.get("name", "").lower() == "robots"
+            and "noindex" in attr_map.get("content", "").lower()
+        ):
+            self.has_noindex = True
 
     def handle_data(self, data: str) -> None:
         if self._in_title:
@@ -134,13 +141,16 @@ def check_expected_pages(site_dir: Path, target: str, failures: list[str]) -> No
         )
 
 
-def check_duplicate_meta(site_dir: Path, failures: list[str]) -> None:
+def check_duplicate_meta(site_dir: Path, target: str, failures: list[str]) -> None:
     """Flag titles, canonical URLs, and og:descriptions shared across pages.
 
     Redirect stubs are exempt: they are noindex, sitemap-excluded, and bounce
     visitors immediately, so duplicate meta on them has no SEO effect. The
     /s/<ID> share pages rely on this — a same_as alias intentionally reuses its
     target entry's title, description, and banner while redirecting elsewhere.
+    On ouimet.info the exemption is limited to pages that carry both a refresh
+    tag and a page-level noindex; the github.io shell exempts every page, since
+    each is a verified redirect stub on a site-wide robots-disallowed host.
     """
     titles: dict[str, list[str]] = defaultdict(list)
     canonicals: dict[str, list[str]] = defaultdict(list)
@@ -148,7 +158,9 @@ def check_duplicate_meta(site_dir: Path, failures: list[str]) -> None:
     for html_path in sorted(site_dir.rglob("*.html")):
         rel = str(html_path.relative_to(site_dir))
         page = parse_page(html_path)
-        if page.has_redirect_refresh:
+        if page.has_redirect_refresh and (
+            target == TARGET_GH_PAGES or page.has_noindex
+        ):
             continue
         if page.title:
             titles[page.title].append(rel)
@@ -233,7 +245,7 @@ def main(argv: list[str] | None = None) -> int:
     failures: list[str] = []
     check_html_patterns(site_dir, failures)
     check_expected_pages(site_dir, args.target, failures)
-    check_duplicate_meta(site_dir, failures)
+    check_duplicate_meta(site_dir, args.target, failures)
     check_target_specific(site_dir, args.target, failures)
 
     if not failures:
