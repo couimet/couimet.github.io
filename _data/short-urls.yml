@@ -1,0 +1,31 @@
+# Registry of shortened share URLs (/s/<ID>). One entry per short ID.
+# Sorted alphabetically by ID for easy lookup — validate-short-urls.py
+# enforces the order, the base62 charset, and agreement with the matching
+# s/<ID>.md page. Once an ID is shared it must stay stable (never renamed).
+#
+# redirect_to   - same-site path the share URL redirects to (must start with /)
+# title         - OG title shown on the share card
+# description   - OG description shown on the share card
+# bannertagline - optional; dynamic tagline drawn on the social banner (defaults to title)
+#
+# og_image is derived as /img/social/<ID>.jpg; do not store it here.
+#
+# Some sections render on both the home page and a dedicated page; such
+# sections get two entries: the regular ID redirects to the canonical page
+# (e.g. /career/changelog/#<anchor>) and a "landing" ID redirects to the home
+# anchor (/#<anchor>). heading-anchor.html carries both via shortenedId +
+# landingShortenedId and exposes the matching one per page.
+#
+# same_as: <ID> makes an entry inherit title, description and the banner from
+# another (regular) entry. redirect_to is always local and title/description
+# may be overridden locally; the banner owner (og_image) is the same_as
+# target, so aliases never get their own banner. Aliases may not set
+# bannertagline (it is baked into the shared banner) and may not chain to
+# another alias.
+kn:
+  redirect_to: /career/changelog/#changelog-9-0-0
+  title: New role at Procurify
+  description: Staff Backend Software Developer on the Platform team at Procurify, building the platform behind agentic procurement.
+lk:
+  same_as: kn
+  redirect_to: /#changelog-9-0-0

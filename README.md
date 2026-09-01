@@ -56,6 +56,25 @@ Skill files (project-local):
 - `.claude/skills/career-role-enrich/SKILL.md`
 - `.claude/skills/career-style/SKILL.md`
 
+## Short URLs
+
+`_data/short-urls.yml` is the single source of truth for the `/s/<ID>` share pages: each entry maps a base62 ID to the path it redirects to, plus the OG title/description for the share card and the optional tagline drawn on the social banner (`bannertagline` defaults to `title`). Heading anchors carry the IDs via `shareId` / `homeShareId` (see `_includes/heading-anchor.html`), and `_includes/copy-link.html` turns the emitted attribute into the share URL.
+
+Regenerate the `s/<ID>.md` share pages from the registry (CI's `check-generated` job fails on drift):
+
+```bash
+make sync-short-urls
+```
+
+Scaffold a new registry entry with placeholder values — the ID is optional, and when omitted the script generates a random base62 ID that doesn't collide with existing entries (fill the values in, then re-run `make sync-short-urls`):
+
+```bash
+make new-short-url               # auto-generates a free base62 ID
+make new-short-url ID=<base62-id>  # or choose one yourself
+```
+
+To reuse another entry's metadata and banner for a second redirect target, alias it instead: `same_as: <target-id>` — only `redirect_to` stays local. Regenerate the banner images with `make banner-share`.
+
 ## Resume
 
 `resume.json` (JSON Resume format) is the single source of truth for the downloadable PDF, the `/resume.html` page, and the formatted `.docx` resume. Three scripts support the workflow:

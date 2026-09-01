@@ -1,6 +1,10 @@
 import importlib.util
+import random
+import tempfile
 import unittest
 from pathlib import Path
+
+import yaml
 
 SCRIPTS = Path(__file__).resolve().parent.parent
 
@@ -14,6 +18,8 @@ def _load(name):
 
 anchors = _load("validate-anchors")
 featured = _load("validate-featured-in")
+short_urls = _load("validate-short-urls")
+new_short_url = _load("new-short-url")
 
 UNIQUE = [{"anchor": "a"}, {"anchor": "b"}, {"anchor": "c"}]
 DUPES = [{"anchor": "a"}, {"anchor": "b"}, {"anchor": "a"}, {"anchor": "c"}]
@@ -112,6 +118,361 @@ class TestValidateFeaturedIn(unittest.TestCase):
             featured.find_duplicate_featured_anchors(["junk", None], ["junk"]),
             [],
         )
+
+
+SHARE_ENTRY = {
+    "redirect_to": "/#changelog-9-0-0",
+    "title": "New role at Procurify",
+    "description": "Staff Backend Software Developer on the Platform team at Procurify. Entry 9.0.0 in the career changelog.",
+    "bannertagline": "New role at Procurify",
+}
+
+ALIAS_ENTRY = {
+    "same_as": "kn",
+    "redirect_to": "/#changelog-9-0-0",
+}
+
+
+def frontmatter(content):
+    """Parse the YAML front matter out of a generated s/<ID>.md file."""
+    _, front, _ = content.split("---", 2)
+    return yaml.safe_load(front)
+
+
+class TestValidateShortUrls(unittest.TestCase):
+    def test_is_base62_id_accepts_two_char(self):
+        self.assertTrue(short_urls.is_base62_id("kn"))
+        self.assertTrue(short_urls.is_base62_id("0a"))
+        self.assertTrue(short_urls.is_base62_id("Z9"))
+
+    def test_is_base62_id_accepts_three_char_superset(self):
+        self.assertTrue(short_urls.is_base62_id("kn1"))
+
+    def test_is_base62_id_rejects_wrong_length(self):
+        self.assertFalse(short_urls.is_base62_id("k"))
+        self.assertFalse(short_urls.is_base62_id("kna0"))
+
+    def test_is_base62_id_rejects_special_chars(self):
+        self.assertFalse(short_urls.is_base62_id("k-"))
+        self.assertFalse(short_urls.is_base62_id("k_"))
+        self.assertFalse(short_urls.is_base62_id(".."))
+
+    def test_unsorted_ids_reported(self):
+        self.assertEqual(short_urls.find_unsorted_ids({"b": {}, "a": {}}), ["a"])
+        self.assertEqual(short_urls.find_unsorted_ids({"a": {}, "b": {}}), [])
+        self.assertEqual(
+            short_urls.find_unsorted_ids({"z": {}, "a": {}, "m": {}}), ["a"]
+        )
+
+    def test_invalid_ids_reported(self):
+        self.assertEqual(short_urls.find_invalid_ids({"kn": {}, "a-": {}}), ["a-"])
+
+    def test_render_page_round_trips_entry(self):
+        content = short_urls.render_page("kn", SHARE_ENTRY)
+        self.assertTrue(content.startswith("---\n"))
+        self.assertTrue(content.rstrip().endswith("---"))
+        meta = frontmatter(content)
+        self.assertEqual(meta["layout"], "share")
+        self.assertEqual(meta["redirect_to"], SHARE_ENTRY["redirect_to"])
+        self.assertEqual(meta["title"], SHARE_ENTRY["title"])
+        self.assertEqual(meta["description"], SHARE_ENTRY["description"])
+        self.assertEqual(meta["og_image"], "/img/social/kn.jpg")
+        self.assertEqual(meta["bannertagline"], SHARE_ENTRY["bannertagline"])
+        self.assertFalse(meta["sitemap"])
+
+    def test_render_page_bannertagline_falls_back_to_title(self):
+        entry = dict(SHARE_ENTRY)
+        del entry["bannertagline"]
+        meta = frontmatter(short_urls.render_page("kn", entry))
+        self.assertEqual(meta["bannertagline"], entry["title"])
+
+    def test_find_stale_pages_current(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            share_dir = Path(tmp)
+            (share_dir / "kn.md").write_text(short_urls.render_page("kn", SHARE_ENTRY))
+            self.assertEqual(
+                short_urls.find_stale_pages({"kn": SHARE_ENTRY}, share_dir), []
+            )
+
+    def test_find_stale_pages_different(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            share_dir = Path(tmp)
+            (share_dir / "kn.md").write_text("---\nlayout: share\n---\n")
+            stale = short_urls.find_stale_pages({"kn": SHARE_ENTRY}, share_dir)
+            self.assertEqual(stale, [("kn", share_dir / "kn.md")])
+
+    def test_find_stale_pages_missing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stale = short_urls.find_stale_pages({"kn": SHARE_ENTRY}, Path(tmp))
+            self.assertEqual(stale, [("kn", Path(tmp) / "kn.md")])
+
+    def test_write_pages_writes_changed_only(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            share_dir = Path(tmp)
+            page = share_dir / "kn.md"
+            page.write_text("stale")
+            written = short_urls.write_pages({"kn": SHARE_ENTRY}, share_dir)
+            self.assertEqual(written, [str(page)])
+            self.assertEqual(
+                page.read_text(), short_urls.render_page("kn", SHARE_ENTRY)
+            )
+            self.assertEqual(short_urls.write_pages({"kn": SHARE_ENTRY}, share_dir), [])
+
+    def test_check_registry_reports_unsorted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            errors = short_urls.check_registry(
+                {"b": SHARE_ENTRY, "a": SHARE_ENTRY}, Path(tmp)
+            )
+            self.assertTrue(any("sorted alphabetically" in e for e in errors))
+
+    def test_registry_errors_does_not_report_stale_pages(self):
+        self.assertEqual(short_urls.registry_errors({"kn": SHARE_ENTRY}), [])
+
+    def test_same_as_errors_valid_alias(self):
+        registry = {"kn": SHARE_ENTRY, "lk": ALIAS_ENTRY}
+        self.assertEqual(short_urls.find_same_as_errors(registry), [])
+        self.assertEqual(short_urls.registry_errors(registry), [])
+
+    def test_same_as_target_missing_reported(self):
+        registry = {"kn": SHARE_ENTRY, "lk": {"same_as": "zz", "redirect_to": "/"}}
+        errors = short_urls.find_same_as_errors(registry)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("same_as target 'zz' does not exist", errors[0])
+
+    def test_same_as_chain_rejected(self):
+        registry = {
+            "kn": SHARE_ENTRY,
+            "lk": ALIAS_ENTRY,
+            "ml": {"same_as": "lk", "redirect_to": "/"},
+        }
+        errors = short_urls.find_same_as_errors(registry)
+        self.assertTrue(any("is itself an alias" in e for e in errors))
+
+    def test_same_as_bannertagline_override_rejected(self):
+        registry = {
+            "kn": SHARE_ENTRY,
+            "lk": dict(ALIAS_ENTRY, bannertagline="Some other tagline"),
+        }
+        errors = short_urls.find_same_as_errors(registry)
+        self.assertTrue(any("cannot override bannertagline" in e for e in errors))
+
+    def test_render_page_alias_inherits_target_banner(self):
+        resolved, banner_ids = short_urls.resolve_registry(
+            {"kn": SHARE_ENTRY, "lk": ALIAS_ENTRY}
+        )
+        meta = frontmatter(
+            short_urls.render_page("lk", resolved["lk"], banner_ids["lk"])
+        )
+        self.assertEqual(meta["og_image"], "/img/social/kn.jpg")
+        self.assertEqual(meta["title"], SHARE_ENTRY["title"])
+        self.assertEqual(meta["description"], SHARE_ENTRY["description"])
+        self.assertEqual(meta["bannertagline"], SHARE_ENTRY["bannertagline"])
+        self.assertEqual(meta["redirect_to"], ALIAS_ENTRY["redirect_to"])
+
+    def test_render_page_alias_local_overrides(self):
+        alias = dict(ALIAS_ENTRY, title="Local title", description="Local desc")
+        resolved, banner_ids = short_urls.resolve_registry(
+            {"kn": SHARE_ENTRY, "lk": alias}
+        )
+        meta = frontmatter(
+            short_urls.render_page("lk", resolved["lk"], banner_ids["lk"])
+        )
+        self.assertEqual(meta["title"], "Local title")
+        self.assertEqual(meta["description"], "Local desc")
+        self.assertEqual(meta["bannertagline"], SHARE_ENTRY["bannertagline"])
+        self.assertEqual(meta["og_image"], "/img/social/kn.jpg")
+
+    def test_find_stale_pages_resolves_alias(self):
+        registry = {"kn": SHARE_ENTRY, "lk": ALIAS_ENTRY}
+        with tempfile.TemporaryDirectory() as tmp:
+            share_dir = Path(tmp)
+            resolved, banner_ids = short_urls.resolve_registry(registry)
+            (share_dir / "kn.md").write_text(
+                short_urls.render_page("kn", resolved["kn"], banner_ids["kn"])
+            )
+            (share_dir / "lk.md").write_text(
+                short_urls.render_page("lk", resolved["lk"], banner_ids["lk"])
+            )
+            self.assertEqual(short_urls.find_stale_pages(registry, share_dir), [])
+
+    def test_find_stale_pages_alias_with_own_banner_is_stale(self):
+        # A stale lk.md referencing its own banner (/img/social/lk.jpg) must be
+        # flagged and rewritten to the target's banner.
+        registry = {"kn": SHARE_ENTRY, "lk": ALIAS_ENTRY}
+        with tempfile.TemporaryDirectory() as tmp:
+            share_dir = Path(tmp)
+            resolved, banner_ids = short_urls.resolve_registry(registry)
+            (share_dir / "kn.md").write_text(
+                short_urls.render_page("kn", resolved["kn"], banner_ids["kn"])
+            )
+            (share_dir / "lk.md").write_text(
+                "---\nlayout: share\nog_image: /img/social/lk.jpg\n---\n"
+            )
+            stale = short_urls.find_stale_pages(registry, share_dir)
+            self.assertEqual(stale, [("lk", share_dir / "lk.md")])
+
+    def test_write_pages_alias_uses_target_banner(self):
+        registry = {"kn": SHARE_ENTRY, "lk": ALIAS_ENTRY}
+        with tempfile.TemporaryDirectory() as tmp:
+            share_dir = Path(tmp)
+            written = short_urls.write_pages(registry, share_dir)
+            self.assertEqual(len(written), 2)
+            meta = frontmatter((share_dir / "lk.md").read_text())
+            self.assertEqual(meta["og_image"], "/img/social/kn.jpg")
+
+    def test_share_ids_known(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            inc = root / "_includes" / "career"
+            inc.mkdir(parents=True)
+            (inc / "changelog.html").write_text(
+                '<h2 id="a">{% include heading-anchor.html id="a" shareId="kn" %}</h2>\n'
+            )
+            self.assertEqual(
+                short_urls.find_unknown_shortened_ids({"kn": SHARE_ENTRY}, root), []
+            )
+
+    def test_share_ids_unknown_reported_with_location(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            inc = root / "_includes" / "career"
+            inc.mkdir(parents=True)
+            path = inc / "changelog.html"
+            path.write_text(
+                '<h2 id="a">{% include heading-anchor.html id="a" shareId="kn" %}</h2>\n'
+                '<h2 id="b">{% include heading-anchor.html id="b" shareId="zz" %}</h2>\n'
+            )
+            self.assertEqual(
+                short_urls.find_unknown_shortened_ids({"kn": SHARE_ENTRY}, root),
+                [(path, 2, "zz")],
+            )
+
+    def test_home_share_ids_unknown_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            inc = root / "_includes" / "career"
+            inc.mkdir(parents=True)
+            path = inc / "changelog.html"
+            path.write_text(
+                '<h2 id="a">{% include heading-anchor.html id="a" shareId="kn" homeShareId="lk" %}</h2>\n'
+            )
+            self.assertEqual(
+                short_urls.find_unknown_shortened_ids({"kn": SHARE_ENTRY}, root),
+                [(path, 1, "lk")],
+            )
+
+    def test_share_ids_ignores_js_and_liquid(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            inc = root / "_includes"
+            inc.mkdir(parents=True)
+            (inc / "copy-link.html").write_text(
+                'var url = anchor.getAttribute("shareId");\n'
+            )
+            (inc / "heading-anchor.html").write_text(
+                'shareId="{{ include.shareId }}"\n'
+                'homeShareId="{{ include.homeShareId }}"\n'
+            )
+            (inc / "footer.html").write_text("<p>plain 🔗</p>\n")
+            self.assertEqual(
+                short_urls.find_unknown_shortened_ids({"kn": SHARE_ENTRY}, root), []
+            )
+
+
+REGISTRY_TEXT = (
+    "# header comment\n"
+    "\n"
+    "kn:\n"
+    "  redirect_to: /career/changelog/#changelog-9-0-0\n"
+    "  title: New role at Procurify\n"
+    "  description: A role.\n"
+    "lk:\n"
+    "  same_as: kn\n"
+    "  redirect_to: /#changelog-9-0-0\n"
+)
+
+
+class TestNewShortUrl(unittest.TestCase):
+    def test_is_base62_id(self):
+        self.assertTrue(new_short_url.is_base62_id("kn"))
+        self.assertTrue(new_short_url.is_base62_id("0a"))
+        self.assertTrue(new_short_url.is_base62_id("Z9"))
+        self.assertFalse(new_short_url.is_base62_id("k"))
+        self.assertFalse(new_short_url.is_base62_id("kna0"))
+
+    def test_insert_entry_keeps_registry_sorted(self):
+        text = new_short_url.insert_entry(REGISTRY_TEXT, "aa")
+        self.assertLess(text.index("aa:"), text.index("kn:"))
+        text = new_short_url.insert_entry(REGISTRY_TEXT, "zz")
+        self.assertGreater(text.index("zz:"), text.index("lk:"))
+
+    def test_insert_entry_preserves_comment_block(self):
+        text = new_short_url.insert_entry(REGISTRY_TEXT, "aa")
+        self.assertTrue(text.startswith("# header comment\n"))
+
+    def test_insert_entry_writes_placeholder_block(self):
+        text = new_short_url.insert_entry(REGISTRY_TEXT, "aa")
+        block = text.split("aa:", 1)[1].split("kn:", 1)[0]
+        self.assertIn("redirect_to: /TODO", block)
+        self.assertIn("title: TODO", block)
+        self.assertIn("description: TODO", block)
+
+    def test_insert_entry_comments_out_bannertagline(self):
+        text = new_short_url.insert_entry(REGISTRY_TEXT, "aa")
+        block = text.split("aa:", 1)[1].split("kn:", 1)[0]
+        self.assertIn("# bannertagline: TODO", block)
+
+    def test_insert_entry_rejects_duplicate(self):
+        with self.assertRaises(ValueError):
+            new_short_url.insert_entry(REGISTRY_TEXT, "kn")
+
+    def test_insert_entry_middle_position_keeps_neighbors(self):
+        text = new_short_url.insert_entry(REGISTRY_TEXT, "km")
+        self.assertLess(text.index("km:"), text.index("kn:"))
+        self.assertLess(text.index("kn:"), text.index("lk:"))
+
+    def test_generate_share_id_avoids_existing(self):
+        registry = {"kn": {}, "lk": {}}
+        for _ in range(20):
+            share_id = new_short_url.generate_share_id(registry)
+            self.assertTrue(new_short_url.is_base62_id(share_id))
+            self.assertNotIn(share_id, registry)
+
+    def test_generate_share_id_prefers_two_chars(self):
+        registry = {"kn": {}, "lk": {}}
+        for _ in range(20):
+            self.assertEqual(len(new_short_url.generate_share_id(registry)), 2)
+
+    def test_generate_share_id_deterministic_with_rng(self):
+        registry = {"kn": {}, "lk": {}}
+        rng = random.Random(7)
+        first = new_short_url.generate_share_id(registry, rng=rng)
+        rng = random.Random(7)
+        second = new_short_url.generate_share_id(registry, rng=rng)
+        self.assertEqual(first, second)
+
+    def test_generate_share_id_falls_back_to_three_chars(self):
+        # All 2-char IDs taken: generator must produce a 3-char ID.
+        registry = {}
+        for a in new_short_url.BASE62_CHARS:
+            for b in new_short_url.BASE62_CHARS:
+                registry[a + b] = {}
+        share_id = new_short_url.generate_share_id(registry)
+        self.assertEqual(len(share_id), 3)
+        self.assertNotIn(share_id, registry)
+
+    def test_generate_share_id_three_char_full_space(self):
+        # All 2-char and 3-char IDs taken: generator must raise.
+        registry = {}
+        for a in new_short_url.BASE62_CHARS:
+            for b in new_short_url.BASE62_CHARS:
+                registry[a + b] = {}
+        for a in new_short_url.BASE62_CHARS:
+            for b in new_short_url.BASE62_CHARS:
+                for c in new_short_url.BASE62_CHARS:
+                    registry[a + b + c] = {}
+        with self.assertRaises(ValueError):
+            new_short_url.generate_share_id(registry)
 
 
 if __name__ == "__main__":

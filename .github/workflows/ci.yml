@@ -43,6 +43,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           header: 'Promotions data YAML validation'
 
+      - name: Validate short URLs data against schema
+        uses: couimet/github-actions/validate-yaml@main
+        with:
+          schema: _data/short-urls.schema.json
+          file: _data/short-urls.yml
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          header: 'Short URLs data YAML validation'
+
       - name: Run Python validation and unit tests
         run: make test-python
 
@@ -240,3 +248,10 @@ jobs:
           post-generate: cd scripts/social-banner && UV_FROZEN=1 uv run python check_banner_drift.py
           github-token: ${{ secrets.GITHUB_TOKEN }}
           header: 'Social banner generated drift check'
+
+      - name: Check short URL share pages freshness
+        uses: couimet/github-actions/check-generated-drift@main
+        with:
+          command: make sync-short-urls
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          header: 'Short URL share pages generated drift check'

@@ -209,8 +209,23 @@ li[id]:hover .heading-anchor,
   color: var(--bs-link-color);
 }
 
+.heading-anchor svg {
+  width: 1.25em;
+  height: 1.25em;
+  fill: currentColor;
+  vertical-align: -0.15em;
+}
+
+/* The share icon is a solid 1.25em SVG box, far wider than the 🔗 emoji
+   glyph, so it needs to sit further left to clear the heading text. The
+   shareId attribute marks the share variant. */
+.heading-anchor[shareId] {
+  left: -1.7em;
+}
+
 @media (hover: none) {
   .heading-anchor,
+  .heading-anchor[shareId],
   li[id] > .heading-anchor {
     position: relative;
     display: inline-block;

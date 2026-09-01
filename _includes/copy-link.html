@@ -40,10 +40,16 @@
     document.addEventListener("click", function (e) {
       var anchor = e.target.closest(".heading-anchor");
       if (!anchor) return;
-      var id = anchor.getAttribute("href");
-      if (!id || !id.startsWith("#")) return;
+      var shareId = anchor.getAttribute("shareId");
+      var url;
+      if (shareId) {
+        url = window.location.origin + "/s/" + shareId;
+      } else {
+        var id = anchor.getAttribute("href");
+        if (!id || !id.startsWith("#")) return;
+        url = window.location.origin + window.location.pathname + id;
+      }
       e.preventDefault();
-      var url = window.location.origin + window.location.pathname + id;
       copyLink(anchor, url);
     });
   }
