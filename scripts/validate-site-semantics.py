@@ -135,13 +135,21 @@ def check_expected_pages(site_dir: Path, target: str, failures: list[str]) -> No
 
 
 def check_duplicate_meta(site_dir: Path, failures: list[str]) -> None:
-    """Flag titles, canonical URLs, and og:descriptions shared across pages."""
+    """Flag titles, canonical URLs, and og:descriptions shared across pages.
+
+    Redirect stubs are exempt: they are noindex, sitemap-excluded, and bounce
+    visitors immediately, so duplicate meta on them has no SEO effect. The
+    /s/<ID> share pages rely on this — a same_as alias intentionally reuses its
+    target entry's title, description, and banner while redirecting elsewhere.
+    """
     titles: dict[str, list[str]] = defaultdict(list)
     canonicals: dict[str, list[str]] = defaultdict(list)
     descriptions: dict[str, list[str]] = defaultdict(list)
     for html_path in sorted(site_dir.rglob("*.html")):
         rel = str(html_path.relative_to(site_dir))
         page = parse_page(html_path)
+        if page.has_redirect_refresh:
+            continue
         if page.title:
             titles[page.title].append(rel)
         if page.canonical:
