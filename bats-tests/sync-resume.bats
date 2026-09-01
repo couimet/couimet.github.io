@@ -83,7 +83,7 @@ run_script() {
   run_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"json2yamlresume is pinned at $PINNED_J2Y_VERSION but $newer is available"* ]]
-  [[ "$output" == *"Update json2yamlresume"* ]]
+  [[ "$output" == *"Update json2yamlresume in package.json"* ]]
   [[ "$output" != *"ERROR: yamlresume is pinned at"* ]]
 }
 
@@ -94,7 +94,7 @@ run_script() {
   run_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"yamlresume is pinned at $PINNED_YR_VERSION but $newer is available"* ]]
-  [[ "$output" == *"Update yamlresume"* ]]
+  [[ "$output" == *"Update yamlresume in package.json"* ]]
 }
 
 @test "version check aborts when both packages are behind latest" {

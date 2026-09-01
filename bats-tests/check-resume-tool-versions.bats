@@ -80,7 +80,7 @@ run_check_script() {
   run_check_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"ERROR: json2yamlresume is pinned at $PINNED_J2Y_VERSION but $(behind_version "$PINNED_J2Y_VERSION") is available"* ]]
-  [[ "$output" == *"Update json2yamlresume"* ]]
+  [[ "$output" == *"Update json2yamlresume in package.json"* ]]
 }
 
 @test "fails when yamlresume is behind" {
@@ -88,7 +88,7 @@ run_check_script() {
   run_check_script
   [ "$status" -eq 1 ]
   [[ "$output" == *"ERROR: yamlresume is pinned at $PINNED_YR_VERSION but $(behind_version "$PINNED_YR_VERSION") is available"* ]]
-  [[ "$output" == *"Update yamlresume"* ]]
+  [[ "$output" == *"Update yamlresume in package.json"* ]]
 }
 
 @test "fails on first mismatch when both are behind (short-circuit)" {
