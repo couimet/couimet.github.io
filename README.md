@@ -2,7 +2,9 @@
 
 For details on this professional portfolio, please see https://ouimet.info.
 
-[![codecov](https://codecov.io/gh/couimet/couimet.github.io/branch/main/graph/badge.svg)](https://codecov.io/gh/couimet/couimet.github.io)
+[![CI](https://github.com/couimet/couimet.github.io/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/couimet/couimet.github.io/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/couimet/couimet.github.io/branch/main/graph/badge.svg)](https://codecov.io/gh/couimet/couimet.github.io)
+
+![Jekyll](https://img.shields.io/badge/Jekyll-CC0000?logo=jekyll&logoColor=white) ![Ruby](https://img.shields.io/badge/Ruby-CC342D?logo=ruby&logoColor=white) ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-5FA04E?logo=nodedotjs&logoColor=white) ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 
 ## Local Development
 
