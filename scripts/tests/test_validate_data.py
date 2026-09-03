@@ -1,8 +1,12 @@
+import contextlib
 import importlib.util
+import io
 import random
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import yaml
 
@@ -156,8 +160,8 @@ class TestValidateShortUrls(unittest.TestCase):
         self.assertTrue(short_urls.is_base62_id("0a"))
         self.assertTrue(short_urls.is_base62_id("Z9"))
 
-    def test_is_base62_id_accepts_three_char_superset(self):
-        self.assertTrue(short_urls.is_base62_id("kn1"))
+    def test_is_base62_id_rejects_three_char(self):
+        self.assertFalse(short_urls.is_base62_id("kn1"))
 
     def test_is_base62_id_rejects_wrong_length(self):
         self.assertFalse(short_urls.is_base62_id("k"))
@@ -176,7 +180,10 @@ class TestValidateShortUrls(unittest.TestCase):
         )
 
     def test_invalid_ids_reported(self):
-        self.assertEqual(short_urls.find_invalid_ids({"kn": {}, "a-": {}}), ["a-"])
+        self.assertEqual(
+            short_urls.find_invalid_ids({"kn": {}, "a-": {}, "kn1": {}}),
+            ["a-", "kn1"],
+        )
 
     def test_render_page_round_trips_entry(self):
         content = short_urls.render_page("kn", SHARE_ENTRY)
@@ -516,7 +523,7 @@ class TestNewShortUrl(unittest.TestCase):
             share_id = new_short_url.generate_share_id(registry)
             self.assertFalse(new_short_url.is_reserved_id(share_id))
 
-    def test_generate_share_id_prefers_two_chars(self):
+    def test_generate_share_id_always_two_chars(self):
         registry = {"kn": {}, "lk": {}}
         for _ in range(20):
             self.assertEqual(len(new_short_url.generate_share_id(registry)), 2)
@@ -529,28 +536,41 @@ class TestNewShortUrl(unittest.TestCase):
         second = new_short_url.generate_share_id(registry, rng=rng)
         self.assertEqual(first, second)
 
-    def test_generate_share_id_falls_back_to_three_chars(self):
-        # All 2-char IDs taken: generator must produce a 3-char ID.
+    def test_generate_share_id_exhausted_two_char_space_raises(self):
+        # Every 2-char ID taken: generator must raise ValueError.
         registry = {}
         for a in new_short_url.BASE62_CHARS:
             for b in new_short_url.BASE62_CHARS:
                 registry[a + b] = {}
-        share_id = new_short_url.generate_share_id(registry)
-        self.assertEqual(len(share_id), 3)
-        self.assertNotIn(share_id, registry)
-
-    def test_generate_share_id_three_char_full_space(self):
-        # All 2-char and 3-char IDs taken: generator must raise.
-        registry = {}
-        for a in new_short_url.BASE62_CHARS:
-            for b in new_short_url.BASE62_CHARS:
-                registry[a + b] = {}
-        for a in new_short_url.BASE62_CHARS:
-            for b in new_short_url.BASE62_CHARS:
-                for c in new_short_url.BASE62_CHARS:
-                    registry[a + b + c] = {}
         with self.assertRaises(ValueError):
             new_short_url.generate_share_id(registry)
+
+    def test_generate_share_id_scans_space_when_random_draws_exhausted(self):
+        # Near-full registry with exactly one free ID and an rng that always
+        # draws a taken candidate: all 64 random attempts collide, so the
+        # deterministic scan must return the single free ID instead of raising
+        # a false "no free 2-char short IDs left".
+        registry = {}
+        for a in new_short_url.BASE62_CHARS:
+            for b in new_short_url.BASE62_CHARS:
+                if a + b != "aa":
+                    registry[a + b] = {}
+        rng = _SequenceRng(["0"] * 128)  # every candidate is the taken "00"
+        self.assertEqual(new_short_url.generate_share_id(registry, rng=rng), "aa")
+
+    def test_main_generate_only_prints_valid_id_and_leaves_registry(self):
+        # --generate-only must not touch the registry file: stdout carries a
+        # bare, valid 2-char ID drawn from the real registry.
+        original = new_short_url.REGISTRY_PATH.read_text()
+        out = io.StringIO()
+        with mock.patch.object(
+            sys, "argv", ["new-short-url.py", "--generate-only"]
+        ), contextlib.redirect_stdout(out):
+            new_short_url.main()
+        share_id = out.getvalue().strip()
+        self.assertTrue(new_short_url.is_base62_id(share_id))
+        self.assertNotIn(share_id, yaml.safe_load(original) or {})
+        self.assertEqual(new_short_url.REGISTRY_PATH.read_text(), original)
 
 
 if __name__ == "__main__":

@@ -4,11 +4,11 @@
   "description": "Schema for _data/short-urls.yml — the registry of /s/<ID> share pages.",
   "type": "object",
   "propertyNames": {
-    "pattern": "^[A-Za-z0-9]{2,3}$",
-    "description": "Base62 short ID. 2 chars now; 3 is the documented non-breaking extension."
+    "pattern": "^[A-Za-z0-9]{2}$",
+    "description": "Base62 short ID. Exactly 2 base62 chars."
   },
   "patternProperties": {
-    "^[A-Za-z0-9]{2,3}$": {
+    "^[A-Za-z0-9]{2}$": {
       "type": "object",
       "description": "A single share page definition. Mirrors the s/<ID>.md front matter.",
       "properties": {
@@ -19,7 +19,7 @@
         },
         "same_as": {
           "type": "string",
-          "pattern": "^[A-Za-z0-9]{2,3}$",
+          "pattern": "^[A-Za-z0-9]{2}$",
           "description": "Alias another entry: inherit its title, description and banner. Must point at a regular (non-alias) entry; redirect_to stays local and title/description may be overridden locally. Aliases may not set bannertagline."
         },
         "title": {

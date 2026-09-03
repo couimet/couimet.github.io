@@ -43,8 +43,8 @@ TEMPLATE_DIRS = ("_includes", "_layouts")
 
 
 def is_base62_id(share_id):
-    """True for a 2-3 char base62 ID (2 chars now; 3 is the superset)."""
-    return 2 <= len(share_id) <= 3 and all(c in BASE62 for c in share_id)
+    """True for an exactly-2-char base62 ID."""
+    return len(share_id) == 2 and all(c in BASE62 for c in share_id)
 
 
 def find_unsorted_ids(registry):
@@ -58,7 +58,7 @@ def find_unsorted_ids(registry):
 
 
 def find_invalid_ids(registry):
-    """Return IDs that are not 2-3 char base62 values, in registry order."""
+    """Return IDs that are not exactly-2-char base62 values, in registry order."""
     return [id_ for id_ in registry if not is_base62_id(id_)]
 
 
@@ -205,7 +205,7 @@ def registry_errors(registry):
     for id_ in find_unsorted_ids(registry):
         errors.append(f"registry is not sorted alphabetically at ID {id_!r}")
     for id_ in find_invalid_ids(registry):
-        errors.append(f"ID {id_!r} is not a 2-3 char base62 value")
+        errors.append(f"ID {id_!r} is not a 2-char base62 value")
     errors.extend(find_same_as_errors(registry))
     return errors
 

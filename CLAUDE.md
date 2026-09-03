@@ -152,6 +152,20 @@ When adding a new project page to this repo, use `/create-github-issue` to creat
 
 ---
 
+<short-urls>
+`_data/short-urls.yml` is the single source of truth for the `/s/<ID>` share pages and their social banners. Edit it, then run `make sync-short-urls` to regenerate the `s/<ID>.md` pages and `make banner-share` to redraw banners. IDs are exactly 2 base62 characters, and an ID is stable once shared — never rename or reuse one. The registry stays sorted alphabetically in base62 order; `make validate-short-urls` (part of `make test-python`) enforces the sort, the exactly-2-char charset, the `same_as` alias rules, and agreement with the generated pages.
+
+**When adding new short IDs, defer `make banner-share` until the copy in `_data/short-urls.yml` is settled and staged.** Adding entries and running `make sync-short-urls` is cheap, but `make banner-share` renders each banner JPEG with the registry text baked in (`bannertagline` defaults to `title`), so generating banners before that text is final spends tokens and CPU on images that any later wording change forces to be redrawn and re-verified. Create the entries, regenerate the `s/<ID>.md` pages, then let the titles, descriptions, and taglines be reviewed and staged before running `make banner-share`.
+
+**Role share-card copy conventions.** A role title reads `New role at <Company>` with the company name written exactly as it appears in the role header, since a Major or Minor changelog version is the start of a role. The description is one short line that names the role and carries only the qualifier that entry already has, either a sector (`in fulfillment and logistics`) or a team or system clause (`on the shop.app Buyer Acquisition team`, `on network management systems`); it never repeats the company the title just named and never adds a qualifier to an entry that lacks one. Descriptions feed only the `/s/<ID>.md` pages, never the banner, so a wording-only change needs `make sync-short-urls` but not `make banner-share`.
+
+The exceptions are deliberate: the live to-Present entry may keep a present-tense product clause (Staff Backend Software Developer on the Platform team, building the platform behind agentic procurement), item-level anchors migrated in a later issue get copy framed around the item rather than the role, and The Beginning (0.1.0) stays bespoke because it is not a company role.
+
+Sections that render on both the home page and a dedicated page (like the career changelog) carry two entries: a regular canonical ID plus a mnemonic landing alias. `_includes/heading-anchor.html` carries both via `shareId` + `homeShareId` and exposes the matching one per page; the alias inherits the canonical's title, description, and banner via `same_as` while keeping its own local `redirect_to` pointing at the home anchor.
+</short-urls>
+
+---
+
 <resume-files>
 `resume.json` (source of truth for the downloadable PDF, ATS-focused) and `_data/bio.json` (drives the Jekyll `/resume.html` page, casual/personal tone) share overlapping fields: `basics.summary`/`summaryLong`, `basics.label`, interests, and skills. When updating one, check the other for consistency. They use different tones (formal vs. casual) but should agree on facts: job titles, industry domains, years of experience, and technology keywords. The CI pipeline (`scripts/sync-resume.sh`, triggered on push to main) auto-generates `resume.yml` and `resume-full.html` from `resume.json` — never edit those generated files directly.
 </resume-files>
