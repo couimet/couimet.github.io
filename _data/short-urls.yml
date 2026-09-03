@@ -1,7 +1,8 @@
 # Registry of shortened share URLs (/s/<ID>). One entry per short ID.
 # Sorted alphabetically by ID for easy lookup — validate-short-urls.py
-# enforces the order, the base62 charset, and agreement with the matching
-# s/<ID>.md page. Once an ID is shared it must stay stable (never renamed).
+# enforces the order, the exactly-2-char base62 charset, and agreement with
+# the matching s/<ID>.md page. IDs are exactly 2 base62 chars, and once an ID
+# is shared it must stay stable (never renamed or reused).
 #
 # redirect_to   - same-site path the share URL redirects to (must start with /)
 # title         - OG title shown on the share card
@@ -13,8 +14,8 @@
 # Some sections render on both the home page and a dedicated page; such
 # sections get two entries: the regular ID redirects to the canonical page
 # (e.g. /career/changelog/#<anchor>) and a "landing" ID redirects to the home
-# anchor (/#<anchor>). heading-anchor.html carries both via shortenedId +
-# landingShortenedId and exposes the matching one per page.
+# anchor (/#<anchor>). heading-anchor.html carries both via shareId +
+# homeShareId and exposes the matching one per page.
 #
 # same_as: <ID> makes an entry inherit title, description and the banner from
 # another (regular) entry. redirect_to is always local and title/description
@@ -22,10 +23,116 @@
 # target, so aliases never get their own banner. Aliases may not set
 # bannertagline (it is baked into the shared banner) and may not chain to
 # another alias.
+#
+# 6.2.0 Flexport (2023 to 2024)
+2G:
+  redirect_to: /career/changelog/#changelog-6-2-0
+  title: New role at Flexport
+  description: Senior Staff Developer in fulfillment and logistics.
+# 5.0.0 SSENSE (2019 to 2021)
+5g:
+  redirect_to: /career/changelog/#changelog-5-0-0
+  title: New role at SSENSE
+  description: Tech Lead in ecommerce and fashion.
+# 0.1.0 The Beginning (2001)
+AY:
+  redirect_to: /career/changelog/#changelog-0-1-0
+  title: The Beginning
+  description: Where the journey into professional software development began in 2001.
+# 6.0.0 Deliverr (2021 to 2022)
+Fz:
+  redirect_to: /career/changelog/#changelog-6-0-0
+  title: New role at Deliverr
+  description: Senior Developer in fulfillment.
+# 1.0.0 Markzware Software (2001 to 2006)
+Gn:
+  redirect_to: /career/changelog/#changelog-1-0-0
+  title: New role at Markzware Software
+  description: Senior Developer in digital publishing and prepress.
+# 3.0.0 AFS Technologies (2011 to 2018)
+K3:
+  redirect_to: /career/changelog/#changelog-3-0-0
+  title: New role at AFS Technologies
+  description: Architect in the consumer packaged goods industry.
+# af: AFS (3.0.0) landing alias
+af:
+  same_as: K3
+  redirect_to: /#changelog-3-0-0
+# dl: Deliverr (6.0.0) landing alias
+dl:
+  same_as: Fz
+  redirect_to: /#changelog-6-0-0
+# 4.0.0 Zola (2019)
+ef:
+  redirect_to: /career/changelog/#changelog-4-0-0
+  title: New role at Zola
+  description: Senior Developer in ecommerce and wedding industry.
+# fl: Flexport (6.2.0) landing alias
+fl:
+  same_as: 2G
+  redirect_to: /#changelog-6-2-0
+# 9.0.0 Procurify (2026 to Present)
 kn:
   redirect_to: /career/changelog/#changelog-9-0-0
   title: New role at Procurify
-  description: Staff Backend Software Developer on the Platform team at Procurify, building the platform behind agentic procurement.
+  description: Staff Backend Software Developer on the Platform team, building the platform behind agentic procurement.
+# lk: legacy landing alias for 9.0.0 Procurify (pr supersedes it)
 lk:
   same_as: kn
   redirect_to: /#changelog-9-0-0
+# mw: Markzware (1.0.0) landing alias
+mw:
+  same_as: Gn
+  redirect_to: /#changelog-1-0-0
+# 6.1.0 Shopify Logistics (2022 to 2023)
+oB:
+  redirect_to: /career/changelog/#changelog-6-1-0
+  title: New role at Shopify Logistics
+  description: Senior Staff Developer in fulfillment.
+# 8.0.0 Shopify (2025 to 2026)
+oP:
+  redirect_to: /career/changelog/#changelog-8-0-0
+  title: New role at Shopify
+  description: Staff Software Developer on the shop.app Buyer Acquisition team.
+# oc: Octav (7.0.0) landing alias
+oc:
+  same_as: rh
+  redirect_to: /#changelog-7-0-0
+# pr: Procurify (9.0.0) landing alias
+pr:
+  same_as: kn
+  redirect_to: /#changelog-9-0-0
+# 2.0.0 Vidéotron (2006 to 2011)
+rB:
+  redirect_to: /career/changelog/#changelog-2-0-0
+  title: New role at Vidéotron
+  description: Senior Developer on network management systems.
+# 7.0.0 Octav (2025)
+rh:
+  redirect_to: /career/changelog/#changelog-7-0-0
+  title: New role at Octav
+  description: Principal Software Developer in the crypto and DeFi space.
+# sh: Shopify (8.0.0) landing alias
+sh:
+  same_as: oP
+  redirect_to: /#changelog-8-0-0
+# sl: Shopify Logistics (6.1.0) landing alias
+sl:
+  same_as: oB
+  redirect_to: /#changelog-6-1-0
+# ss: SSENSE (5.0.0) landing alias
+ss:
+  same_as: 5g
+  redirect_to: /#changelog-5-0-0
+# tb: The Beginning (0.1.0) landing alias
+tb:
+  same_as: AY
+  redirect_to: /#changelog-0-1-0
+# vi: Vidéotron (2.0.0) landing alias
+vi:
+  same_as: rB
+  redirect_to: /#changelog-2-0-0
+# zo: Zola (4.0.0) landing alias
+zo:
+  same_as: ef
+  redirect_to: /#changelog-4-0-0
