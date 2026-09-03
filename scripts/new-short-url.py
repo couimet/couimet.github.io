@@ -61,7 +61,10 @@ def generate_share_id(registry, rng=None):
     """Return a random 2-char base62 ID not already in *registry*.
 
     Rejection-samples the 2-char ID space so it stays collision-free against
-    the existing entries. *rng* is injectable for deterministic tests.
+    the existing entries. If 64 random draws all collide (a near-full
+    registry), falls back to a deterministic scan of the finite space so the
+    ValueError below fires only when every ID is genuinely taken. *rng* is
+    injectable for deterministic tests.
     """
     rng = rng or random
     taken = set(registry)
@@ -69,6 +72,11 @@ def generate_share_id(registry, rng=None):
         candidate = "".join(rng.choice(BASE62_CHARS) for _ in range(2))
         if candidate not in taken and not is_reserved_id(candidate):
             return candidate
+    for first in BASE62_CHARS:
+        for second in BASE62_CHARS:
+            candidate = first + second
+            if candidate not in taken and not is_reserved_id(candidate):
+                return candidate
     raise ValueError("no free 2-char short IDs left")
 
 

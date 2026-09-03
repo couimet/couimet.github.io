@@ -545,6 +545,19 @@ class TestNewShortUrl(unittest.TestCase):
         with self.assertRaises(ValueError):
             new_short_url.generate_share_id(registry)
 
+    def test_generate_share_id_scans_space_when_random_draws_exhausted(self):
+        # Near-full registry with exactly one free ID and an rng that always
+        # draws a taken candidate: all 64 random attempts collide, so the
+        # deterministic scan must return the single free ID instead of raising
+        # a false "no free 2-char short IDs left".
+        registry = {}
+        for a in new_short_url.BASE62_CHARS:
+            for b in new_short_url.BASE62_CHARS:
+                if a + b != "aa":
+                    registry[a + b] = {}
+        rng = _SequenceRng(["0"] * 128)  # every candidate is the taken "00"
+        self.assertEqual(new_short_url.generate_share_id(registry, rng=rng), "aa")
+
     def test_main_generate_only_prints_valid_id_and_leaves_registry(self):
         # --generate-only must not touch the registry file: stdout carries a
         # bare, valid 2-char ID drawn from the real registry.
