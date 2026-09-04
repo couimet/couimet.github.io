@@ -50,8 +50,20 @@ export const messagesFr = {
   [MessageCode.PREVIEW_COPIED]: 'Copié !',
   [MessageCode.PREVIEW_FILL_IN_TITLE]: 'À remplir : {missing}',
 
+  // Share link
+  [MessageCode.TITLE_SHARE_TEMPLATE]: 'Copier le lien de partage de ce modèle',
+  [MessageCode.SHARE_LINK_COPIED]: 'Lien copié !',
+
+  // Compose share sheet (step 1)
+  [MessageCode.SHARE_SHEET_PRIMARY]: "Français, tel que vous l'utilisez",
+  [MessageCode.SHARE_SHEET_PRIMARY_SUBLINE]: "S'ouvre prêt à remplir, en français.",
+  [MessageCode.SHARE_SHEET_READER_CHOICE]: 'Laisser le lecteur choisir',
+  [MessageCode.SHARE_SHEET_READER_CHOICE_SUBLINE]: "S'ouvre dans la langue du lecteur, anglais ou français.",
+  [MessageCode.SHARE_SHEET_DISMISS]: 'Fermer les options de partage',
+
   // Buttons
   [MessageCode.BUTTON_SELECT]: 'Sélectionner',
+  [MessageCode.BUTTON_SHARE]: 'Partager',
   [MessageCode.BUTTON_BACK_TO_TEMPLATES]: 'Retour aux modèles',
   [MessageCode.TITLE_COPY_TO_CLIPBOARD]: 'Copier dans le presse-papiers',
 };

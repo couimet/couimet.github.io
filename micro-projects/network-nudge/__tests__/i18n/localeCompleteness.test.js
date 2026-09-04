@@ -1,5 +1,6 @@
 import { MessageCode } from '../../src/i18n/messageCodes.js';
 import {
+  applyLocale,
   DEFAULT_LOCALE,
   detectLocale,
   format,
@@ -101,6 +102,24 @@ describe('Locale manager', () => {
   it('setLocale falls back to the default for falsy locales', () => {
     setLocale(null);
     expect(getCurrentLocale()).toBe(DEFAULT_LOCALE);
+  });
+
+  it('applyLocale applies a supported locale without persisting it', () => {
+    localStorage.setItem(STORAGE_KEY, 'en');
+    applyLocale('fr');
+    expect(getCurrentLocale()).toBe('fr');
+    expect(localStorage.getItem(STORAGE_KEY)).toBe('en');
+  });
+
+  it('applyLocale falls back to the default for unsupported locales', () => {
+    applyLocale('xx');
+    expect(getCurrentLocale()).toBe(DEFAULT_LOCALE);
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+  });
+
+  it('applyLocale leaves no stored value behind when none was set', () => {
+    applyLocale('fr');
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
   });
 
   it('detectLocale returns the stored locale when supported', () => {

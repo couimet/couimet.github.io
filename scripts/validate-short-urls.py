@@ -41,6 +41,23 @@ SHARE_ID_PATTERNS = (SHARE_ID_RE, HOME_SHARE_ID_RE)
 
 TEMPLATE_DIRS = ("_includes", "_layouts")
 
+# Property-form shareId: '<ID>' literals in
+# micro-projects/network-nudge/src/templates.js. TemplateCard reads
+# template.shareId to build the /s/<ID> URL, and the compose share sheet reads
+# template.pinnedShareIds[locale] (an en/fr map of registry IDs pinned to a
+# locale's #<locale>--<template id> hash), so every literal must exist in the
+# registry or a Share button copies a URL that 404s. The colon-plus-quote
+# shape is distinct from the HTML shareId="<ID>" attribute regex above (no
+# equals sign), and the "shareId" prose in templates.js comments carries no
+# colon or quote.
+JS_SHARE_ID_RE = re.compile(r"shareId:\s*['\"]([A-Za-z0-9]+)['\"]")
+# The pinned map is scanned per line: only en:/fr: property literals on a line
+# that declares pinnedShareIds count, so a stray en: or fr: key elsewhere in
+# the file is never treated as a share ID.
+JS_PINNED_LINE_RE = re.compile(r"pinnedShareIds\s*:")
+JS_PINNED_ID_RE = re.compile(r"\b(?:en|fr):\s*['\"]([A-Za-z0-9]+)['\"]")
+TEMPLATES_JS_RELPATH = Path("micro-projects") / "network-nudge" / "src" / "templates.js"
+
 
 def is_base62_id(share_id):
     """True for an exactly-2-char base62 ID."""
@@ -67,7 +84,8 @@ def find_same_as_errors(registry):
 
     An alias must point at an existing regular entry: the target may not
     itself be an alias (no chains), and the alias may not override
-    bannertagline because it is baked into the shared banner (Q001/Q002).
+    bannertagline or bannersubtitle because both are baked into the shared
+    banner.
     """
     errors = []
     for share_id, entry in registry.items():
@@ -84,11 +102,12 @@ def find_same_as_errors(registry):
                 f"entry {share_id!r}: same_as target {target_id!r} is itself an alias"
                 " (chains are not allowed)"
             )
-        if "bannertagline" in entry:
-            errors.append(
-                f"entry {share_id!r}: same_as entries cannot override bannertagline"
-                " (the shared banner bakes in the target's tagline)"
-            )
+        for key in ("bannertagline", "bannersubtitle"):
+            if key in entry:
+                errors.append(
+                    f"entry {share_id!r}: same_as entries cannot override {key}"
+                    f" (the shared banner bakes in the target's {key})"
+                )
     return errors
 
 
@@ -134,6 +153,11 @@ def render_page(share_id, entry, banner_id=None):
         "bannertagline": entry.get("bannertagline") or entry["title"],
         "sitemap": False,
     }
+    # bannersubtitle is generation metadata mirrored onto the page so the
+    # registry and page stay in sync; the share layout itself only reads
+    # redirect_to. Omit it when unset so existing pages are unchanged.
+    if entry.get("bannersubtitle"):
+        front["bannersubtitle"] = entry["bannersubtitle"]
     dumped = yaml.safe_dump(front, sort_keys=False, allow_unicode=True, width=1000)
     return f"---\n{GENERATED_HEADER}\n{dumped}---\n"
 
@@ -188,9 +212,19 @@ def find_shape_errors(registry):
             errors.append(f"entry {share_id!r}: redirect_to must be a non-empty string")
         if "same_as" in entry:
             continue
+        # title and description are required, so a missing or blank value is an
+        # error; bannertagline/bannersubtitle are optional, so only a present
+        # non-string or blank value is.
         for field in ("title", "description"):
             value = entry.get(field)
             if not isinstance(value, str) or not value.strip():
+                errors.append(
+                    f"entry {share_id!r}: {field} must be a non-empty string "
+                    "on regular entries"
+                )
+        for field in ("bannertagline", "bannersubtitle"):
+            value = entry.get(field)
+            if value is not None and (not isinstance(value, str) or not value.strip()):
                 errors.append(
                     f"entry {share_id!r}: {field} must be a non-empty string "
                     "on regular entries"
@@ -241,6 +275,37 @@ def find_unknown_shortened_ids(registry, root):
                         share_id = match.group(1)
                         if share_id not in registry:
                             unknown.append((path, lineno, share_id))
+    return unknown
+
+
+def find_unknown_template_js_ids(registry, root):
+    """Return [(path, line_no, share_id)] for templates.js share-id literals
+    not in the registry.
+
+    Each outreach template in micro-projects/network-nudge/src/templates.js
+    carries its registry-backed short ID as a `shareId: '<ID>'` property and a
+    per-locale `pinnedShareIds: { en: '<ID>', fr: '<ID>' }` map; TemplateCard
+    builds the /s/<ID> share URL from the scalar and the compose share sheet
+    builds the pinned /s/<ID> URL from the map, so every literal must exist in
+    the registry or a Share button copies a URL that 404s. The property form is
+    distinct from the HTML shareId="<ID>" attribute scanned by
+    find_unknown_shortened_ids, so the two scans cover different sources.
+    """
+    unknown = []
+    path = root / TEMPLATES_JS_RELPATH
+    if not path.exists():
+        return unknown
+    for lineno, line in enumerate(path.read_text().splitlines(), 1):
+        for match in JS_SHARE_ID_RE.finditer(line):
+            share_id = match.group(1)
+            if share_id not in registry:
+                unknown.append((path, lineno, share_id))
+        if not JS_PINNED_LINE_RE.search(line):
+            continue
+        for match in JS_PINNED_ID_RE.finditer(line):
+            share_id = match.group(1)
+            if share_id not in registry:
+                unknown.append((path, lineno, share_id))
     return unknown
 
 
@@ -297,7 +362,11 @@ def main():
         f"{path}:{lineno}: shareId {share_id!r} is not in {REGISTRY_PATH.name}"
         for path, lineno, share_id in find_unknown_shortened_ids(registry, REPO_ROOT)
     ]
-    errors = stale + unknown
+    unknown_js = [
+        f"{path}:{lineno}: templates.js share-id {share_id!r} is not in {REGISTRY_PATH.name}"
+        for path, lineno, share_id in find_unknown_template_js_ids(registry, REPO_ROOT)
+    ]
+    errors = stale + unknown + unknown_js
     if errors:
         print(f"ERROR: {REGISTRY_PATH.name}", file=sys.stderr)
         for error in errors:

@@ -20,7 +20,7 @@
         "same_as": {
           "type": "string",
           "pattern": "^[A-Za-z0-9]{2}$",
-          "description": "Alias another entry: inherit its title, description and banner. Must point at a regular (non-alias) entry; redirect_to stays local and title/description may be overridden locally. Aliases may not set bannertagline."
+          "description": "Alias another entry: inherit its title, description and banner. Must point at a regular (non-alias) entry; redirect_to stays local and title/description may be overridden locally. Aliases may not set bannertagline or bannersubtitle."
         },
         "title": {
           "type": "string",
@@ -36,6 +36,11 @@
           "type": "string",
           "minLength": 1,
           "description": "Dynamic tagline drawn on the social banner. Falls back to title. Regular entries only; aliases inherit the target's tagline."
+        },
+        "bannersubtitle": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Subtitle drawn under the banner title, overriding the default (a project's own banner subtitle for project-branded shares, or the site label otherwise). Regular entries only; aliases inherit the target's banner."
         }
       },
       "additionalProperties": false,
@@ -53,7 +58,7 @@
             {
               "description": "Alias entry: same_as required, banner text inherited.",
               "required": ["same_as"],
-              "not": { "required": ["bannertagline"] }
+              "not": { "required": ["bannertagline", "bannersubtitle"] }
             }
           ]
         }

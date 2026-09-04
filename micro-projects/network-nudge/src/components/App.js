@@ -1,15 +1,16 @@
 import { MessageCode } from '../i18n/messageCodes.js';
-import { detectLocale, getMessages, LocaleContext, setLocale, supportedLocales } from '../i18n/supportedLocales.js';
+import { applyLocale, detectLocale, getMessages, LocaleContext, setLocale, supportedLocales } from '../i18n/supportedLocales.js';
 import { SHARED_FIELD_NAMES, TEMPLATES } from '../templates.js';
 
 import { MessageForm } from './MessageForm.js';
 import { MessagePreview } from './MessagePreview.js';
 import { SharedFields } from './SharedFields.js';
+import { ShareSheet } from './ShareSheet.js';
 import { StepIndicator } from './StepIndicator.js';
 import { TemplateCards } from './TemplateCards.js';
 
 import htm from 'htm';
-import { createElement, useCallback, useEffect, useReducer, useState } from 'react';
+import { createElement, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 
 const html = htm.bind(createElement);
 
@@ -80,10 +81,12 @@ export function App({ careerUrlDefault, resumeUrlDefault } = {}) {
 
   // Lazy initializer: sync module-level locale before the first render so
   // getMessages() returns the correct bundle when children call renderPreview().
+  // A hash locale applies for this visit only; nothing here persists (only an
+  // explicit EN/FR press writes network-nudge-locale).
   const [locale, setLocaleState] = useState(() => {
     const { locale: hashLocale } = parseHash(window.location.hash);
     const resolved = hashLocale || detectLocale();
-    setLocale(resolved);
+    applyLocale(resolved);
     return resolved;
   });
 
@@ -97,11 +100,13 @@ export function App({ careerUrlDefault, resumeUrlDefault } = {}) {
 
   // Keep state aligned with browser navigation (Back/Forward). Every handler
   // writes window.location.hash but only this listener reads it reactively.
+  // A hash locale applies for this visit only (applyLocale); it does not
+  // overwrite the reader's stored choice.
   useEffect(() => {
     const onHashChange = () => {
       const { locale: hashLocale, templateId } = parseHash(window.location.hash);
       if (hashLocale) {
-        setLocale(hashLocale);
+        applyLocale(hashLocale);
         setLocaleState(hashLocale);
       }
       if (templateId && TEMPLATES.some((t) => t.id === templateId)) {
@@ -114,8 +119,9 @@ export function App({ careerUrlDefault, resumeUrlDefault } = {}) {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, [state.selectedTemplateId]);
 
-  // Updates the module-level locale (and localStorage) via supportedLocales,
-  // then triggers a re-render through App's own state. Keeps the hash in sync.
+  // Updates the module-level locale and persists it (an explicit EN/FR press is
+  // the only action that writes network-nudge-locale), then triggers a
+  // re-render through App's own state. Keeps the hash in sync.
   const handleSetLocale = useCallback(
     (newLocale) => {
       setLocale(newLocale);
@@ -137,6 +143,15 @@ export function App({ careerUrlDefault, resumeUrlDefault } = {}) {
     window.location.hash = buildHash(locale, null);
     dispatch({ type: 'GO_BACK' });
   }, [locale]);
+
+  // Compose share sheet (step 1). The sheet is anchored under its Share
+  // trigger; leaving step 1 (back to the gallery or a different template)
+  // always closes it so it cannot linger over a new view.
+  const [shareOpen, setShareOpen] = useState(false);
+  const shareTriggerRef = useRef(null);
+  useEffect(() => {
+    setShareOpen(false);
+  }, [state.currentStep, state.selectedTemplateId]);
 
   const setField = useCallback((field, value) => dispatch({ type: 'SET_FIELD', field, value }), []);
 
@@ -164,7 +179,27 @@ export function App({ careerUrlDefault, resumeUrlDefault } = {}) {
             <div className="row mt-4">
               <div className="col-lg-5 mb-3">
                 <${MessageForm} template=${selectedTemplate} fieldValues=${state.fieldValues} onChange=${setField} />
-                <button className="btn btn-outline-secondary mt-3" onClick=${handleGoBack}>${getMessages()[MessageCode.BUTTON_BACK_TO_TEMPLATES]}</button>
+                <div className="d-flex flex-wrap gap-2 mt-3">
+                  <button className="btn btn-outline-secondary" onClick=${handleGoBack}>${getMessages()[MessageCode.BUTTON_BACK_TO_TEMPLATES]}</button>
+                  <span className="position-relative">
+                    <button
+                      ref=${shareTriggerRef}
+                      type="button"
+                      className=${`btn ${shareOpen ? 'btn-primary' : 'btn-outline-secondary'}`}
+                      aria-haspopup="true"
+                      aria-expanded=${shareOpen}
+                      onClick=${() => setShareOpen((open) => !open)}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" className="me-1 align-baseline">
+                        <path
+                          d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"
+                        />
+                      </svg>
+                      ${getMessages()[MessageCode.BUTTON_SHARE]}
+                    </button>
+                    ${shareOpen && html`<${ShareSheet} template=${selectedTemplate} triggerRef=${shareTriggerRef} onClose=${() => setShareOpen(false)} />`}
+                  </span>
+                </div>
               </div>
               <div className="col-lg-7">
                 <${MessagePreview} template=${selectedTemplate} fieldValues=${state.fieldValues} locale=${locale} />

@@ -319,6 +319,34 @@ class TestValidateShortUrls(unittest.TestCase):
         errors = short_urls.find_same_as_errors(registry)
         self.assertTrue(any("cannot override bannertagline" in e for e in errors))
 
+    def test_same_as_bannersubtitle_override_rejected(self):
+        registry = {
+            "kn": SHARE_ENTRY,
+            "lk": dict(ALIAS_ENTRY, bannersubtitle="Sous-titre localisé"),
+        }
+        errors = short_urls.find_same_as_errors(registry)
+        self.assertTrue(any("cannot override bannersubtitle" in e for e in errors))
+
+    def test_render_page_mirrors_bannersubtitle_when_set(self):
+        entry = dict(SHARE_ENTRY, bannersubtitle="Sous-titre localisé")
+        meta = frontmatter(short_urls.render_page("kn", entry))
+        self.assertEqual(meta["bannersubtitle"], "Sous-titre localisé")
+
+    def test_render_page_omits_bannersubtitle_when_unset(self):
+        meta = frontmatter(short_urls.render_page("kn", SHARE_ENTRY))
+        self.assertNotIn("bannersubtitle", meta)
+
+    def test_registry_errors_flags_empty_bannersubtitle(self):
+        entry = dict(SHARE_ENTRY, bannersubtitle="   ")
+        errors = short_urls.registry_errors({"kn": entry})
+        self.assertTrue(
+            any("bannersubtitle must be a non-empty string" in e for e in errors)
+        )
+
+    def test_registry_errors_accepts_bannersubtitle_on_regular_entry(self):
+        entry = dict(SHARE_ENTRY, bannersubtitle="Sous-titre localisé")
+        self.assertEqual(short_urls.registry_errors({"kn": entry}), [])
+
     def test_render_page_alias_inherits_target_banner(self):
         resolved, banner_ids = short_urls.resolve_registry(
             {"kn": SHARE_ENTRY, "lk": ALIAS_ENTRY}
@@ -441,6 +469,83 @@ class TestValidateShortUrls(unittest.TestCase):
                 short_urls.find_unknown_shortened_ids({"kn": SHARE_ENTRY}, root), []
             )
 
+    def test_template_js_share_ids_known(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            js_dir = root / "micro-projects" / "network-nudge" / "src"
+            js_dir.mkdir(parents=True)
+            (js_dir / "templates.js").write_text(
+                "{ id: 'direct-application', shareId: 'YK' },\n"
+                "{ id: 'cold-reachout', shareId: 'E4' },\n"
+                "{ id: 'mutual-intro', shareId: 'VJ' },\n"
+            )
+            registry = {"YK": SHARE_ENTRY, "E4": SHARE_ENTRY, "VJ": SHARE_ENTRY}
+            self.assertEqual(
+                short_urls.find_unknown_template_js_ids(registry, root), []
+            )
+
+    def test_template_js_share_ids_unknown_reported_with_location(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            js_dir = root / "micro-projects" / "network-nudge" / "src"
+            js_dir.mkdir(parents=True)
+            path = js_dir / "templates.js"
+            path.write_text(
+                "{ id: 'direct-application', shareId: 'YK' },\n"
+                "{ id: 'cold-reachout', shareId: 'zz' },\n"
+            )
+            self.assertEqual(
+                short_urls.find_unknown_template_js_ids({"YK": SHARE_ENTRY}, root),
+                [(path, 2, "zz")],
+            )
+
+    def test_template_js_pinned_share_ids_known(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            js_dir = root / "micro-projects" / "network-nudge" / "src"
+            js_dir.mkdir(parents=True)
+            (js_dir / "templates.js").write_text(
+                "{ id: 'direct-application', shareId: 'YK', "
+                "pinnedShareIds: { en: 'Fu', fr: 'oG' } },\n"
+                "{ id: 'cold-reachout', shareId: 'E4', "
+                "pinnedShareIds: { en: 'YS', fr: 'qY' } },\n"
+            )
+            registry = {
+                "YK": SHARE_ENTRY,
+                "Fu": SHARE_ENTRY,
+                "oG": SHARE_ENTRY,
+                "E4": SHARE_ENTRY,
+                "YS": SHARE_ENTRY,
+                "qY": SHARE_ENTRY,
+            }
+            self.assertEqual(
+                short_urls.find_unknown_template_js_ids(registry, root), []
+            )
+
+    def test_template_js_pinned_share_ids_unknown_reported_with_location(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            js_dir = root / "micro-projects" / "network-nudge" / "src"
+            js_dir.mkdir(parents=True)
+            path = js_dir / "templates.js"
+            path.write_text(
+                "{ id: 'direct-application', shareId: 'YK', "
+                "pinnedShareIds: { en: 'Fu', fr: 'zz' } },\n"
+            )
+            self.assertEqual(
+                short_urls.find_unknown_template_js_ids(
+                    {"YK": SHARE_ENTRY, "Fu": SHARE_ENTRY}, root
+                ),
+                [(path, 1, "zz")],
+            )
+
+    def test_template_js_missing_file_returns_empty(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.assertEqual(
+                short_urls.find_unknown_template_js_ids({"kn": SHARE_ENTRY}, root), []
+            )
+
 
 REGISTRY_TEXT = (
     "# header comment\n"
@@ -509,18 +614,42 @@ class TestNewShortUrl(unittest.TestCase):
         for share_id in ("ab", "on1", "zz", "kn"):
             self.assertFalse(new_short_url.is_reserved_id(share_id))
 
+    def test_is_language_code_rejects_iso_codes(self):
+        for share_id in ("en", "EN", "fr", "Fr", "Id", "DE", "af", "no"):
+            self.assertTrue(new_short_url.is_language_code(share_id))
+
+    def test_is_language_code_accepts_ordinary_ids(self):
+        for share_id in ("yk", "YK", "zz", "qq", "k3", "mw", "fl"):
+            self.assertFalse(new_short_url.is_language_code(share_id))
+
     def test_generate_share_id_rejects_reserved_candidate(self):
         # An injected rng that first yields "on" (a YAML-reserved word) must be
-        # skipped so generation returns the next non-reserved candidate.
+        # skipped so generation returns the next non-reserved candidate. "xk"
+        # is safe: not reserved, not a language code, not in the registry.
         registry = {"kn": {}, "lk": {}}
-        rng = _SequenceRng("onab")
+        rng = _SequenceRng("onxk")
         share_id = new_short_url.generate_share_id(registry, rng=rng)
-        self.assertEqual(share_id, "ab")
+        self.assertEqual(share_id, "xk")
 
     def test_generate_share_id_avoids_reserved_ids(self):
         registry = {"kn": {}, "lk": {}}
         for _ in range(200):
             share_id = new_short_url.generate_share_id(registry)
+            self.assertFalse(new_short_url.is_reserved_id(share_id))
+
+    def test_generate_share_id_rejects_language_code_candidate(self):
+        # An injected rng that first yields "en" (an ISO 639-1 code) must be
+        # skipped so generation returns the next non-language candidate.
+        registry = {"kn": {}, "lk": {}}
+        rng = _SequenceRng("enxk")
+        share_id = new_short_url.generate_share_id(registry, rng=rng)
+        self.assertEqual(share_id, "xk")
+
+    def test_generate_share_id_avoids_language_codes(self):
+        registry = {"kn": {}, "lk": {}}
+        for _ in range(200):
+            share_id = new_short_url.generate_share_id(registry)
+            self.assertFalse(new_short_url.is_language_code(share_id))
             self.assertFalse(new_short_url.is_reserved_id(share_id))
 
     def test_generate_share_id_always_two_chars(self):
@@ -563,9 +692,10 @@ class TestNewShortUrl(unittest.TestCase):
         # bare, valid 2-char ID drawn from the real registry.
         original = new_short_url.REGISTRY_PATH.read_text()
         out = io.StringIO()
-        with mock.patch.object(
-            sys, "argv", ["new-short-url.py", "--generate-only"]
-        ), contextlib.redirect_stdout(out):
+        with (
+            mock.patch.object(sys, "argv", ["new-short-url.py", "--generate-only"]),
+            contextlib.redirect_stdout(out),
+        ):
             new_short_url.main()
         share_id = out.getvalue().strip()
         self.assertTrue(new_short_url.is_base62_id(share_id))

@@ -39,6 +39,16 @@ AY:
   redirect_to: /career/changelog/#changelog-0-1-0
   title: The Beginning
   description: Where the journey into professional software development began in 2001.
+# E4: Network Nudge cold-reachout template
+E4:
+  redirect_to: /projects/network-nudge.html#cold-reachout
+  title: Network Nudge
+  description: Cold reach-out. Connect with people at a specific company about a role you want.
+  bannertagline: Connect with people at a company you admire
+# Fu: Network Nudge direct-application template, English-pinned alias of YK
+Fu:
+  same_as: YK
+  redirect_to: /projects/network-nudge.html#en--direct-application
 # 6.0.0 Deliverr (2021 to 2022)
 Fz:
   redirect_to: /career/changelog/#changelog-6-0-0
@@ -54,6 +64,22 @@ K3:
   redirect_to: /career/changelog/#changelog-3-0-0
   title: New role at AFS Technologies
   description: Architect in the consumer packaged goods industry.
+# VJ: Network Nudge mutual-intro template
+VJ:
+  redirect_to: /projects/network-nudge.html#mutual-intro
+  title: Network Nudge
+  description: Mutual intro request. Ask a mutual connection to introduce you to someone at a target company.
+  bannertagline: Get introduced by a mutual connection
+# YK: Network Nudge direct-application template
+YK:
+  redirect_to: /projects/network-nudge.html#direct-application
+  title: Network Nudge
+  description: Direct cold application. You found a role and want to reach the hiring manager or talent team directly.
+  bannertagline: Reach the hiring manager directly
+# YS: Network Nudge cold-reachout template, English-pinned alias of E4
+YS:
+  same_as: E4
+  redirect_to: /projects/network-nudge.html#en--cold-reachout
 # af: AFS (3.0.0) landing alias
 af:
   same_as: K3
@@ -62,6 +88,10 @@ af:
 dl:
   same_as: Fz
   redirect_to: /#changelog-6-0-0
+# dr: Network Nudge mutual-intro template, English-pinned alias of VJ
+dr:
+  same_as: VJ
+  redirect_to: /projects/network-nudge.html#en--mutual-intro
 # 4.0.0 Zola (2019)
 ef:
   redirect_to: /career/changelog/#changelog-4-0-0
@@ -89,6 +119,13 @@ oB:
   redirect_to: /career/changelog/#changelog-6-1-0
   title: New role at Shopify Logistics
   description: Senior Staff Developer in fulfillment.
+# oG: Network Nudge direct-application template, French
+oG:
+  redirect_to: /projects/network-nudge.html#fr--direct-application
+  title: Network Nudge
+  description: Candidature directe. Vous avez trouvé un poste et souhaitez contacter directement le responsable du recrutement ou l'équipe talent.
+  bannertagline: Contactez le responsable du recrutement directement
+  bannersubtitle: Générateur de messages d'approche
 # 8.0.0 Shopify (2025 to 2026)
 oP:
   redirect_to: /career/changelog/#changelog-8-0-0
@@ -102,6 +139,13 @@ oc:
 pr:
   same_as: kn
   redirect_to: /#changelog-9-0-0
+# qY: Network Nudge cold-reachout template, French
+qY:
+  redirect_to: /projects/network-nudge.html#fr--cold-reachout
+  title: Network Nudge
+  description: Contact direct avec l'entreprise. Vous prenez contact avec des personnes d'une entreprise précise à propos d'un poste.
+  bannertagline: Contactez des gens d'une entreprise qui vous inspire
+  bannersubtitle: Générateur de messages d'approche
 # 2.0.0 Vidéotron (2006 to 2011)
 rB:
   redirect_to: /career/changelog/#changelog-2-0-0
@@ -132,6 +176,13 @@ tb:
 vi:
   same_as: rB
   redirect_to: /#changelog-2-0-0
+# z5: Network Nudge mutual-intro template, French
+z5:
+  redirect_to: /projects/network-nudge.html#fr--mutual-intro
+  title: Network Nudge
+  description: Demande d'introduction mutuelle. Vous avez trouvé une personne dans l'entreprise cible et demandez à une connaissance commune de vous présenter.
+  bannertagline: Faites-vous présenter par une connaissance commune
+  bannersubtitle: Générateur de messages d'approche
 # zo: Zola (4.0.0) landing alias
 zo:
   same_as: ef

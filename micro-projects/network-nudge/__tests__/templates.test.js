@@ -9,6 +9,25 @@ describe('TEMPLATES', () => {
     expect(TEMPLATES).toHaveLength(3);
   });
 
+  it('each template has a unique registry-backed 2-char base62 shareId', () => {
+    const ids = TEMPLATES.map((t) => t.shareId);
+    expect(new Set(ids).size).toBe(TEMPLATES.length);
+    for (const id of ids) {
+      expect(id).toMatch(/^[0-9A-Za-z]{2}$/);
+    }
+  });
+
+  it('each template pins a per-locale share ID distinct from its bare shareId', () => {
+    for (const t of TEMPLATES) {
+      expect(Object.keys(t.pinnedShareIds).sort()).toEqual(['en', 'fr']);
+      for (const locale of ['en', 'fr']) {
+        const pinned = t.pinnedShareIds[locale];
+        expect(pinned, `${t.id} ${locale} pinned id`).toMatch(/^[0-9A-Za-z]{2}$/);
+        expect(pinned, `${t.id} ${locale} pinned id differs from bare`).not.toBe(t.shareId);
+      }
+    }
+  });
+
   it('each template includes careerUrl and resumeUrl in shared fields', () => {
     for (const t of TEMPLATES) {
       const names = t.fields.map((f) => f.name);

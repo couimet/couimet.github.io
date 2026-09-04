@@ -13,6 +13,11 @@ entry gets placeholder redirect_to / title / description values for the author
 to fill in; then run `make sync-short-urls` to generate the matching
 s/<ID>.md page (the Makefile target chains it).
 
+Drawn IDs also avoid two reserved classes: YAML 1.1 boolean scalars (on/no/
+yes/off), which PyYAML would reload as bool keys, and ISO 639-1 language codes
+in any casing, since /s/en and /s/EN both read as the English language rather
+than a link.
+
 bannertagline is scaffolded as a commented-out placeholder: the banner
 falls back to the title, but the reminder line shows where a custom tagline
 goes if the image should diverge from the card title.
@@ -40,6 +45,200 @@ PLACEHOLDER = "TODO"
 # the complete set of IDs that cannot round-trip through _data/short-urls.yml.
 RESERVED_IDS = {"on", "no", "yes", "off"}
 
+# ISO 639-1 alpha-2 language codes (lowercase). A share ID must not equal one
+# in any casing: /s/en and /s/EN both read as the English language, not a
+# link. The ban lives in the generator only: older entries that already
+# collide (af, AY, Gn, kn, oc, sl, ss, vi...) are shared and stable, so they
+# cannot be renamed — the generator just refuses to mint new ones.
+LANGUAGE_CODES = frozenset(
+    {
+        "aa",
+        "ab",
+        "ae",
+        "af",
+        "ak",
+        "am",
+        "an",
+        "ar",
+        "as",
+        "av",
+        "ay",
+        "az",
+        "ba",
+        "be",
+        "bg",
+        "bh",
+        "bi",
+        "bm",
+        "bn",
+        "bo",
+        "br",
+        "bs",
+        "ca",
+        "ce",
+        "ch",
+        "co",
+        "cr",
+        "cs",
+        "cu",
+        "cv",
+        "cy",
+        "da",
+        "de",
+        "dv",
+        "dz",
+        "ee",
+        "el",
+        "en",
+        "eo",
+        "es",
+        "et",
+        "eu",
+        "fa",
+        "ff",
+        "fi",
+        "fj",
+        "fo",
+        "fr",
+        "fy",
+        "ga",
+        "gd",
+        "gl",
+        "gn",
+        "gu",
+        "gv",
+        "ha",
+        "he",
+        "hi",
+        "ho",
+        "hr",
+        "ht",
+        "hu",
+        "hy",
+        "hz",
+        "ia",
+        "id",
+        "ie",
+        "ig",
+        "ii",
+        "ik",
+        "io",
+        "is",
+        "it",
+        "iu",
+        "ja",
+        "jv",
+        "ka",
+        "kg",
+        "ki",
+        "kj",
+        "kk",
+        "kl",
+        "km",
+        "kn",
+        "ko",
+        "kr",
+        "ks",
+        "ku",
+        "kv",
+        "kw",
+        "ky",
+        "la",
+        "lb",
+        "lg",
+        "li",
+        "ln",
+        "lo",
+        "lt",
+        "lu",
+        "lv",
+        "mg",
+        "mh",
+        "mi",
+        "mk",
+        "ml",
+        "mn",
+        "mr",
+        "ms",
+        "mt",
+        "my",
+        "na",
+        "nb",
+        "nd",
+        "ne",
+        "ng",
+        "nl",
+        "nn",
+        "no",
+        "nr",
+        "nv",
+        "ny",
+        "oc",
+        "oj",
+        "om",
+        "or",
+        "os",
+        "pa",
+        "pi",
+        "pl",
+        "ps",
+        "pt",
+        "qu",
+        "rm",
+        "rn",
+        "ro",
+        "ru",
+        "rw",
+        "sa",
+        "sc",
+        "sd",
+        "se",
+        "sg",
+        "si",
+        "sk",
+        "sl",
+        "sm",
+        "sn",
+        "so",
+        "sq",
+        "sr",
+        "ss",
+        "st",
+        "su",
+        "sv",
+        "sw",
+        "ta",
+        "te",
+        "tg",
+        "th",
+        "ti",
+        "tk",
+        "tl",
+        "tn",
+        "to",
+        "tr",
+        "ts",
+        "tt",
+        "tw",
+        "ty",
+        "ug",
+        "uk",
+        "ur",
+        "uz",
+        "ve",
+        "vi",
+        "vo",
+        "wa",
+        "wo",
+        "xh",
+        "yi",
+        "yo",
+        "za",
+        "zh",
+        "zu",
+    }
+)
+
 
 def is_base62_id(share_id):
     """True for an exactly-2-char base62 ID."""
@@ -57,20 +256,30 @@ def is_reserved_id(share_id):
     return share_id.lower() in RESERVED_IDS
 
 
+def is_language_code(share_id):
+    """True when share_id (any casing) is an ISO 639-1 language code."""
+    return share_id.lower() in LANGUAGE_CODES
+
+
 def generate_share_id(registry, rng=None):
     """Return a random 2-char base62 ID not already in *registry*.
 
     Rejection-samples the 2-char ID space so it stays collision-free against
-    the existing entries. If 64 random draws all collide (a near-full
-    registry), falls back to a deterministic scan of the finite space so the
-    ValueError below fires only when every ID is genuinely taken. *rng* is
-    injectable for deterministic tests.
+    the existing entries and avoids reserved and language-code IDs. If 64
+    random draws all collide (a near-full registry), falls back to a
+    deterministic scan of the finite space so the ValueError below fires only
+    when every ID is genuinely taken. *rng* is injectable for deterministic
+    tests.
     """
     rng = rng or random
     taken = set(registry)
     for _ in range(64):
         candidate = "".join(rng.choice(BASE62_CHARS) for _ in range(2))
-        if candidate not in taken and not is_reserved_id(candidate):
+        if (
+            candidate not in taken
+            and not is_reserved_id(candidate)
+            and not is_language_code(candidate)
+        ):
             return candidate
     for first in BASE62_CHARS:
         for second in BASE62_CHARS:
@@ -139,6 +348,13 @@ def main():
         print(
             f"ERROR: {share_id!r} is a YAML-reserved boolean word "
             "(PyYAML would load it as a boolean key)",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    elif is_language_code(share_id):
+        print(
+            f"ERROR: {share_id!r} is an ISO 639-1 language code; "
+            "share IDs must not read as a language (e.g. en, EN)",
             file=sys.stderr,
         )
         sys.exit(1)

@@ -1,6 +1,12 @@
 // Fields shared across all templates — filled once, used everywhere.
 // Names must match field definitions in each template's fields array.
 // Default values come from the App component props (injected by the Jekyll page).
+// Each template's shareId is its registry-backed short ID (see _data/short-urls.yml);
+// TemplateCard builds the /s/<shareId> share URL from it. Registry entries must
+// redirect to the matching #<template id> hash.
+// pinnedShareIds maps a locale to the registry ID pinned to that locale's hash
+// (#<locale>--<template id>); the compose share sheet's primary row copies
+// /s/<pinnedShareIds[locale]> to hand over the template as it is being used.
 
 import { MessageCode } from './i18n/messageCodes.js';
 import { format } from './i18n/supportedLocales.js';
@@ -39,6 +45,8 @@ export function renderPreview(template, fieldValues, msgs) {
 export const TEMPLATES = [
   {
     id: 'direct-application',
+    shareId: 'YK',
+    pinnedShareIds: { en: 'Fu', fr: 'oG' },
     titleCode: MessageCode.TEMPLATE_DIRECT_APPLICATION_TITLE,
     descCode: MessageCode.TEMPLATE_DIRECT_APPLICATION_DESC,
     linkedinLimit: true,
@@ -51,6 +59,8 @@ export const TEMPLATES = [
   },
   {
     id: 'cold-reachout',
+    shareId: 'E4',
+    pinnedShareIds: { en: 'YS', fr: 'qY' },
     titleCode: MessageCode.TEMPLATE_COLD_REACHOUT_TITLE,
     descCode: MessageCode.TEMPLATE_COLD_REACHOUT_DESC,
     linkedinLimit: true,
@@ -64,6 +74,8 @@ export const TEMPLATES = [
   },
   {
     id: 'mutual-intro',
+    shareId: 'VJ',
+    pinnedShareIds: { en: 'dr', fr: 'z5' },
     titleCode: MessageCode.TEMPLATE_MUTUAL_INTRO_TITLE,
     descCode: MessageCode.TEMPLATE_MUTUAL_INTRO_DESC,
     linkedinLimit: false,

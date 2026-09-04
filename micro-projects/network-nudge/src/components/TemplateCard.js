@@ -10,16 +10,19 @@ const html = htm.bind(createElement);
 export function TemplateCard({ template, sharedFieldValues, onSelect }) {
   const { locale, t } = useLocale();
   const [copied, setCopied] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
   const timeoutRef = useRef(null);
+  const shareTimeoutRef = useRef(null);
 
   const preview = useMemo(() => renderPreview(template, sharedFieldValues, supportedLocales[locale]), [template, sharedFieldValues, locale]);
 
   const isComplete = !preview.includes('[');
 
-  // Clear copy-feedback timeout on unmount
+  // Clear transient-feedback timeouts on unmount
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current);
     };
   }, []);
 
@@ -36,6 +39,22 @@ export function TemplateCard({ template, sharedFieldValues, onSelect }) {
       }
     },
     [preview],
+  );
+
+  const handleShare = useCallback(
+    async (e) => {
+      e.stopPropagation();
+      const url = `${window.location.origin}/s/${template.shareId}`;
+      try {
+        await navigator.clipboard.writeText(url);
+        setShareCopied(true);
+        if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current);
+        shareTimeoutRef.current = setTimeout(() => setShareCopied(false), 2000);
+      } catch {
+        // clipboard unavailable — no-op
+      }
+    },
+    [template.shareId],
   );
 
   return html`
@@ -65,6 +84,21 @@ ${preview}</pre>
       </div>
       <div className="card-footer d-flex gap-2">
         <button className="btn btn-primary btn-sm flex-grow-1">${t(MessageCode.BUTTON_SELECT)}</button>
+        <button
+          className=${`btn btn-sm ${shareCopied ? 'btn-success' : 'btn-outline-secondary'}`}
+          onClick=${handleShare}
+          title=${t(MessageCode.TITLE_SHARE_TEMPLATE)}
+        >
+          ${
+            shareCopied
+              ? t(MessageCode.SHARE_LINK_COPIED)
+              : html`<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                  <path
+                    d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"
+                  />
+                </svg>`
+          }
+        </button>
         ${
           isComplete &&
           html`

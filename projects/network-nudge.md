@@ -22,6 +22,13 @@ og_image: /img/social-banner-network-nudge.jpg
 
 Network Nudge replaces the copy-pasta grind of outreach messages. Pick a template, fill in the shared fields, and copy — the message preview updates live as you type.
 
+<!-- Inert anchors matching the template ids the app reads from the hash.
+     The /s/<ID> share pages deep-link here (e.g. #cold-reachout), and the
+     static ids let link checks resolve those hashes against this page. The
+     en--/fr-- ids back the locale-pinned compose shares (#en--<template>,
+     #fr--<template>). -->
+<span id="direct-application"></span><span id="cold-reachout"></span><span id="mutual-intro"></span><span id="en--direct-application"></span><span id="en--cold-reachout"></span><span id="en--mutual-intro"></span><span id="fr--direct-application"></span><span id="fr--cold-reachout"></span><span id="fr--mutual-intro"></span>
+
 <div id="root"></div>
 
 <script type="importmap">

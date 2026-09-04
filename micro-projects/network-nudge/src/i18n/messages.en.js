@@ -52,8 +52,20 @@ export const messagesEn = {
   [MessageCode.PREVIEW_COPIED]: 'Copied!',
   [MessageCode.PREVIEW_FILL_IN_TITLE]: 'Fill in: {missing}',
 
+  // Share link
+  [MessageCode.TITLE_SHARE_TEMPLATE]: 'Copy share link to this template',
+  [MessageCode.SHARE_LINK_COPIED]: 'Link copied!',
+
+  // Compose share sheet (step 1)
+  [MessageCode.SHARE_SHEET_PRIMARY]: "English, as you're using it",
+  [MessageCode.SHARE_SHEET_PRIMARY_SUBLINE]: 'Opens ready to fill in, in English.',
+  [MessageCode.SHARE_SHEET_READER_CHOICE]: 'Let the reader choose',
+  [MessageCode.SHARE_SHEET_READER_CHOICE_SUBLINE]: "Opens in the reader's own language, English or French.",
+  [MessageCode.SHARE_SHEET_DISMISS]: 'Close share options',
+
   // Buttons
   [MessageCode.BUTTON_SELECT]: 'Select',
+  [MessageCode.BUTTON_SHARE]: 'Share',
   [MessageCode.BUTTON_BACK_TO_TEMPLATES]: '← Back to templates',
   [MessageCode.TITLE_COPY_TO_CLIPBOARD]: 'Copy to clipboard',
 };
