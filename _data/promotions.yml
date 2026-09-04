@@ -6,6 +6,31 @@
 # anchor:  slug for deep-linking a promotion line from a project page (rendered as promo-<anchor>).
 # Channels are keyed by name (linkedin, x, etc.), each with url and content.
 
+- date: "2026-09-03"
+  context: https://github.com/danyuchn/asd-ste100-skill/pull/8
+  anchor: asd-ste100-merged
+  summary: "Open-source contribution merged"
+  linkedin:
+    url: https://www.linkedin.com/feed/update/urn:li:share:7501466716166864896/
+    content: |
+      It merged 🎉
+
+      My first PR to a 1.5K-star repo is official, which makes me an official (tiny) contributor to the fight against AI slop.
+
+      Yuchen Teng built it; I documented its quick start using `npx skills` command.
+
+      #ClaudeCode #AIAgents #rtfm
+  x:
+    url: https://x.com/charlesouimet/status/2095700325160108275
+    content: |
+      It merged 🎉
+
+      My first PR to a 1.5K-star repo is official, which makes me an official (tiny) contributor to the fight against AI slop.
+
+      Yuchen Teng built it; I documented its quick start using `npx skills` command.
+
+      #ClaudeCode #AIAgents #rtfm
+
 - date: "2026-08-27"
   context: https://github.com/danyuchn/asd-ste100-skill/pull/8
   anchor: asd-ste100-pr
