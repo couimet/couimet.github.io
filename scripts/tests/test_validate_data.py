@@ -678,14 +678,27 @@ class TestNewShortUrl(unittest.TestCase):
         # Near-full registry with exactly one free ID and an rng that always
         # draws a taken candidate: all 64 random attempts collide, so the
         # deterministic scan must return the single free ID instead of raising
-        # a false "no free 2-char short IDs left".
+        # a false "no free 2-char short IDs left". "xk" is free and usable:
+        # neither reserved nor a language code, so the scan accepts it.
         registry = {}
         for a in new_short_url.BASE62_CHARS:
             for b in new_short_url.BASE62_CHARS:
-                if a + b != "aa":
+                if a + b != "xk":
                     registry[a + b] = {}
         rng = _SequenceRng(["0"] * 128)  # every candidate is the taken "00"
-        self.assertEqual(new_short_url.generate_share_id(registry, rng=rng), "aa")
+        self.assertEqual(new_short_url.generate_share_id(registry, rng=rng), "xk")
+
+    def test_generate_share_id_fallback_skips_language_code(self):
+        # Near-full registry whose only free slots are a language code ("aa")
+        # and a usable ID ("xk"): the deterministic scan must skip "aa" and
+        # return "xk", keeping the fallback consistent with the random loop.
+        registry = {}
+        for a in new_short_url.BASE62_CHARS:
+            for b in new_short_url.BASE62_CHARS:
+                if a + b not in ("aa", "xk"):
+                    registry[a + b] = {}
+        rng = _SequenceRng(["0"] * 128)  # every candidate is the taken "00"
+        self.assertEqual(new_short_url.generate_share_id(registry, rng=rng), "xk")
 
     def test_main_generate_only_prints_valid_id_and_leaves_registry(self):
         # --generate-only must not touch the registry file: stdout carries a

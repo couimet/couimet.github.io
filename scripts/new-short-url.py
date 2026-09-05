@@ -268,8 +268,8 @@ def generate_share_id(registry, rng=None):
     the existing entries and avoids reserved and language-code IDs. If 64
     random draws all collide (a near-full registry), falls back to a
     deterministic scan of the finite space so the ValueError below fires only
-    when every ID is genuinely taken. *rng* is injectable for deterministic
-    tests.
+    when no acceptable ID remains (each is taken, reserved, or a language
+    code). *rng* is injectable for deterministic tests.
     """
     rng = rng or random
     taken = set(registry)
@@ -284,7 +284,11 @@ def generate_share_id(registry, rng=None):
     for first in BASE62_CHARS:
         for second in BASE62_CHARS:
             candidate = first + second
-            if candidate not in taken and not is_reserved_id(candidate):
+            if (
+                candidate not in taken
+                and not is_reserved_id(candidate)
+                and not is_language_code(candidate)
+            ):
                 return candidate
     raise ValueError("no free 2-char short IDs left")
 
