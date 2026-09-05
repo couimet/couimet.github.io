@@ -4,7 +4,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import htm from 'htm';
 import { createElement } from 'react';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const html = htm.bind(createElement);
 
@@ -114,5 +114,75 @@ describe('App', () => {
     render(html`<${App} />`);
     expect(screen.getByText('Retour aux modèles')).toBeTruthy();
     expect(screen.queryAllByRole('button', { name: 'Select' })).toHaveLength(0);
+  });
+
+  it('does not overwrite the stored locale when a pinned hash supplies one', () => {
+    localStorage.setItem('network-nudge-locale', 'en');
+    window.location.hash = '#fr--direct-application';
+    render(html`<${App} />`);
+    expect(screen.getByText('Retour aux modèles')).toBeTruthy();
+    // The hash locale applies for this visit only; the stored choice is intact.
+    expect(localStorage.getItem('network-nudge-locale')).toBe('en');
+  });
+
+  it('persists a locale chosen by an explicit EN/FR press', async () => {
+    const user = userEvent.setup();
+    render(html`<${App} />`);
+    await user.click(screen.getByRole('button', { name: 'FR' }));
+    expect(localStorage.getItem('network-nudge-locale')).toBe('fr');
+  });
+
+  it('opens the share sheet from step 1 and copies the right links from each row', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+
+    render(html`<${App} />`);
+    await user.click(screen.getAllByRole('button', { name: 'Select' })[0]);
+    await user.click(screen.getByRole('button', { name: 'Share' }));
+
+    // The sheet names the rows for the reader, not the mechanism.
+    expect(screen.getByText("English, as you're using it")).toBeTruthy();
+    expect(screen.getByText('Let the reader choose')).toBeTruthy();
+
+    // Primary row: the current view pinned to its locale.
+    await user.click(screen.getByText("English, as you're using it"));
+    // Reader row: the plain share link the template cards already use.
+    await user.click(screen.getByText('Let the reader choose'));
+
+    const shareUrls = writeText.mock.calls.map(([url]) => url).filter((url) => url.includes('/s/'));
+    expect(shareUrls).toHaveLength(2);
+    expect(shareUrls[0]).toContain('/s/Fu');
+    expect(shareUrls[1]).toContain('/s/YK');
+  });
+
+  it('pins the primary share link to the locale a pinned hash supplies', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+    localStorage.setItem('network-nudge-locale', 'en');
+    window.location.hash = '#fr--direct-application';
+
+    render(html`<${App} />`);
+    expect(screen.getByText('Retour aux modèles')).toBeTruthy();
+
+    await user.click(screen.getByRole('button', { name: 'Partager' }));
+    await user.click(screen.getByText(/Français/));
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining('/s/oG'));
+
+    // A hash locale applies for this visit only; the stored choice is intact.
+    expect(localStorage.getItem('network-nudge-locale')).toBe('en');
+  });
+
+  it('closes the share sheet when leaving step 1', async () => {
+    const user = userEvent.setup();
+    render(html`<${App} />`);
+    await user.click(screen.getAllByRole('button', { name: 'Select' })[0]);
+    await user.click(screen.getByRole('button', { name: 'Share' }));
+    expect(screen.getByText("English, as you're using it")).toBeTruthy();
+
+    await user.click(screen.getByText('← Back to templates'));
+    expect(screen.queryByText("English, as you're using it")).toBeNull();
+    expect(screen.getAllByRole('button', { name: 'Select' })).toHaveLength(3);
   });
 });

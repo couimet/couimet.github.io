@@ -58,11 +58,24 @@ export function detectLocale() {
 }
 
 /**
- * Sets the active locale, persisting it. Unsupported locales fall back to the default.
+ * Applies a locale for this visit only, without persisting it. Used when the
+ * locale comes from the URL hash, so a shared pinned link never overwrites the
+ * reader's stored choice. Unsupported locales fall back to the default.
+ * @param {LocaleCode} locale
+ */
+export function applyLocale(locale) {
+  currentLocale = isSupported(locale) ? locale : DEFAULT_LOCALE;
+}
+
+/**
+ * Sets the active locale, persisting it. Explicit user choice only: a locale
+ * a person presses (the EN/FR toggle) persists, while one resolved from the
+ * hash or detection must go through applyLocale. Unsupported locales fall
+ * back to the default.
  * @param {LocaleCode} locale
  */
 export function setLocale(locale) {
-  currentLocale = isSupported(locale) ? locale : DEFAULT_LOCALE;
+  applyLocale(locale);
   writeStoredLocale(currentLocale);
 }
 

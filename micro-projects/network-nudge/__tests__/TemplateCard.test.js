@@ -3,7 +3,7 @@ import { TEMPLATES } from '../src/templates.js';
 
 import { TestWrapper } from './helpers/localeWrapper.js';
 
-import { cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import htm from 'htm';
 import { createElement } from 'react';
@@ -109,5 +109,60 @@ describe('TemplateCard', () => {
     await user.click(copyBtn);
     await user.click(copyBtn);
     expect(writeText).toHaveBeenCalledTimes(2);
+  });
+
+  it('shows the Share button even when fields are incomplete', () => {
+    render(html`<${TestWrapper}><${TemplateCard} template=${template} sharedFieldValues=${{}} onSelect=${vi.fn()} /></${TestWrapper}>`);
+    expect(screen.getByTitle('Copy share link to this template')).toBeTruthy();
+    // Copy stays gated on a complete preview; Share is not.
+    expect(screen.queryByTitle('Copy to clipboard')).toBeNull();
+  });
+
+  it('copies the share URL, not the preview, and shows feedback', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+
+    render(html`<${TestWrapper}><${TemplateCard} template=${template} sharedFieldValues=${completeFields} onSelect=${onSelect} /></${TestWrapper}>`);
+    await user.click(screen.getByTitle('Copy share link to this template'));
+    expect(writeText).toHaveBeenCalledTimes(1);
+    expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/s/${template.shareId}`);
+    expect(await screen.findByText('Link copied!')).toBeTruthy();
+    // Sharing must not trigger template selection.
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it('clears the link-copied feedback after the timeout', async () => {
+    vi.useFakeTimers();
+    try {
+      const writeText = vi.fn().mockResolvedValue(undefined);
+      vi.stubGlobal('navigator', { clipboard: { writeText } });
+
+      render(html`<${TestWrapper}><${TemplateCard} template=${template} sharedFieldValues=${{}} onSelect=${vi.fn()} /></${TestWrapper}>`);
+      // fireEvent is synchronous; act flushes the clipboard writeText
+      // continuation and the resulting state update.
+      fireEvent.click(screen.getByTitle('Copy share link to this template'));
+      await act(async () => {
+        await Promise.resolve();
+      });
+      expect(screen.getByText('Link copied!')).toBeTruthy();
+
+      act(() => {
+        vi.advanceTimersByTime(2100);
+      });
+      expect(screen.queryByText('Link copied!')).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not show share feedback when the clipboard is unavailable', async () => {
+    const user = userEvent.setup();
+    vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn().mockRejectedValue(new Error('denied')) } });
+
+    render(html`<${TestWrapper}><${TemplateCard} template=${template} sharedFieldValues=${{}} onSelect=${vi.fn()} /></${TestWrapper}>`);
+    await user.click(screen.getByTitle('Copy share link to this template'));
+    expect(screen.queryByText('Link copied!')).toBeNull();
   });
 });
