@@ -19,14 +19,14 @@ jobs:
           persist-credentials: false
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073
         with:
           bundler-cache: true
         env:
           BUNDLE_FROZEN: 'true'
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
 
       # Rebuilds the site, copies _site/sitemap.xml to .snapshots/sitemap.xml,
       # and fails on `git diff --exit-code` if the freshly built sitemap differs

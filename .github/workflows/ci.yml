@@ -25,7 +25,7 @@ jobs:
         uses: couimet/github-actions/setup-node-pnpm@main
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
 
       - name: Validate articles data against schema
         uses: couimet/github-actions/validate-yaml@main
@@ -86,7 +86,7 @@ jobs:
           persist-credentials: false
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
 
       - name: Install deps
         run: uv sync --frozen --extra dev
@@ -145,7 +145,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073
         with:
           bundler-cache: true
         env:
@@ -157,7 +157,7 @@ jobs:
           working-directory: micro-projects/network-nudge
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
 
       - name: Install dependencies
         uses: couimet/github-actions/install-deps@main
@@ -179,14 +179,14 @@ jobs:
           persist-credentials: false
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        uses: ruby/setup-ruby@a0102e0972be65f351c307e2d64b9314a57c8073
         with:
           bundler-cache: true
         env:
           BUNDLE_FROZEN: 'true'
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
 
       - name: Sync uv deps
         run: uv sync --frozen
@@ -231,7 +231,7 @@ jobs:
         run: ./scripts/check-resume-tool-versions.sh
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
 
       - name: Check resume freshness
         uses: couimet/github-actions/check-generated-drift@main
